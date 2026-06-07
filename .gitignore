@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.hypothesis/
+.pytest_cache/
+
+# Environment
+.env
+.env.local
+venv/
+.venv/
+
+# Data (may contain proprietary simulation params)
+data/raw/
+data/processed/
+data/checksums.sha256
+
+# Experiment outputs (large files)
+experiments/*/checkpoints/
+experiments/*/logs/
+*.pt
+*.pth
+*.ckpt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# LaTeX build artifacts
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+
+# Benchmarks
+.benchmarks/

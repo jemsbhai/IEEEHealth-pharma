@@ -1,0 +1,200 @@
+# Base configuration for Drug Integrity Algebra experiments
+# All experiment configs inherit from this and override specific values.
+
+# ──────────────────────────────────────────────
+# Supply Chain Topology
+# ──────────────────────────────────────────────
+topology:
+  nodes:
+    - id: manufacturer
+      type: MANUFACTURER
+      label: "Overseas Manufacturer (FDA/EMA-approved)"
+    - id: importer
+      type: IMPORTER
+      label: "UAE Licensed Importer (GLN-registered)"
+    - id: central_warehouse
+      type: WAREHOUSE
+      label: "Central Warehouse (Abu Dhabi)"
+    - id: distributor_a
+      type: DISTRIBUTOR
+      label: "Regional Distributor A (Dubai)"
+    - id: distributor_b
+      type: DISTRIBUTOR
+      label: "Regional Distributor B (Northern Emirates)"
+    - id: hospital
+      type: PHARMACY
+      label: "Hospital Pharmacy"
+    - id: pharmacy_a
+      type: PHARMACY
+      label: "Community Pharmacy A"
+    - id: pharmacy_b
+      type: PHARMACY
+      label: "Community Pharmacy B"
+
+  edges:
+    - [manufacturer, importer]
+    - [importer, central_warehouse]
+    - [central_warehouse, distributor_a]
+    - [central_warehouse, distributor_b]
+    - [distributor_a, hospital]
+    - [distributor_a, pharmacy_a]
+    - [distributor_b, pharmacy_b]
+
+# ──────────────────────────────────────────────
+# Product Categories
+# ──────────────────────────────────────────────
+products:
+  P1_insulin:
+    name: "Insulin (refrigerated biologic)"
+    cold_chain_range: [2.0, 8.0]   # °C
+    shelf_life_manufactured: 730    # days (24 months)
+    shelf_life_min_pharmacy: 180    # days (6 months)
+    category: biologic
+    evidence_weights:
+      serialization: 0.25
+      cold_chain: 0.35
+      shelf_life: 0.20
+      documentation: 0.15
+      recall: 0.05
+
+  P2_amoxicillin:
+    name: "Amoxicillin tablets (CRT conventional)"
+    cold_chain_range: [15.0, 25.0]  # °C
+    shelf_life_manufactured: 730
+    shelf_life_min_pharmacy: 180
+    category: conventional
+    evidence_weights:
+      serialization: 0.30
+      cold_chain: 0.15
+      shelf_life: 0.25
+      documentation: 0.25
+      recall: 0.05
+
+  P3_mrna:
+    name: "mRNA-based therapy (frozen advanced therapy)"
+    cold_chain_range: [-25.0, -15.0]  # °C
+    shelf_life_manufactured: 180      # shorter shelf life
+    shelf_life_min_pharmacy: 30
+    category: advanced_therapy
+    evidence_weights:
+      serialization: 0.20
+      cold_chain: 0.40
+      shelf_life: 0.20
+      documentation: 0.15
+      recall: 0.05
+
+# ──────────────────────────────────────────────
+# Evidence Formation Parameters
+# ──────────────────────────────────────────────
+evidence_params:
+  serialization:
+    kappa: 2.0            # Dirichlet non-evidence weight
+    base_rate: 0.99       # prior for regulated supply chains
+
+  cold_chain:
+    base_rate: 0.95
+    sensor_interval_sec: 300   # 5-minute readings
+
+  shelf_life:
+    base_rate: 0.90
+
+  documentation:
+    base_rate: 0.80
+    critical_weight: 0.60  # weight for critical vs non-critical docs
+    critical_documents:
+      - certificate_of_analysis
+      - gmp_certificate
+      - batch_release_certificate
+    required_documents:
+      - certificate_of_analysis
+      - gmp_certificate
+      - batch_release_certificate
+      - bioequivalence_study
+      - import_license
+
+  recall:
+    # No tunable params — binary override
+
+# ──────────────────────────────────────────────
+# Temporal Decay Half-Lives
+# ──────────────────────────────────────────────
+temporal_decay:
+  serialization_half_life: 2592000   # 30 days in seconds
+  cold_chain_half_life: 14400        # 4 hours in seconds
+  documentation_half_life: 15552000  # 180 days in seconds
+  decay_function: exponential        # exponential | linear | step
+
+# ──────────────────────────────────────────────
+# Simulation Parameters
+# ──────────────────────────────────────────────
+simulation:
+  n_trials: 1000
+  random_seed: 42
+
+  normal_operation:
+    scan_rate_range: [0.95, 1.0]
+    scan_failure_rate: 0.001
+    cold_chain_noise_std: 1.0       # °C Gaussian noise around midpoint
+    shelf_life_consumption_months: [6, 12]  # uniform range
+    documentation_completeness: 1.0
+
+  transit_durations_hours:
+    manufacturer_to_importer: [48, 120]     # international shipping
+    importer_to_warehouse: [2, 8]
+    warehouse_to_distributor: [1, 4]
+    distributor_to_pharmacy: [0.5, 2]
+
+# ──────────────────────────────────────────────
+# Failure Scenarios
+# ──────────────────────────────────────────────
+failures:
+  F1_mild_excursion:
+    node: distributor_a
+    evidence_type: cold_chain
+    duration_min: 30
+    magnitude_above_max: 2.0   # °C above T_max
+
+  F2_severe_excursion:
+    node: distributor_a
+    evidence_type: cold_chain
+    duration_min: 360
+    magnitude_above_max: 17.0
+
+  F3_counterfeit:
+    node: importer
+    evidence_type: serialization
+    counterfeit_fraction: 0.05
+
+  F4_scan_omission:
+    node: central_warehouse
+    evidence_type: serialization
+    scan_rate: 0.20
+
+  F5_expired_batch:
+    node: distributor_a
+    evidence_type: shelf_life
+    remaining_days: 90          # below 180-day minimum
+
+  F6_missing_docs:
+    node: importer
+    evidence_type: documentation
+    missing: [certificate_of_analysis]
+
+  F7_cascading:
+    components:
+      - {scenario: F1_mild_excursion, node: central_warehouse}
+      - {scenario: F4_scan_omission, node: distributor_a}
+
+# ──────────────────────────────────────────────
+# Evaluation
+# ──────────────────────────────────────────────
+evaluation:
+  detection_threshold: 0.5      # P(ω) below this = flagged
+  uncertainty_threshold: 0.3    # u above this = flagged for review
+  metrics:
+    - detection_rate
+    - false_positive_rate
+    - localization_accuracy
+    - uncertainty_calibration
+    - information_retention
+    - gradual_degradation_detection
