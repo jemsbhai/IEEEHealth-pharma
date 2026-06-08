@@ -1,0 +1,1747 @@
+{
+	"info": {
+		"_postman_id": "c35e4d0b-a534-443d-902f-bcd5c4324ea7",
+		"name": "Tatmeen_SupplyChain (MAH,logistic, dispens)_STAGING(17-May-2024)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10077231"
+	},
+	"item": [
+		{
+			"name": "RequestToken API",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse response to JSON object\r",
+							"var jsonData = JSON.parse(responseBody);\r",
+							"\r",
+							"// Get token from response and set as global variable\r",
+							"var TOKEN = jsonData.access_token;\r",
+							"postman.setGlobalVariable(\"access_token\", TOKEN);\r",
+							"\r",
+							"// Get refresh token from response and set as global variable\r",
+							"var REFRESH_TOKEN = jsonData.refresh_token;\r",
+							"postman.setGlobalVariable(\"refresh_token\", REFRESH_TOKEN);\r",
+							"\r",
+							"// Check response code is 200\r",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "xxxxxxxxxxx",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "xxxxxxxxxxx",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/auth",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Message Status Query",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <tatmeenMsgStatusQuery xsi:noNamespaceSchemaLocation=\"schema.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n            <language>E</language>\r\n            <instanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</instanceIdentifier>\r\n        </tatmeenMsgStatusQuery>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/MsgStatusQuery",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"MsgStatusQuery"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MAH Serialization Data B2B - Comm,pack,ship -Vibramycin - EA/BE/CS/SSCC",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "ATTPFlag",
+						"value": "Success"
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Invalid",
+						"description": "test/mock/ATTP/Invalid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Validty",
+						"description": "test/mock/ATTP/Valid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Successful",
+						"description": "/test/mock/ATTP/EPCIS/Successful",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Failed",
+						"description": "/test/mock/ATTP/EPCIS/Failed",
+						"disabled": true
+					},
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2021-01-28T07:21:26Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2021-05-31T12:02:05.000Z </sbdh:CreationDateAndTime></sbdh:DocumentIdentification>\r\n\t\t\t\t\t\t</sbdh:StandardBusinessDocumentHeader>\r\n                    </EPCISHeader>\r\n                    <EPCISBody>\r\n                        <EventList>\r\n                            <ObjectEvent>\r\n                                <!--Commissioning of SGTIN's/PRODUCTS-->\r\n                                <eventTime>2021-05-31T12:02:11.000Z</eventTime>\r\n                                <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                                <epcList>\r\n                                    <epc>urn:epc:id:sgtin:xxxxxxxx.06987.7713101</epc>\r\n                                </epcList>\r\n                                <action>ADD</action>\r\n                                <bizStep>urn:epcglobal:cbv:bizstep:commissioning</bizStep>\r\n                                <disposition>urn:epcglobal:cbv:disp:active</disposition>\r\n                                <readPoint>\r\n                                    <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </readPoint>\r\n                                <bizLocation>\r\n                                    <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </bizLocation>\r\n                                <extension>\r\n                                    <ilmd>\r\n                                        <cbvmda:lotNumber>xxxxxxxxxxxxx</cbvmda:lotNumber>\r\n                                        <cbvmda:itemExpirationDate>2023-02-28</cbvmda:itemExpirationDate>\r\n                                    </ilmd>\r\n                                </extension>\r\n                                <tatmeen:lotManufacturingDate>2022-01-15</tatmeen:lotManufacturingDate>\r\n                                <tatmeen:manufacturingOrigin>I</tatmeen:manufacturingOrigin>\r\n                                <tatmeen:shipmentPermit>SHP/MP/48913/2020</tatmeen:shipmentPermit>\r\n                            </ObjectEvent>\r\n                            <ObjectEvent>\r\n                                <!-- COMMISSION EVENT FOR SHIPPER CASES -->\r\n                                <eventTime>2021-05-31T12:02:15.000Z</eventTime>\r\n                                <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                                <epcList>\r\n                                    <epc>urn:epc:id:sgtin:xxxxxxxx.06983.7713101</epc>\r\n                                </epcList>\r\n                                <action>ADD</action>\r\n                                <bizStep>urn:epcglobal:cbv:bizstep:commissioning</bizStep>\r\n                                <disposition>urn:epcglobal:cbv:disp:active</disposition>\r\n                                <readPoint>\r\n                                     <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </readPoint>\r\n                                <bizLocation>\r\n                                     <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </bizLocation>\r\n                                <extension>\r\n                                    <ilmd>\r\n                                        <cbvmda:lotNumber>LOTMA0104D</cbvmda:lotNumber>\r\n                                        <cbvmda:itemExpirationDate>2023-02-28</cbvmda:itemExpirationDate>\r\n                                    </ilmd>\r\n                                </extension>\r\n                                <tatmeen:lotManufacturingDate>2022-01-15</tatmeen:lotManufacturingDate>\r\n                                <tatmeen:manufacturingOrigin>I</tatmeen:manufacturingOrigin>\r\n                                <tatmeen:shipmentPermit>SHP/MP/48913/2020</tatmeen:shipmentPermit>\r\n                            </ObjectEvent>\r\n                            <ObjectEvent>\r\n                                <!--Commissioning of SSCC/PALLET-->\r\n                                <eventTime>2021-05-31T12:02:20.000Z</eventTime>\r\n                                <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                                <epcList>\r\n                                \r\n                                    <epc>urn:epc:id:sscc:xxxxxxxx.217248828</epc>\r\n                                </epcList>\r\n                                <action>ADD</action>\r\n                                <bizStep>urn:epcglobal:cbv:bizstep:commissioning</bizStep>\r\n                                <disposition>urn:epcglobal:cbv:disp:active</disposition>\r\n                                <readPoint>\r\n                                   <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </readPoint>\r\n                                <bizLocation>\r\n                                   <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </bizLocation>\r\n                            </ObjectEvent>\r\n                            <AggregationEvent>\r\n                                <!-- AGGREGATION OF EACHES INTO CASE-->\r\n                                <eventTime>2021-05-31T12:02:16.000Z</eventTime>\r\n                                <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                                <parentID>urn:epc:id:sgtin:xxxxxxxx.06983.7713101</parentID>\r\n                                <childEPCs>\r\n                                    <epc>urn:epc:id:sgtin:xxxxxxxx.06987.7713101</epc>\r\n                                </childEPCs>\r\n                                <action>ADD</action>\r\n                                <bizStep>urn:epcglobal:cbv:bizstep:packing</bizStep>\r\n                                <readPoint>\r\n                                    <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </readPoint>\r\n                                <bizLocation>\r\n                                    <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </bizLocation>\r\n                            </AggregationEvent>\r\n                            <AggregationEvent>\r\n                                <!-- AGGREGATION OF CASE INTO A PALLET-->\r\n                                <eventTime>2021-05-31T12:02:22.000Z</eventTime>\r\n                                <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                                <parentID>urn:epc:id:sscc:xxxxxxxx.217248828</parentID>\r\n                                <childEPCs>\r\n                                    <epc>urn:epc:id:sgtin:xxxxxxxx.06983.7713101</epc>\r\n                                </childEPCs>\r\n                                <action>ADD</action>\r\n                                <bizStep>urn:epcglobal:cbv:bizstep:packing</bizStep>\r\n                                <readPoint>\r\n                                    <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </readPoint>\r\n                                <bizLocation>\r\n                                  <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </bizLocation>\r\n                            </AggregationEvent>\r\n                            <ObjectEvent>\r\n                                <!-- Shipping Event -->\r\n                                <eventTime>2021-05-31T12:02:25.000Z</eventTime>\r\n                                <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                                <epcList>\r\n                                    <epc>urn:epc:id:sscc:xxxxxxxx.217248828</epc>\r\n                                </epcList>\r\n                                <action>OBSERVE</action>\r\n                                <bizStep>urn:epcglobal:cbv:bizstep:shipping</bizStep>\r\n                                <disposition>urn:epcglobal:cbv:disp:in_transit</disposition>\r\n                                <readPoint>\r\n                                    <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </readPoint>\r\n                                <bizLocation>\r\n                                    <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                                </bizLocation>\r\n                                <bizTransactionList>\r\n                                    <bizTransaction type=\"urn:epcglobal:cbv:btt:desadv\">urn:epcglobal:cbv:bt:xxxxxxxx00000:Ship_Ref_MA140</bizTransaction>\r\n                                </bizTransactionList>\r\n                                <extension>\r\n                                    <sourceList>\r\n                                        <source type=\"urn:epcglobal:cbv:sdt:owning_party\">urn:epc:id:sgln:xxxxxxxx.2244.0</source>\r\n                                    </sourceList>\r\n                                    <destinationList>\r\n                                        <destination type=\"urn:epcglobal:cbv:sdt:owning_party\">urn:epc:id:sgln:xxxxxxxx.0000.0</destination>\r\n                                        <destination type=\"urn:epcglobal:cbv:sdt:location\">urn:epc:id:sgln:xxxxxxxx.0000.0</destination>\r\n                                    </destinationList>\r\n                                </extension>\r\n                            </ObjectEvent>\r\n                        </EventList>\r\n                    </EPCISBody>\r\n                </epcis:EPCISDocument>\r\n            </soap:Body>\r\n        </soap:Envelope>\r\n",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/mah/B2B/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"mah",
+						"B2B",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Shipping",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "ATTPFlag",
+						"value": "Success"
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Invalid",
+						"description": "test/mock/ATTP/Invalid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Validty",
+						"description": "test/mock/ATTP/Valid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Successful",
+						"description": "/test/mock/ATTP/EPCIS/Successful",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Failed",
+						"description": "/test/mock/ATTP/EPCIS/Failed",
+						"disabled": true
+					},
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-31T12:00:00Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2023-02-28T12:00:00Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <!-- Shipping Event -->\r\n                        <eventTime>2023-03-16T05:30:13+04:00</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.217248828</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:shipping</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:in_transit</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                        </bizLocation>                       \r\n                        <extension>\r\n                            <sourceList>\r\n                                <source type=\"urn:epcglobal:cbv:sdt:owning_party\">urn:epc:id:sgln:xxxxxxxx.2244.0</source>\r\n                            </sourceList>\r\n                            <destinationList>\r\n                                <destination type=\"urn:epcglobal:cbv:sdt:owning_party\">urn:epc:id:sgln:xxxxxxxx.2244.0</destination>\r\n                                <destination type=\"urn:epcglobal:cbv:sdt:location\">urn:epc:id:sgln:xxxxxxxx.2288.0</destination>\r\n                            </destinationList>\r\n                        </extension>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://devapim.tatmeen.ae/v1/mah/B2B/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"devapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"mah",
+						"B2B",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Shipping Cancellation",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "ATTPFlag",
+						"value": "Success"
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Invalid",
+						"description": "test/mock/ATTP/Invalid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Validty",
+						"description": "test/mock/ATTP/Valid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Successful",
+						"description": "/test/mock/ATTP/EPCIS/Successful",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Failed",
+						"description": "/test/mock/ATTP/EPCIS/Failed",
+						"disabled": true
+					},
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-31T12:00:00Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2023-01-31T12:00:00Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2023-03-01T09:21:23Z</eventTime>\r\n                        <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.217248828</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:void_shipping</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:in_progress</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </bizLocation>\r\n                        <tatmeen:instanceIdentifierReference xmlns:tatmeen=\"https://tatmeen.ae/epcis/\">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</tatmeen:instanceIdentifierReference>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/mah/B2B/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"mah",
+						"B2B",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Pack",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-13T15:01:26Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2022-01-13T15:01:05.000Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <AggregationEvent>\r\n                        <!-- AGGREGATION OF 2 CASES INTO A PALLET SSCC-->\r\n                        <eventTime>2022-02-12T22:09:50.000Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <parentID>urn:epc:id:sscc:xxxxxxxxx.71859632</parentID>\r\n                        <childEPCs>\r\n                            <epc>urn:epc:id:sgtin:xxxxxxxx.0001.520701</epc>\r\n                            <epc>urn:epc:id:sgtin:xxxxxxxx.06983.1590301</epc>\r\n                        </childEPCs>\r\n                        <action>ADD</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:packing</bizStep>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </bizLocation>\r\n                    </AggregationEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/scp/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"scp",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Unpack",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2021-12-12T07:21:26Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2021-12-12T12:02:05.000Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                <AggregationEvent>\r\n                        <!-- DIS-AGGREGATION OF 1 CS FROM SSCC-->\r\n                        <eventTime>2022-04-02T10:55:32.000Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <parentID>urn:epc:id:sscc:xxxxxxxxx.54994661</parentID>\r\n                        <childEPCs>\r\n                            <epc>urn:epc:id:sgtin:xxxxxxxxx.0309.72018501</epc>\r\n                        </childEPCs>\r\n                        <action>DELETE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:unpacking</bizStep>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </bizLocation>\r\n                    </AggregationEvent>\r\n                    <AggregationEvent>\r\n                        <!-- DIS-AGGREGATION OF 1 BE FROM CASE-->\r\n                        <eventTime>2022-04-02T10:56:32.000Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <parentID>urn:epc:id:sgtin:xxxxxxxxx.0309.72018501</parentID>\r\n                        <childEPCs>\r\n                            <epc>urn:epc:id:sgtin:xxxxxxxxx.0312.72018501</epc>\r\n                        </childEPCs>\r\n                        <action>DELETE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:unpacking</bizStep>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </bizLocation>\r\n                    </AggregationEvent>\r\n                    <AggregationEvent>\r\n                        <!-- DIS-AGGREGATION OF 1 EA FROM BE-->\r\n                        <eventTime>2022-04-02T10:57:32.000Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <parentID>urn:epc:id:sgtin:xxxxxxxxx.0312.72018501</parentID>\r\n                        <childEPCs>\r\n                            <epc>urn:epc:id:sgtin:xxxxxxxxx.0302.72018501</epc>\r\n                        </childEPCs>\r\n                        <action>DELETE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:unpacking</bizStep>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </bizLocation>\r\n                    </AggregationEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/scp/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"scp",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Return Shipping",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2021-12-12T07:21:26Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <!--Mandatory. Instance Identifier upto 50 char (min 32) alphanumeric UUID, example: 2f1bdabdfaee464c87e1aeb7e586e6ab-->\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2021-12-12T12:02:05.000Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <!-- Shipping Event -->\r\n                        <eventTime>2022-03-28T16:58:11.000Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.123456789</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:shipping</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:returned</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.5555.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.5555.0</id>\r\n                        </bizLocation>\r\n                        <bizTransactionList>\r\n                            <bizTransaction type=\"urn:epcglobal:cbv:btt:desadv\">urn:epcglobal:cbv:bt:7765000500006:TSTOBD001</bizTransaction>\r\n                        </bizTransactionList>\r\n                        <extension>\r\n                            <sourceList>\r\n                                <source type=\"urn:epcglobal:cbv:sdt:owning_party\">urn:epc:id:sgln:xxxxxxxx.5555.0</source>\r\n                                <source type=\"urn:epcglobal:cbv:sdt:location\">urn:epc:id:sgln:xxxxxxxx.5555.0</source>\r\n                            </sourceList>\r\n                            <destinationList>\r\n                                <destination type=\"urn:epcglobal:cbv:sdt:owning_party\">urn:epc:id:sgln:xxxxxxxx.2244.0</destination>\r\n                                <destination type=\"urn:epcglobal:cbv:sdt:location\">urn:epc:id:sgln:xxxxxxxx.2244.0</destination>\r\n                            </destinationList>\r\n                        </extension>\r\n                        <tatmeen:reasonCode>R01</tatmeen:reasonCode>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/scp/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"scp",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Return Shipping Cancellation",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "ATTPFlag",
+						"value": "Success"
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Invalid",
+						"description": "test/mock/ATTP/Invalid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Validty",
+						"description": "test/mock/ATTP/Valid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Successful",
+						"description": "/test/mock/ATTP/EPCIS/Successful",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Failed",
+						"description": "/test/mock/ATTP/EPCIS/Failed",
+						"disabled": true
+					},
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-31T12:00:00Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2023-01-31T12:00:00Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2023-03-01T09:33:21Z</eventTime>\r\n                        <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.217248828</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:void_shipping</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:returned</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </bizLocation>\r\n                        <tatmeen:instanceIdentifierReference xmlns:tatmeen=\"https://tatmeen.ae/epcis/\">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</tatmeen:instanceIdentifierReference>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/mah/B2B/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"mah",
+						"B2B",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Recieve",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-10T18:51:26Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                         <!--Mandatory. Instance Identifier upto 50 char (min 32) alphanumeric UUID, example: 2f1bdabdfaee464c87e1aeb7e586e6ab-->\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2022-01-13T11:53:31.000Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2022-03-28T14:00:31.000Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.123456789</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:receiving</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:in_progress</disposition>\r\n                        <readPoint>\r\n                        <id>urn:epc:id:sgln:xxxxxxxx.5555.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.5555.0</id>\r\n                        </bizLocation>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/scp/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"scp",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Return Recieving",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2021-12-12T07:21:26Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <!--Mandatory. Instance Identifier upto 50 char (min 32) alphanumeric UUID, example: 2f1bdabdfaee464c87e1aeb7e586e6ab-->\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2021-12-12T12:02:05.000Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2022-03-28T18:59:11.000Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.123456789</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:receiving</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:returned</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.2244.0</id>\r\n                        </bizLocation>\r\n                        <bizTransactionList>\r\n                            <bizTransaction type=\"urn:epcglobal:cbv:btt:desadv\">urn:epcglobal:cbv:bt:xxxxxxxx00000:TSTOBD001</bizTransaction>\r\n                        </bizTransactionList>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/scp/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"scp",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Return Recieving Cancellation",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "ATTPFlag",
+						"value": "Success"
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Invalid",
+						"description": "test/mock/ATTP/Invalid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Validty",
+						"description": "test/mock/ATTP/Valid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Successful",
+						"description": "/test/mock/ATTP/EPCIS/Successful",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Failed",
+						"description": "/test/mock/ATTP/EPCIS/Failed",
+						"disabled": true
+					},
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-31T12:00:00Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2023-01-31T12:00:00Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2023-03-01T09:58:00Z</eventTime>\r\n                        <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.217248828</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:void_receiving</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:returned</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </bizLocation>\r\n                        <tatmeen:instanceIdentifierReference xmlns:tatmeen=\"https://tatmeen.ae/epcis/\">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</tatmeen:instanceIdentifierReference>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://qaapim.tatmeen.ae/v1/mah/B2B/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"qaapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"mah",
+						"B2B",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Sample",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-04T07:21:26Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.0</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <!--Mandatory. Instance Identifier upto 50 char (min 32) alphanumeric UUID, example: 2f1bdabdfaee464c87e1aeb7e586e6ab-->\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2020-05-05T10:04:17Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2022-03-29T13:02:20Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.123456789</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:inspecting</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:destroyed</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.xxxx.x</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.xxxx.x</id>\r\n                        </bizLocation>\r\n                        <tatmeen:reasonCode>XXX</tatmeen:reasonCode>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/scp/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"scp",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Damage",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-04T07:21:26Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.0</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <!--Mandatory. Instance Identifier upto 50 char (min 32) alphanumeric UUID, example: 2f1bdabdfaee464c87e1aeb7e586e6ab-->\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2020-05-05T10:04:17Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2022-03-29T10:03:20Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.123456789</epc>\r\n                        </epcList>\r\n                        <action>DELETE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:decommissioning</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:damaged</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.5555.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.5555.0</id>\r\n                        </bizLocation>\r\n                         <tatmeen:reasonCode>xxx</tatmeen:reasonCode>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/scp/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"scp",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Stolen",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-04T07:21:26Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.0</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <!--Mandatory. Instance Identifier upto 50 char (min 32) alphanumeric UUID, example: 2f1bdabdfaee464c87e1aeb7e586e6ab-->\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2020-05-05T10:04:17Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2022-03-29T11:03:20Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.123456789</epc>\r\n                        </epcList>\r\n                        <action>DELETE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:decommissioning</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:stolen</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.5555.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.5555.0</id>\r\n                        </bizLocation>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/scp/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"scp",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Exported",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-04T07:21:26Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.0</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <!--Mandatory. Instance Identifier upto 50 char (min 32) alphanumeric UUID, example: 2f1bdabdfaee464c87e1aeb7e586e6ab-->\r\n                         <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2020-05-05T10:04:17Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2022-04-02T11:03:20Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.809629190</epc>\r\n                        </epcList>\r\n                        <action>DELETE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:decommissioning</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:non_sellable_other</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </bizLocation>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/scp/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"scp",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Lost",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-04T07:21:26Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.0</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <!--Mandatory. Instance Identifier upto 50 char (min 32) alphanumeric UUID, example: 2f1bdabdfaee464c87e1aeb7e586e6ab-->\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2020-05-05T10:04:17Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2022-04-13T11:04:20Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.123456789</epc>\r\n                        </epcList>\r\n                        <action>DELETE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:decommissioning</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:inactive</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.5555.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.5555.0</id>\r\n                        </bizLocation>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/scp/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"scp",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Dispense SGTIN",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\"\r\n\t\t\t\t\t xmlns:tatmeen=\"http://tatmeen.ae/epcis/\"\r\n\t\t\t\t\t schemaVersion=\"1.2\" creationDate=\"2021-01-28T07:21:26Z\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <!-- Mandatory. Instance Identifier upto 50 char (min 32) alphanumeric UUID, example: 2f1bdabdfaee464c87e1aeb7e586e6ab -->\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2022-01-26T10:04:17Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2022-04-05T12:02:11.000Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sgtin:xxxxxxxx.xxxxx.9106801</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:retail_selling</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:retail_sold</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </bizLocation>\r\n                        <cbvmda:lotNumber>LOTMA3103A</cbvmda:lotNumber>\r\n                        <cbvmda:itemExpirationDate>2023-02-28</cbvmda:itemExpirationDate>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/Dispensation",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"Dispensation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Dispense SSCC",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "xxxxxxxxxxxxxxx"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\"\r\n\t\t\t\t\t xmlns:tatmeen=\"http://tatmeen.ae/epcis/\"\r\n\t\t\t\t\t schemaVersion=\"1.2\" creationDate=\"2021-01-28T07:21:26Z\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <!-- Mandatory. Instance Identifier upto 50 char (min 32) alphanumeric UUID, example: 2f1bdabdfaee464c87e1aeb7e586e6ab -->\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2022-01-26T10:04:17Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2022-04-05T12:02:11.000Z</eventTime>\r\n                        <eventTimeZoneOffset>+05:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxxx.809629190</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:retail_selling</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:retail_sold</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </bizLocation>\r\n                        <cbvmda:lotNumber>LOTMA3103A</cbvmda:lotNumber>\r\n                        <cbvmda:itemExpirationDate>2023-02-28</cbvmda:itemExpirationDate>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://stgapim.tatmeen.ae/v1/Dispensation",
+					"protocol": "https",
+					"host": [
+						"stgapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"Dispensation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Product Recall Initiation.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <ProductRecall>\r\n            <MessageHeader>\r\n                <SenderGLN>xxxxxxxxxxxxx</SenderGLN>\r\n                <ReceiverGLN>6297001273005</ReceiverGLN>\r\n                <InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxx</InstanceIdentifier>\r\n                <MessageCreationTime>2023-01-13T15:01:05.000Z</MessageCreationTime>\r\n            </MessageHeader>\r\n            <Body>\r\n                <Activity>1</Activity>\r\n                <Language>E</Language>\r\n                <GTIN>xxxxxxxxxxxxxx</GTIN>\r\n                <GLN>xxxxxxxxxxxxx</GLN>\r\n                <CircularRef>MOHAP/O/22/xxxx</CircularRef>\r\n                <OriginalInstanceIdentifier/>\r\n            </Body>\r\n        </ProductRecall>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://devapim.tatmeen.ae/v1/ProductRecall",
+					"protocol": "https",
+					"host": [
+						"devapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"ProductRecall"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Product Recall Initiation Cancellation.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <ProductRecall>\r\n            <MessageHeader>\r\n                <SenderGLN>xxxxxxxxxxxxx</SenderGLN>\r\n                <ReceiverGLN>xxxxxxxxxxxxx</ReceiverGLN>\r\n                <InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxx</InstanceIdentifier>\r\n                <MessageCreationTime>2023-01-13T15:01:05.000Z</MessageCreationTime>\r\n            </MessageHeader>\r\n            <Body>\r\n                <Activity>2</Activity>\r\n                <Language>E</Language>\r\n                <GTIN>xxxxxxxxxxxxxx</GTIN>\r\n                <GLN>xxxxxxxxxxxxx</GLN>\r\n                <CircularRef/>\r\n                <OriginalInstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxx</OriginalInstanceIdentifier>\r\n            </Body>\r\n        </ProductRecall>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://devapim.tatmeen.ae/v1/ProductRecall",
+					"protocol": "https",
+					"host": [
+						"devapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"ProductRecall"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Product Recall Completion",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <ProductRecall>\r\n            <MessageHeader>\r\n                <SenderGLN>xxxxxxxxxxxxx</SenderGLN>\r\n                <ReceiverGLN>xxxxxxxxxxxxx</ReceiverGLN>\r\n                <InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxx</InstanceIdentifier>\r\n                <MessageCreationTime>2023-01-13T15:01:05.000Z</MessageCreationTime>\r\n            </MessageHeader>\r\n            <Body>\r\n                <Activity>6</Activity>\r\n                <Language>E</Language>\r\n                <GTIN>xxxxxxxxxxxxxx</GTIN>\r\n                <GLN>xxxxxxxxxxxxx</GLN>\r\n                <CircularRef/>\r\n                <OriginalInstanceIdentifier/>\r\n            </Body>\r\n        </ProductRecall>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://devapim.tatmeen.ae/v1/ProductRecall",
+					"protocol": "https",
+					"host": [
+						"devapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"ProductRecall"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Destruction Initiation",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" schemaVersion=\"1.2\" creationDate=\"2021-05-07T07:53:26Z\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2023-04-24T07:53:26Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2023-04-24T07:53:26Z</eventTime>\r\n                        <eventTimeZoneOffset>+04:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxx.1263739851</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:tatmeen:cbv:bizstep:updating</bizStep>\r\n                        <disposition>urn:tatmeen:cbv:disp:destroy_init</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxxxx.00.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxxxx.00.0</id>\r\n                        </bizLocation>\r\n                        <tatmeen:destroy_sgtin>I</tatmeen:destroy_sgtin>\r\n                        <tatmeen:destroy_sscc>I</tatmeen:destroy_sscc>\r\n                        <tatmeen:reference>MOHAP/DNOTE/xx/xxxxxx</tatmeen:reference>\r\n                        <tatmeen:reasonCode>W01</tatmeen:reasonCode>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://devapim.tatmeen.ae/v1/mah/B2B/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"devapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"mah",
+						"B2B",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Destruction Initaition Cancellation",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "ATTPFlag",
+						"value": "Success"
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Invalid",
+						"description": "test/mock/ATTP/Invalid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Validty",
+						"description": "test/mock/ATTP/Valid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Successful",
+						"description": "/test/mock/ATTP/EPCIS/Successful",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Failed",
+						"description": "/test/mock/ATTP/EPCIS/Failed",
+						"disabled": true
+					},
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-31T12:00:00Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">6297001273005</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2023-01-31T12:00:00Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2023-03-01T10:36:04Z</eventTime>\r\n                        <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sgtin:xxxxxxxx.06987.7713101</epc>\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:updating</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:destroy_init_cancel</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </bizLocation>\r\n                        <tatmeen:instanceIdentifierReference xmlns:tatmeen=\"https://tatmeen.ae/epcis/\">96b15e7b-7264-443a-82d7-e0820a8d7ff2</tatmeen:instanceIdentifierReference>\r\n                        <tatmeen:destroy_sgtin xmlns:tatmeen=\"https://tatmeen.ae/epcis/\">C</tatmeen:destroy_sgtin>\r\n                        <tatmeen:destroy_sscc xmlns:tatmeen=\"https://tatmeen.ae/epcis/\">C</tatmeen:destroy_sscc>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://qaapim.tatmeen.ae/v1/mah/B2B/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"qaapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"mah",
+						"B2B",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS  - Destruction Completion",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" schemaVersion=\"1.2\" creationDate=\"2021-05-07T07:53:26Z\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">6297001273005</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2023-04-24T07:53:26Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2023-04-24T07:53:26Z</eventTime>\r\n                        <eventTimeZoneOffset>+04:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <epc>urn:epc:id:sscc:xxxxxxx.1263739851</epc>\r\n                        </epcList>\r\n                        <action>DELETE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:destroying</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:destroyed</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxxxx.00.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id>urn:epc:id:sgln:xxxxxxxxxx.00.0</id>\r\n                        </bizLocation>\r\n                        <tatmeen:destroy_sgtin>X</tatmeen:destroy_sgtin>\r\n                        <tatmeen:destroy_sscc>X</tatmeen:destroy_sscc>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://devapim.tatmeen.ae/v1/mah/B2B/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"devapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"mah",
+						"B2B",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Batch Recall Initiation",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" schemaVersion=\"1.2\" creationDate=\"2021-05-07T07:53:26Z\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">6297001273005</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2023-04-24T07:53:26Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2023-04-24T07:53:26Z}</eventTime>\r\n                        <eventTimeZoneOffset>+04:30</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <!-- Mandatory field -->\r\n                            <epc/>\r\n                            <!-- Mandatory field -->\r\n                        \r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:updating</bizStep>\r\n                        <disposition>urn:tatmeen:cbv:disp:recall_init</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxxxx.00.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id></id>\r\n                        </bizLocation>\r\n                        <extension>\r\n                            <quantityList>\r\n                                <quantityElement>\r\n                                    <epcClass>urn:epc:class:lgtin:xxxxxxxxx.050.PR11452</epcClass>\r\n                                    <!-- Omit the <quantity></quantity> element as this event refers to the whole LOT -->\r\n                                    <!-- Mandatory field -->\r\n                                </quantityElement>\r\n                            </quantityList>\r\n                        </extension>\r\n                        <tatmeen:recalled>I</tatmeen:recalled>\r\n                        <tatmeen:reference>MOHAP/O/xx/xxxxxx</tatmeen:reference>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://devapim.tatmeen.ae/v1/mah/B2B/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"devapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"mah",
+						"B2B",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Batch Recall Initiation Cancellation",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "ATTPFlag",
+						"value": "Success"
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Invalid",
+						"description": "test/mock/ATTP/Invalid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_URL",
+						"value": "/test/mock/ATTP/Validty",
+						"description": "test/mock/ATTP/Valid",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Successful",
+						"description": "/test/mock/ATTP/EPCIS/Successful",
+						"disabled": true
+					},
+					{
+						"key": "POSTMAN_MOCK_ATTP_EPCIS_URL",
+						"value": "/test/mock/ATTP/EPCIS/Failed",
+						"description": "/test/mock/ATTP/EPCIS/Failed",
+						"disabled": true
+					},
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument schemaVersion=\"1.2\" creationDate=\"2022-01-31T12:00:00Z\" xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">6297001273005</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2023-01-31T12:00:00Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2023-03-01T11:32:25Z</eventTime>\r\n                        <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>\r\n                        <epcList>\r\n                            <!-- Mandatory field -->\r\n                            <epc/>\r\n                            <!-- Mandatory field -->                                     \r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:updating</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:recall_init_cancel</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxx.0000.0</id>\r\n                        </readPoint>\r\n                        <extension>\r\n                            <quantityList>\r\n                                <quantityElement>\r\n                                    <epcClass>urn:epc:class:lgtin:xxxxxxxxx.050.PR11452</epcClass>\r\n                                </quantityElement>\r\n                            </quantityList>\r\n                        </extension>\r\n                        <tatmeen:recalled xmlns:tatmeen=\"https://tatmeen.ae/epcis/\">C</tatmeen:recalled>\r\n                        <tatmeen:instanceIdentifierReference xmlns:tatmeen=\"https://tatmeen.ae/epcis/\">907cd6bc-d050-437c-a8e8-37618e0831f9</tatmeen:instanceIdentifierReference>\r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://qaapim.tatmeen.ae/v1/mah/B2B/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"qaapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"mah",
+						"B2B",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SCP Logistics_Send EPCIS - Batch Recall Completion",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n    <soap:Header/>\r\n    <soap:Body>\r\n        <epcis:EPCISDocument xmlns:sbdh=\"http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader\" xmlns:epcis=\"urn:epcglobal:epcis:xsd:1\" xmlns:cbvmda=\"urn:epcglobal:cbv:mda\" schemaVersion=\"1.2\" creationDate=\"2021-05-07T07:53:26Z\" xmlns:tatmeen=\"http://tatmeen.ae/epcis/\">\r\n            <EPCISHeader>\r\n                <sbdh:StandardBusinessDocumentHeader>\r\n                    <sbdh:HeaderVersion>1.3</sbdh:HeaderVersion>\r\n                    <sbdh:Sender>\r\n                        <sbdh:Identifier Authority=\"GS1\">xxxxxxxxxxxxx</sbdh:Identifier>\r\n                    </sbdh:Sender>\r\n                    <sbdh:Receiver>\r\n                        <sbdh:Identifier Authority=\"GS1\">6297001273005</sbdh:Identifier>\r\n                    </sbdh:Receiver>\r\n                    <sbdh:DocumentIdentification>\r\n                        <sbdh:Standard>EPCGlobal</sbdh:Standard>\r\n                        <sbdh:TypeVersion>1.0</sbdh:TypeVersion>\r\n                        <sbdh:InstanceIdentifier>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</sbdh:InstanceIdentifier>\r\n                        <sbdh:Type>Events</sbdh:Type>\r\n                        <sbdh:CreationDateAndTime>2023-04-24T07:53:26Z</sbdh:CreationDateAndTime>\r\n                    </sbdh:DocumentIdentification>\r\n                </sbdh:StandardBusinessDocumentHeader>\r\n            </EPCISHeader>\r\n            <EPCISBody>\r\n                <EventList>\r\n                    <ObjectEvent>\r\n                        <eventTime>2023-04-24T07:53:26Z</eventTime>\r\n                        <eventTimeZoneOffset>+04:30</eventTimeZoneOffset>\r\n                        <epcList> <!-- Mandatory field -->\r\n                            <epc/> <!-- Mandatory field -->\r\n                        </epcList>\r\n                        <action>OBSERVE</action>\r\n                        <bizStep>urn:epcglobal:cbv:bizstep:updating</bizStep>\r\n                        <disposition>urn:epcglobal:cbv:disp:recalled</disposition>\r\n                        <readPoint>\r\n                            <id>urn:epc:id:sgln:xxxxxxxxxx.00.0</id>\r\n                        </readPoint>\r\n                        <bizLocation>\r\n                            <id></id>\r\n                        </bizLocation>\r\n                        <extension>\r\n                            <quantityList>\r\n                                <quantityElement>\r\n                                    <epcClass>urn:epc:class:lgtin:xxxxxxxxxx.050.PR11452</epcClass>\r\n                                    <!-- Omit the <quantity></quantity> element as this event refers to the whole LOT -->\r\n                                </quantityElement>\r\n                            </quantityList>\r\n                        </extension>   \r\n                    <tatmeen:recalled>X</tatmeen:recalled>                                             \r\n                    </ObjectEvent>\r\n                </EventList>\r\n            </EPCISBody>\r\n        </epcis:EPCISDocument>\r\n    </soap:Body>\r\n</soap:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://devapim.tatmeen.ae/v1/mah/B2B/SendEPCIS",
+					"protocol": "https",
+					"host": [
+						"devapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"mah",
+						"B2B",
+						"SendEPCIS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product Verification",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "apikey",
+						"value": "{{apikey}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<env:Envelope xmlns:env=\"http://www.w3.org/2003/05/soap-envelope\">\r\n    <env:Header/>\r\n    <env:Body>\r\n        <ProductVerificationRequest>\r\n            <GeoLatitude/>\r\n            <GeoLongitude/>\r\n            <Language>E</Language>\r\n            <ProductID>urn:epc:id:sgtin:xxx.xxx.xxx</ProductID>\r\n        </ProductVerificationRequest>\r\n    </env:Body>\r\n</env:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://devapim.tatmeen.ae/v1/VerifyProduct",
+					"protocol": "https",
+					"host": [
+						"devapim",
+						"tatmeen",
+						"ae"
+					],
+					"path": [
+						"v1",
+						"VerifyProduct"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
