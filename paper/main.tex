@@ -546,14 +546,19 @@ scenarios, AUC of 0.516 (near random), Spearman $\rho = 0.312$ (not
 significant), and Shannon entropy of 0.0 bits (all scores are
 identically 1.0). Two structural failures explain this result.
 
-\textit{Zadeh's paradox.} When four evidence types strongly support
-safety and an active recall indicates compromise, Dempster's rule
-normalizes away the conflict ($K \approx 0.99$) and reports
-$BetP(safe) = 0.997$ for a recalled drug. The SL algebra correctly
-produces near-zero integrity through the dogmatic override property of
-cumulative fusion. A pharmaceutical recall is a regulatory authority
-determination, not a noisy sensor reading, and D-S has no mechanism to
-encode this distinction.
+\textit{Zadeh's paradox.} Consider F2 (severe temperature excursion),
+where 50\% of cold chain readings exceed the maximum by 17\textdegree C.
+Four evidence types (serialization, shelf life, documentation, recall
+status) strongly support safety, producing mass functions with
+$m(safe) > 0.6$. The cold chain mass function assigns substantial mass
+to $m(compromised)$, but Dempster's rule normalizes away the resulting
+conflict: the four agreeing sources overwhelm the single dissenting
+source, and the pignistic probability remains $BetP(safe) = 1.000$
+(Table~\ref{tab:main_results}). The SL algebra correctly assigns
+$P(\omega) = 0.332$ to the same scenario because cumulative fusion
+preserves per-dimension disbelief rather than normalizing it away, and
+the deduction operator propagates that disbelief causally through the
+chain.
 
 \textit{Evidence dilution.} With 25 mass functions combined via
 Dempster's rule (5 evidence types at 5 nodes), $m(\Theta)$ approaches
@@ -563,21 +568,21 @@ structural: Dempster's rule is designed for combining a small number of
 independent sources, not for multi-dimensional, multi-node supply chain
 assessment.
 
-\textit{On hierarchical D-S.} A reviewer might note that our B4
+\textit{On hierarchical combination.} One might note that our B4
 implementation combines all 25 mass functions in a flat pool, and that a
-hierarchical architecture (fusing 5 evidence types per node locally,
-then combining 5 node-level masses across the chain) would reduce
-dilution. We observe two points. First, Zadeh's paradox is a
-within-node phenomenon: it occurs when combining just 5 mass functions
-at a single node where recall conflicts with four clean evidence types.
-Hierarchical combination does not resolve this. Second, even with
-hierarchical combination, the cross-node step still uses Dempster's
-rule, which treats node opinions as independent evidence and has no
-mechanism for causal propagation. Our deduction operator
-(J\o sang \S12.6) encodes the physical constraint that upstream
+hierarchical architecture (fusing the 5 evidence types locally at each
+node, then combining 5 node-level masses across the chain) would reduce
+dilution. We observe two points. First, the conflict-normalization
+problem demonstrated by F2 is a within-node phenomenon: it occurs when
+combining just 5 mass functions at a single node where one evidence type
+conflicts with four others. Hierarchical combination does not resolve
+this. Second, even with hierarchical combination, the cross-node step
+still uses Dempster's rule, which treats node opinions as independent
+evidence and has no mechanism for causal propagation. Our deduction
+operator (J\o sang \S12.6) encodes the physical constraint that upstream
 compromise implies downstream compromise through causal conditionals.
-Dempster's rule has no equivalent operator, regardless of whether
-combination is flat or hierarchical.
+Dempster's rule has no equivalent, regardless of whether combination is
+flat or hierarchical.
 
 %===================================================================
 \section{Discussion}
