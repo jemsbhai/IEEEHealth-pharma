@@ -1,0 +1,622 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\graphicspath{{../}{./}}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{subcaption}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Drug Integrity Algebra: Quantifying End-to-End\\Pharmaceutical Safety with Subjective Logic}
+
+\author{\IEEEauthorblockN{Muntaser Syed\IEEEauthorrefmark{1}, [Collaborator]\IEEEauthorrefmark{2}, Marius Silaghi\IEEEauthorrefmark{1}}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Florida Institute of Technology, Melbourne, FL, USA}
+\IEEEauthorblockA{\IEEEauthorrefmark{2}[Affiliation], United Arab Emirates}
+}
+
+\maketitle
+
+\begin{abstract}
+Pharmaceutical supply chains protect patient safety through serialization
+and cold chain monitoring, yet current systems like the UAE's Tatmeen,
+the US Drug Supply Chain Security Act, and the EU Falsified Medicines
+Directive rely on binary pass/fail thresholds that discard continuous
+evidence, ignore measurement uncertainty, and evaluate each node in
+isolation. We present a drug integrity algebra grounded in J\o sang's
+Subjective Logic that maps five heterogeneous evidence types at each
+supply chain node to opinions with explicit belief, disbelief, and
+uncertainty components, fuses them within nodes via cumulative fusion,
+and propagates them across a directed acyclic graph using the deduction
+operator with causal conditionals. In Monte Carlo evaluation across
+seven failure scenarios, three pharmaceutical product categories, and
+five comparison methods (including a Dempster-Shafer baseline), the
+algebra achieves perfect detection (DR=1.000) and localization
+(LA=1.000) while providing graded severity scores that correctly rank
+failure severity (Spearman $\rho$=0.976, $p$=3.3$\times$10$^{-5}$) -
+the only method to do so with statistical significance. The algebra
+detects 1\% counterfeit infiltration where weighted scoring requires
+10\% and Bayesian inference requires over 5\%. Ablation analysis
+identifies per-dimension opinion monitoring as the single critical
+architectural component, and the Dempster-Shafer baseline demonstrates
+both Zadeh's paradox and evidence dilution, producing zero bits of
+Shannon entropy across all failure conditions.
+\end{abstract}
+
+\begin{IEEEkeywords}
+subjective logic, pharmaceutical supply chain, drug integrity,
+uncertainty quantification, evidence fusion, cold chain monitoring
+\end{IEEEkeywords}
+
+%===================================================================
+\section{Introduction}
+%===================================================================
+
+The World Health Organization estimates that one in ten medical products
+circulating in low- and middle-income countries is substandard or
+falsified, with global expenditure on such products reaching
+US\$30.5 billion annually~\cite{who2024sf}. In 2022 alone, contaminated
+cough syrups caused the deaths of over 300 children across the Gambia,
+Indonesia, and Uzbekistan~\cite{who2023cough}. Regulatory responses
+have produced national track-and-trace mandates: the UAE's Tatmeen
+platform (Ministerial Decree No.~73/2021)~\cite{tatmeen_decree73},
+the US Drug Supply Chain Security Act (DSCSA)~\cite{dscsa2013}, and the
+EU Falsified Medicines Directive~\cite{eufmd2011}. These systems
+require serialization of individual packages using GS1 DataMatrix
+codes and verification at each custody transfer.
+
+All three systems share a fundamental architectural limitation: they
+operate on binary pass/fail thresholds at each supply chain node
+independently. This design has three consequences that directly affect
+patient safety.
+
+First, thresholds destroy continuous evidence. A temperature reading of
+7.9\textdegree C and one of 2.1\textdegree C both produce ``pass'' on a
+2-8\textdegree C product, but carry different risk signals. A facility
+scanning 100\% of packages and one scanning 10\% generate identical
+``compliant'' status if all scanned items pass, despite an order-of-magnitude
+difference in verification confidence.
+
+Second, no existing system quantifies the uncertainty in its own
+assessments. When a pharmacy receives a batch rated ``compliant,'' the
+system provides no indication of whether that rating rests on thorough
+evidence or sparse observations.
+
+Third, each node reports independently. There is no mechanism to compose
+evidence across the supply chain into an end-to-end integrity assessment
+at the point of dispensing.
+
+We address all three limitations with a \textit{drug integrity algebra}
+grounded in J\o sang's Subjective Logic (SL)~\cite{josang2016}. The
+algebra defines five evidence-to-opinion formation functions that map
+serialization scans, cold chain readings, shelf life status,
+documentation completeness, and recall status to SL opinions with
+explicit belief, disbelief, and uncertainty. These opinions fuse within
+each node via cumulative fusion and propagate across the supply chain
+directed acyclic graph (DAG) using the deduction operator with causal
+conditionals that reflect the physical irreversibility of drug
+compromise.
+
+Our contributions are:
+\begin{enumerate}
+\item A formal mapping of five pharmaceutical evidence types to SL
+      opinions, using only established operators from J\o sang's
+      textbook (no ad-hoc formulas).
+\item A supply chain DAG model grounded in the UAE Tatmeen system's
+      EPCIS event architecture and Ministerial Decree No.~73/2021.
+\item A chain-level integrity algebra using deduction-based cross-node
+      propagation, justified by the irreversibility of drug compromise.
+\item Empirical evaluation across seven failure scenarios, three product
+      categories, and five comparison methods including a
+      Dempster-Shafer baseline.
+\item Identification of per-dimension opinion monitoring as the critical
+      architectural component through systematic ablation.
+\end{enumerate}
+
+%===================================================================
+\section{Background and Related Work}
+%===================================================================
+
+\subsection{Track-and-Trace Systems}
+
+Pharmaceutical serialization mandates require unique identifiers on
+each saleable unit and verification at custody transfers. The UAE's
+Tatmeen system, operated by EVOTEQ under the Ministry of Health and
+Prevention, mandates four GS1 DataMatrix elements per package: GTIN,
+batch number, expiry date, and serial number (Article~5, Ministerial
+Decree No.~73/2021)~\cite{tatmeen_decree73}. Both sender and receiver
+must report each custody transfer as paired EPCIS events, and dispensing
+verification at pharmacies is synchronous~\cite{tatmeen_dispenser_v3}.
+The DSCSA~\cite{dscsa2013} and EU FMD~\cite{eufmd2011} impose similar
+requirements with jurisdiction-specific variations. All three systems
+produce binary verification outcomes. Our B1 baseline mirrors this
+approach.
+
+\subsection{Blockchain for Pharmaceutical Supply Chain}
+
+Blockchain-based systems such as MediLedger~\cite{mediledger} and
+TraceLink provide tamper-proof audit trails for custody transfer
+records. Bocek et al.~\cite{bocek2017} integrated IoT temperature
+sensors with Ethereum smart contracts for pharmaceutical cold chain
+monitoring. These systems ensure the \textit{integrity of records} but
+do not reason about what those records mean for drug safety. A
+blockchain faithfully recording that 5\% of scan verifications failed
+does not produce a risk assessment. Our algebra is complementary:
+blockchain provides the data infrastructure, and the algebra reasons
+over that data.
+
+\subsection{IoT Cold Chain Monitoring}
+
+Real-time temperature monitoring with IoT sensors and machine learning
+anomaly detection has received substantial attention~\cite{coldchain_iot2026}.
+LSTM and ANN architectures can detect temperature excursions with
+reported prevention rates exceeding 82\% in controlled
+settings~\cite{patsnap2026}. These approaches monitor a single evidence
+dimension (temperature), require training data, and do not produce
+calibrated uncertainty estimates or compose assessments across supply
+chain nodes. Our cold chain evidence type is one of five dimensions in
+the algebra.
+
+\subsection{Dempster-Shafer Theory}
+
+Dempster-Shafer theory (DST)~\cite{shafer1976} provides a framework for
+combining evidence via mass functions and Dempster's rule of
+combination. DST has been applied to fraud detection~\cite{ds_fraud2021}
+and supplier selection~\cite{ds_supplier2017}. SL is sometimes
+characterized as extending DST to address known
+limitations~\cite{josang2016}: DST has no trust discounting operator for
+propagating opinions through networks, is subject to Zadeh's
+paradox~\cite{zadeh1984} when evidence sources conflict, lacks a base
+rate for meaningful probability projection, and has no temporal decay
+mechanism. Our evaluation includes a DST baseline (B4) that
+demonstrates both Zadeh's paradox and evidence dilution in the
+pharmaceutical domain.
+
+\subsection{Subjective Logic}
+
+J\o sang's Subjective Logic~\cite{josang2016} extends probabilistic
+logic with explicit uncertainty representation. An SL opinion
+$\omega = (b, d, u, a)$ decomposes confidence into belief $b$,
+disbelief $d$, and uncertainty $u$ (with $b + d + u = 1$), plus a base
+rate $a$ for probability projection $P(\omega) = b + a \cdot u$. SL
+has been applied to trust management in mobile ad hoc
+networks~\cite{sl_manet2017}, vehicular networks~\cite{sl_vanet2013}, and
+e-commerce~\cite{josang2016}. Multi-source fusion operators have been
+formalized by J\o sang et al.~\cite{sl_multisource2018}. To our
+knowledge, no prior work has applied SL to pharmaceutical supply chain
+integrity assessment. This paper is the first to do so.
+
+%===================================================================
+\section{Drug Integrity Algebra}
+%===================================================================
+
+\subsection{Supply Chain DAG}
+
+\textbf{Definition 1.} A pharmaceutical supply chain is a directed
+acyclic graph $G = (N, E)$ where $N = \{n_1, \ldots, n_k\}$ are custody
+nodes and $E \subseteq N \times N$ are custody transfer edges. Each node
+$n_i$ has type $\tau(n_i) \in \{\textsc{manufacturer}, \textsc{importer},
+\textsc{warehouse}, \textsc{distributor}, \textsc{pharmacy}\}$, and each
+edge carries an EPCIS transfer record. A product path
+$\pi = (n_1, \ldots, n_m)$ traces a batch from manufacture to
+dispensing.
+
+Our evaluation uses a five-node path grounded in the Tatmeen
+architecture: manufacturer (overseas), importer (UAE), central warehouse,
+distributor, and pharmacy.
+
+\subsection{Evidence Taxonomy}
+
+\textbf{Definition 2.} At each node $n_i$, five evidence types are
+observable:
+\begin{itemize}
+\item \textbf{E1 - Serialization:} scan results per package (success,
+      failure, unscanned).
+\item \textbf{E2 - Cold chain:} temperature time-series with target
+      range and sensor coverage.
+\item \textbf{E3 - Shelf life:} remaining days relative to regulatory
+      minimum.
+\item \textbf{E4 - Documentation:} presence of required and critical
+      documents (Certificate of Analysis, GMP Certificate, etc.).
+\item \textbf{E5 - Recall status:} whether the batch is under active
+      recall.
+\end{itemize}
+
+\subsection{Formation Functions}
+
+\textbf{Definition 3.} Each evidence type maps to an SL opinion via a
+formation function $\varphi_i$ using established SL operators.
+
+\textbf{F1 (Serialization).} Given $s$ successful scans, $f$ failures,
+and $N$ total packages, we apply \texttt{Opinion.from\_evidence}
+(J\o sang \S3.2) with $r = s$, $w = f$, and prior weight
+$W = \kappa \cdot (N - s - f) / N$ to encode scan coverage as
+non-evidence mass, then apply trust discounting (J\o sang \S14.3) by
+the scan coverage ratio.
+
+\textbf{F2 (Cold chain).} Temperature readings produce positive evidence
+(in-range readings) and negative evidence (excursions weighted by
+severity), with sensor coverage modeled as a trust discount on the
+resulting opinion.
+
+\textbf{F3 (Shelf life).} The ratio $r = \text{remaining}/\text{minimum}$
+maps to opinion via a piecewise linear function: at $r = 1.0$ (the
+regulatory threshold), the opinion is vacuous, reflecting maximum
+decision-relevant uncertainty.
+
+\textbf{F4 (Documentation).} Document completeness maps to belief, with
+critical documents (Certificate of Analysis, GMP Certificate) weighted
+three times higher than routine documents.
+
+\textbf{F5 (Recall).} An active recall produces a dogmatic disbelief
+opinion $\omega = (0, 1, 0, a)$ that overrides all other evidence in
+fusion. No recall produces a vacuous opinion, correctly encoding that
+the absence of a recall is not evidence of safety.
+
+All formation functions use only \texttt{Opinion.from\_evidence}
+(\S3.2) and \texttt{trust\_discount} (\S14.3) from J\o sang's
+textbook. No ad-hoc formulas are introduced.
+
+\subsection{Within-Node Fusion}
+
+\textbf{Definition 4.} At each node $n_i$, the five evidence opinions
+fuse into a node-level integrity opinion via cumulative fusion
+(J\o sang \S12.3):
+
+\begin{equation}
+\omega_{node}(n_i) = \bigoplus_{j=1}^{5} \varphi_j(\mathbf{e}_j^{(i)})
+\label{eq:node_fusion}
+\end{equation}
+
+\noindent where $\bigoplus$ denotes cumulative fusion and
+$\mathbf{e}_j^{(i)}$ is the evidence of type $j$ at node $i$.
+Product-specific evidence weights are implemented by adjusting the
+Dirichlet prior weight $W$ in each formation function, which controls
+the opinion's dogmaticism in fusion without violating the
+$b + d + u = 1$ constraint.
+
+\subsection{Cross-Node Propagation}
+
+\textbf{Definition 5.} Along a product path $\pi = (n_1, \ldots, n_m)$,
+chain-level integrity is computed via the deduction operator (J\o sang
+\S12.6) with causal conditionals:
+
+\begin{equation}
+\omega_{chain} = \omega_{n_1} \circledcirc (\omega_{n_2} \circledcirc (\cdots \circledcirc \omega_{n_m}))
+\label{eq:chain_propagation}
+\end{equation}
+
+\noindent where $\circledcirc$ denotes deduction with conditional
+opinions $\omega_{Y|x} = \omega_{remaining}$ (if upstream is safe) and
+$\omega_{Y|\overline{x}} = (0, 1, 0, 0.01)$ (if upstream is
+compromised).
+
+The choice of deduction over trust discounting (\S14.3) is semantically
+motivated. Trust discounting maps upstream disbelief to downstream
+\textit{uncertainty}, which would mean ``we are uncertain about
+downstream integrity because we distrust the upstream node.'' But drug
+compromise is physically irreversible: a contaminated batch arriving at
+a downstream node remains contaminated regardless of that node's
+processes. Deduction with the conditional
+$\omega_{Y|\overline{x}} = (0, 1, 0, 0.01)$ correctly maps upstream
+disbelief to downstream \textit{disbelief}, preserving the causal
+semantics.
+
+\subsection{Properties}
+
+The algebra satisfies five properties derived from SL's formal
+guarantees.
+\textbf{P1 (Monotonicity):} Additional positive evidence can only
+increase chain belief or decrease uncertainty.
+\textbf{P2 (Compositionality):} Chain opinion decomposes into
+independently modifiable node opinions.
+\textbf{P3 (Sensitivity):} Chain opinion responds proportionally to
+evidence strength, with no threshold discontinuities.
+\textbf{P4 (Uncertainty conservation):} Missing evidence produces
+quantifiable uncertainty rather than silent pass or fail.
+\textbf{P5 (Override):} Active recall produces chain-level disbelief
+regardless of all other evidence.
+
+%===================================================================
+\section{Evaluation}
+%===================================================================
+
+\subsection{Setup}
+
+We simulate a five-node supply chain path (manufacturer, importer,
+central warehouse, distributor, pharmacy) grounded in the Tatmeen
+architecture. Three product categories are evaluated: insulin
+(refrigerated biologic, 2-8\textdegree C), amoxicillin tablets
+(controlled room temperature, 15-25\textdegree C), and mRNA-based
+therapy (frozen, -15 to -25\textdegree C). Normal operation generates
+95-100\% scan rates with less than 0.1\% failure, Gaussian temperature
+noise ($\sigma = 1$\textdegree C), and complete documentation. Seven
+failure scenarios (Table~\ref{tab:scenarios}) inject specific
+compromises at designated nodes. Each configuration runs 1000 Monte
+Carlo trials (seed 42, reproducible). Detection thresholds are
+adaptively calibrated at the 1st percentile of each method's normal
+distribution, ensuring a matched 1\% false positive rate across
+methods.
+
+\begin{table}[t]
+\centering
+\caption{Failure Scenarios}
+\label{tab:scenarios}
+\footnotesize
+\begin{tabular}{@{}lll@{}}
+\toprule
+ID & Description & Target Node \\
+\midrule
+F1 & Mild temp excursion (+2\textdegree C, 5\% readings) & Warehouse \\
+F2 & Severe temp excursion (+17\textdegree C, 50\%) & Warehouse \\
+F3 & Counterfeit insertion (5\% packages) & Importer \\
+F4 & Scan omission (20\% scan rate) & Distributor \\
+F5 & Expired batch (50\% of regulatory min) & Distributor \\
+F6 & Missing Certificate of Analysis & Importer \\
+F7 & Cascading (F1 at warehouse + F4 at distributor) & Both \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Comparison Methods}
+
+Five methods are compared: the proposed SL algebra, a rule-based
+threshold system (B1, mirroring Tatmeen), a weighted scoring approach
+(B2), Bayesian probabilistic fusion (B3), and Dempster-Shafer evidence
+theory (B4). B1 applies binary pass/fail checks per evidence type with
+AND-aggregation across the chain. B2 computes continuous scores per type
+with weighted averaging per node and weakest-link across the chain. B3
+uses Beta-binomial conjugate posteriors per evidence type with
+product-of-probabilities across nodes. B4 maps each evidence type to a
+mass function over $\{safe, compromised\}$, combines within-node via
+Dempster's rule, and combines cross-node via iterated Dempster's rule,
+using the pignistic probability as its integrity score.
+
+\subsection{Detection and Severity}
+
+Table~\ref{tab:main_results} presents detection rates and severity
+scores. The SL algebra achieves DR=1.000 and LA=1.000 across all 21
+scenario-product combinations, the only method to do so.
+
+\begin{table}[t]
+\centering
+\caption{Detection Rate and Mean Integrity Score (Insulin)}
+\label{tab:main_results}
+\footnotesize
+\begin{tabular}{@{}l ccccc@{}}
+\toprule
+& SL & B1 & B2 & B3 & B4 \\
+\midrule
+\multicolumn{6}{@{}l}{\textit{Detection Rate}} \\
+F1 mild    & 1.000 & 1.000 & 0.892 & 0.739 & 0.043 \\
+F2 severe  & 1.000 & 1.000 & 1.000 & 1.000 & 0.129 \\
+F3 counterfeit & 1.000 & 1.000 & 0.000 & 0.461 & 0.013 \\
+F4 scan    & 1.000 & 1.000 & 1.000 & 1.000 & 0.010 \\
+F5 expired & 1.000 & 1.000 & 1.000 & 1.000 & 0.000 \\
+F6 CoA     & 1.000 & 1.000 & 1.000 & 1.000 & 0.048 \\
+F7 cascade & 1.000 & 1.000 & 1.000 & 1.000 & 0.060 \\
+\midrule
+\multicolumn{6}{@{}l}{\textit{Mean Integrity Score}} \\
+Normal     & 0.997 & 1.000 & 0.990 & 0.842 & 1.000 \\
+F1 mild    & 0.951 & 0.000 & 0.981 & 0.800 & 1.000 \\
+F2 severe  & 0.332 & 0.000 & 0.869 & 0.425 & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+B2 completely misses 5\% counterfeit infiltration (F3, DR=0.000) because
+its serialization score of $0.95 \times 1.0 = 0.95$ remains above its
+adaptive threshold. B3 detects F3 at only 46\% because its
+Beta-binomial posterior for 5\% counterfeiting sits near the calibrated
+threshold. B1 detects everything but outputs 0.0 for all failures
+regardless of severity, providing no information to the dispensing
+pharmacist beyond a binary flag.
+
+The severity scores in Table~\ref{tab:main_results} (bottom) reveal the
+key qualitative difference. The SL algebra assigns $P(\omega) = 0.951$
+to a mild excursion and $P(\omega) = 0.332$ to a severe one, correctly
+reflecting their different risk profiles. B1 assigns 0.0 to both. B4
+assigns 1.000 to both, failing to register any failure at all.
+
+Fig.~\ref{fig:severity} illustrates this severity discrimination, and
+Fig.~\ref{fig:detection} shows detection rates across all scenarios.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig2_severity_discrimination.pdf}
+\caption{Severity discrimination for insulin. The SL algebra correctly
+grades mild ($P(\omega) = 0.95$) and severe ($P(\omega) = 0.33$)
+excursions. B1 collapses both to 0.0 (binary). B4 Dempster-Shafer
+produces 1.0 for all conditions, including severe failure.}
+\label{fig:severity}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig1_detection_rates.pdf}
+\caption{Detection rates across seven failure scenarios (averaged over
+three product categories). The SL algebra achieves DR=1.000 on every
+scenario. B4 Dempster-Shafer fails to detect any scenario above 13\%.}
+\label{fig:detection}
+\end{figure}
+
+\subsection{Severity Ranking}
+
+We define a ground-truth severity ordering based on physical impact
+(Normal $<$ F6 $<$ F4 $<$ F3 $<$ F5 $<$ F1 $<$ F7 $<$ F2) and compute
+Spearman rank correlation between each method's mean scores and this
+ordering. The SL algebra achieves $\rho = 0.976$
+($p = 3.3 \times 10^{-5}$), the only method with a statistically
+significant result. B1 ($\rho = 0.577$, $p = 0.134$), B2
+($\rho = 0.431$, $p = 0.286$), B3 ($\rho = 0.619$, $p = 0.102$), and
+B4 ($\rho = 0.312$, $p = 0.452$) all fail the $p < 0.05$ significance
+threshold. Fig.~\ref{fig:spearman} shows this comparison alongside
+Shannon entropy of output distributions.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig5_spearman_entropy.pdf}
+\caption{(a) Spearman rank correlation with ground-truth severity
+ordering. Only the SL algebra reaches statistical significance
+(***~$p < 0.001$). (b) Shannon entropy of output distributions. B4
+produces 0.0 bits (all scores identical at 1.0). B1 produces 0.5 bits
+(near-binary). The SL algebra retains 2.2 bits of severity information.}
+\label{fig:spearman}
+\end{figure}
+
+\subsection{Counterfeit Sensitivity}
+
+We sweep the counterfeit infiltration rate in F3 from 1\% to 20\%
+(Fig.~\ref{fig:counterfeit}). The SL algebra maintains DR=1.000 at all
+levels, including 1\% infiltration, because per-dimension disbelief
+monitoring flags the serialization dimension even when the chain-level
+score remains high. B2 requires at least 10\% infiltration before its
+score crosses the adaptive threshold. B3 achieves majority detection
+only above 5\%. B4 shows erratic detection below 22\% with no
+consistent pattern, a consequence of evidence dilution in Dempster's
+rule.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig3_counterfeit_sweep.pdf}
+\caption{Detection rate as a function of counterfeit infiltration rate.
+The SL algebra detects 1\% counterfeiting with DR=1.000, while B2
+requires 10$\times$ higher infiltration.}
+\label{fig:counterfeit}
+\end{figure}
+
+\subsection{Ablation Analysis}
+
+We perform five ablations, each modifying exactly one architectural
+component (Fig.~\ref{fig:ablation}).
+
+\textbf{A4 (Per-dimension detection)} is the only ablation that breaks
+detection. Removing per-dimension monitoring and relying solely on the
+chain-level score reduces F4 (scan omission) detection from DR=1.000 to
+DR=0.297-0.369 across product categories. Scan omission manifests as
+high uncertainty ($u \approx 0.80$) in the serialization dimension
+without elevating disbelief, a pattern invisible to chain-level
+aggregation but captured by per-dimension monitoring.
+
+\textbf{A1 (Evidence type removal)} confirms clean one-to-one coupling
+between evidence types and failure scenarios. Removing cold chain
+evidence makes F1 and F2 scores indistinguishable from Normal. Removing
+serialization evidence eliminates F3 and F4 discrimination. Each
+evidence dimension is necessary for its matched failure type, validating
+the multi-dimensional design.
+
+\textbf{A2 (Fusion operator)} and \textbf{A3 (Propagation operator)}
+show no impact on detection rates. Averaging fusion produces
+$4.8\times$ higher uncertainty than cumulative fusion, and independent
+node evaluation yields slightly higher Normal scores, but detection
+remains at DR=1.000 for both. Their value is in uncertainty calibration
+and semantic correctness, not detection capability.
+
+\textbf{A5 (Evidence weights)} shows that product-specific weights
+shift severity scores by 5-10\% on temperature failures but do not
+affect detection rates.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig4_ablation.pdf}
+\caption{(a) F4 detection with and without per-dimension monitoring.
+Removal reduces DR from 1.0 to approximately 0.3. (b) Evidence-failure
+coupling matrix. Filled circles mark where removing an evidence type
+eliminates score discrimination for that failure scenario.}
+\label{fig:ablation}
+\end{figure}
+
+\subsection{Dempster-Shafer Comparison}
+
+B4 is the worst-performing method by every metric: DR below 0.13 on all
+scenarios, AUC of 0.516 (near random), Spearman $\rho = 0.312$ (not
+significant), and Shannon entropy of 0.0 bits (all scores are
+identically 1.0). Two structural failures explain this result.
+
+\textit{Zadeh's paradox.} When four evidence types strongly support
+safety and an active recall indicates compromise, Dempster's rule
+normalizes away the conflict ($K \approx 0.99$) and reports
+$BetP(safe) = 0.997$ for a recalled drug. The SL algebra correctly
+produces near-zero integrity through the dogmatic override property of
+cumulative fusion. A pharmaceutical recall is a regulatory authority
+determination, not a noisy sensor reading, and D-S has no mechanism to
+encode this distinction.
+
+\textit{Evidence dilution.} With 25 mass functions combined via
+Dempster's rule (5 evidence types at 5 nodes), $m(\Theta)$ approaches
+zero exponentially and $m(safe)$ dominates. A failure signal in one of
+25 sources has negligible impact on the combined result. This is
+structural: Dempster's rule is designed for combining a small number of
+independent sources, not for multi-dimensional, multi-node supply chain
+assessment.
+
+%===================================================================
+\section{Discussion}
+%===================================================================
+
+\textbf{Clinical implications.} The graded integrity score gives
+dispensing pharmacists actionable information beyond a binary flag. A
+score of $P(\omega) = 0.95$ with low uncertainty suggests a minor
+concern warranting monitoring, while $P(\omega) = 0.33$ signals a
+likely compromise requiring quarantine. The per-dimension breakdown
+identifies \textit{which} evidence type triggered the concern and at
+\textit{which} node, enabling targeted investigation rather than
+wholesale rejection.
+
+\textbf{Integration path.} The algebra operates on the same EPCIS event
+data that Tatmeen already collects. Implementation requires no changes
+to the serialization infrastructure, only an additional assessment layer
+consuming existing event streams. The five evidence types map directly
+to data elements mandated by Decree No.~73/2021 (Article~5) and the
+Tatmeen technical guides~\cite{tatmeen_mfg_v5, tatmeen_logistics_v5}.
+
+\textbf{Limitations.} Our evaluation uses simulated data calibrated to
+domain expert profiles rather than real Tatmeen event streams. The
+evidence weights are based on expert judgment and could benefit from
+empirical calibration with operational data. Temporal decay, while
+formally supported by the algebra (J\o sang \S10.4), was not active in
+the current evaluation and should be assessed in real-time deployment
+scenarios. The simulation covers a single linear path; real supply
+chains with multiple parallel distributors would exercise the
+multi-path fusion capability that we have implemented but not
+extensively evaluated.
+
+\textbf{Generalization.} While grounded in Tatmeen, the algebra applies
+to any serialized pharmaceutical supply chain. The evidence taxonomy
+(E1-E5) maps to DSCSA and EU FMD data elements with minor
+adjustments to regulatory thresholds and document requirements.
+
+%===================================================================
+\section{Conclusion}
+%===================================================================
+
+We presented a drug integrity algebra that replaces binary pass/fail
+pharmaceutical supply chain assessment with graded, uncertainty-aware
+integrity scores. Built on J\o sang's Subjective Logic and grounded in
+the UAE Tatmeen system, the algebra achieves perfect detection and
+localization across seven failure scenarios while providing the only
+statistically significant severity ranking among five comparison
+methods. Per-dimension opinion monitoring is the critical architectural
+component, enabling detection of evidence gaps that chain-level scores
+miss. The Dempster-Shafer baseline demonstrates that the closest
+theoretical alternative produces zero information content in this
+domain due to evidence dilution and Zadeh's paradox. The algebra is
+compatible with existing track-and-trace infrastructure and requires no
+changes to serialization systems already mandated by regulation.
+
+%===================================================================
+% REFERENCES
+%===================================================================
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
