@@ -160,14 +160,15 @@ over that data.
 \subsection{IoT Cold Chain Monitoring}
 
 Real-time temperature monitoring with IoT sensors and machine learning
-anomaly detection has received substantial attention~\cite{coldchain_iot2026}.
-LSTM and ANN architectures can detect temperature excursions with
-reported prevention rates exceeding 82\% in controlled
-settings~\cite{patsnap2026}. These approaches monitor a single evidence
-dimension (temperature), require training data, and do not produce
-calibrated uncertainty estimates or compose assessments across supply
-chain nodes. Our cold chain evidence type is one of five dimensions in
-the algebra.
+anomaly detection has received substantial attention. Gillespie et
+al.~\cite{coldchain_iot2023} demonstrated real-time anomaly detection
+in cold chain transportation using IoT technology, achieving improved
+visibility and spoilage reduction. LSTM and ANN architectures have been
+applied to predict temperature excursions before they occur. These
+approaches monitor a single evidence dimension (temperature), require
+training data, and do not produce calibrated uncertainty estimates or
+compose assessments across supply chain nodes. Our cold chain evidence
+type is one of five dimensions in the algebra.
 
 \subsection{Dempster-Shafer Theory}
 
@@ -265,9 +266,9 @@ opinion $\omega = (0, 1, 0, a)$ that overrides all other evidence in
 fusion. No recall produces a vacuous opinion, correctly encoding that
 the absence of a recall is not evidence of safety.
 
-All formation functions use only \texttt{Opinion.from\_evidence}
-(\S3.2) and \texttt{trust\_discount} (\S14.3) from J\o sang's
-textbook. No ad-hoc formulas are introduced.
+All formation functions use only established operators from J\o sang's
+textbook: the evidence-to-opinion mapping (\S3.2) and trust discounting
+for sensor coverage (\S14.3). No ad-hoc formulas are introduced.
 
 \subsection{Within-Node Fusion}
 
@@ -561,6 +562,22 @@ zero exponentially and $m(safe)$ dominates. A failure signal in one of
 structural: Dempster's rule is designed for combining a small number of
 independent sources, not for multi-dimensional, multi-node supply chain
 assessment.
+
+\textit{On hierarchical D-S.} A reviewer might note that our B4
+implementation combines all 25 mass functions in a flat pool, and that a
+hierarchical architecture (fusing 5 evidence types per node locally,
+then combining 5 node-level masses across the chain) would reduce
+dilution. We observe two points. First, Zadeh's paradox is a
+within-node phenomenon: it occurs when combining just 5 mass functions
+at a single node where recall conflicts with four clean evidence types.
+Hierarchical combination does not resolve this. Second, even with
+hierarchical combination, the cross-node step still uses Dempster's
+rule, which treats node opinions as independent evidence and has no
+mechanism for causal propagation. Our deduction operator
+(J\o sang \S12.6) encodes the physical constraint that upstream
+compromise implies downstream compromise through causal conditionals.
+Dempster's rule has no equivalent operator, regardless of whether
+combination is flat or hierarchical.
 
 %===================================================================
 \section{Discussion}
