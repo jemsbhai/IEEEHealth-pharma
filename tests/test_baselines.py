@@ -1,5 +1,5 @@
 """
-Tests for baseline methods (B1–B3).
+Tests for baseline methods (B1–B4).
 
 Validates that each baseline:
 - Produces valid scores
@@ -17,6 +17,7 @@ from baselines.baselines import (
     evaluate_threshold,
     evaluate_weighted_scoring,
     evaluate_bayesian,
+    evaluate_dempster_shafer,
     evaluate_all_baselines,
 )
 from models.drug_integrity_opinion import (
@@ -196,3 +197,84 @@ class TestUnifiedEvaluator:
         assert "B1_Threshold" in results
         assert "B2_WeightedScoring" in results
         assert "B3_Bayesian" in results
+        assert "B4_DempsterShafer" in results
+
+
+class TestDempsterShaferBaseline:
+    """Test B4 Dempster-Shafer evidence theory baseline."""
+
+    def test_good_evidence_high_score(self):
+        evidence = {n: _good_evidence() for n in PATH}
+        result = evaluate_dempster_shafer(PATH, evidence)
+        # Good evidence should produce high pignistic probability
+        assert result.chain_score > 0.7
+        assert result.method == "B4_DempsterShafer"
+
+    def test_recall_zadeh_paradox(self):
+        """KEY FINDING: Zadeh's paradox — D-S fails to detect active recall.
+
+        When 4 evidence types strongly support 'safe' and recall strongly
+        supports 'compromised', Dempster's rule normalizes away the conflict.
+        The chain score remains high (~1.0) despite an active recall.
+
+        This is a known limitation of D-S theory (Zadeh, 1979) and a key
+        advantage of the SL algebra, which handles recall as a dogmatic
+        override via form_recall_opinion.
+        """
+        evidence = {n: _good_evidence() for n in PATH}
+        evidence["ph"] = NodeEvidence(
+            serialization=SerializationEvidence(100, 0, 100),
+            cold_chain=ColdChainEvidence(tuple([5.0] * 100), 2.0, 8.0, 100),
+            shelf_life=ShelfLifeEvidence(360, 180),
+            documentation=DocumentationEvidence(
+                DEFAULT_REQUIRED_DOCUMENTS, DEFAULT_REQUIRED_DOCUMENTS,
+                DEFAULT_CRITICAL_DOCUMENTS,
+            ),
+            recall=RecallStatus.ACTIVE_RECALL,
+        )
+        result = evaluate_dempster_shafer(PATH, evidence)
+        # D-S normalizes away the conflict: score stays HIGH despite recall.
+        # This is Zadeh's paradox — a known D-S limitation.
+        assert result.chain_score > 0.9, (
+            "D-S should exhibit Zadeh's paradox: recall overwhelmed by "
+            "4 strong safe sources due to conflict normalization"
+        )
+
+    def test_missing_data_produces_uncertainty(self):
+        evidence = {n: NodeEvidence() for n in PATH}  # all None
+        result = evaluate_dempster_shafer(PATH, evidence)
+        # Vacuous mass functions → BetP = 0.5 (maximum uncertainty)
+        assert abs(result.chain_score - 0.5) < 0.01
+
+    def test_mass_function_sums_to_one(self):
+        from baselines.baselines import (
+            MassFunction, _ds_serialization, _ds_cold_chain,
+            _ds_shelf_life, _ds_documentation, _ds_recall,
+            dempster_combine,
+        )
+        # Check individual mass functions
+        ev = _good_evidence()
+        for fn in [
+            lambda: _ds_serialization(ev.serialization),
+            lambda: _ds_cold_chain(ev.cold_chain),
+            lambda: _ds_shelf_life(ev.shelf_life),
+            lambda: _ds_documentation(ev.documentation),
+            lambda: _ds_recall(ev.recall),
+        ]:
+            m = fn()
+            assert abs(m.m_safe + m.m_compromised + m.m_theta - 1.0) < 1e-9
+
+        # Check combined mass function
+        m1 = _ds_serialization(ev.serialization)
+        m2 = _ds_cold_chain(ev.cold_chain)
+        combined = dempster_combine(m1, m2)
+        assert abs(combined.m_safe + combined.m_compromised + combined.m_theta - 1.0) < 1e-9
+
+    def test_pignistic_probability_bounds(self):
+        from baselines.baselines import MassFunction
+        # BetP should always be in [0, 1]
+        m = MassFunction(0.3, 0.2, 0.5)
+        assert 0.0 <= m.pignistic_safe() <= 1.0
+        # Vacuous → 0.5
+        m_vac = MassFunction.vacuous()
+        assert abs(m_vac.pignistic_safe() - 0.5) < 1e-9

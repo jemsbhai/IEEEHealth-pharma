@@ -385,6 +385,262 @@ BASELINE_METHODS = {
 }
 
 
+# ═════════════════════════════════════════════════════════════════
+# B4 — DEMPSTER-SHAFER EVIDENCE THEORY
+# ═════════════════════════════════════════════════════════════════
+#
+# Frame of discernment: Θ = {safe, compromised}
+# Mass function: m(safe), m(compromised), m(Θ)
+# Dempster’s rule of combination for fusing evidence sources.
+#
+# Key differences from SL algebra:
+#   - No trust discounting or deduce operator (no cross-node propagation)
+#   - Subject to Zadeh’s paradox under high conflict
+#   - No base rate (pignistic probability uses uniform prior)
+#   - Cross-node: Dempster’s rule treats each node as independent evidence
+
+
+@dataclass
+class MassFunction:
+    """D-S mass function over binary frame {safe, compromised}."""
+    m_safe: float       # m({safe})
+    m_compromised: float  # m({compromised})
+    m_theta: float      # m(Θ) = uncertainty mass
+
+    def __post_init__(self):
+        total = self.m_safe + self.m_compromised + self.m_theta
+        assert abs(total - 1.0) < 1e-9, f"Mass must sum to 1.0, got {total}"
+
+    def bel_safe(self) -> float:
+        """Belief in safe = m(safe)."""
+        return self.m_safe
+
+    def plaus_safe(self) -> float:
+        """Plausibility of safe = 1 - m(compromised)."""
+        return 1.0 - self.m_compromised
+
+    def pignistic_safe(self) -> float:
+        """Pignistic probability: BetP(safe) = m(safe) + m(Θ)/2."""
+        return self.m_safe + self.m_theta / 2.0
+
+    @staticmethod
+    def vacuous() -> "MassFunction":
+        """Complete ignorance: all mass on Θ."""
+        return MassFunction(0.0, 0.0, 1.0)
+
+
+def dempster_combine(m1: MassFunction, m2: MassFunction) -> MassFunction:
+    """Dempster’s rule of combination for binary frame.
+
+    Combines two independent evidence sources. Subject to Zadeh’s paradox
+    when conflict K approaches 1.0.
+    """
+    # All pairwise intersections
+    # safe ∩ safe = safe
+    # safe ∩ compromised = ∅ (conflict)
+    # safe ∩ Θ = safe
+    # compromised ∩ compromised = compromised
+    # compromised ∩ safe = ∅ (conflict)
+    # compromised ∩ Θ = compromised
+    # Θ ∩ safe = safe
+    # Θ ∩ compromised = compromised
+    # Θ ∩ Θ = Θ
+
+    conflict = (m1.m_safe * m2.m_compromised +
+                m1.m_compromised * m2.m_safe)
+
+    if conflict >= 1.0 - 1e-12:
+        # Total conflict — Zadeh’s paradox. Return vacuous.
+        return MassFunction.vacuous()
+
+    norm = 1.0 / (1.0 - conflict)
+
+    m_safe = norm * (m1.m_safe * m2.m_safe +
+                     m1.m_safe * m2.m_theta +
+                     m1.m_theta * m2.m_safe)
+
+    m_comp = norm * (m1.m_compromised * m2.m_compromised +
+                     m1.m_compromised * m2.m_theta +
+                     m1.m_theta * m2.m_compromised)
+
+    m_theta = norm * (m1.m_theta * m2.m_theta)
+
+    return MassFunction(m_safe, m_comp, m_theta)
+
+
+def dempster_combine_multi(*masses: MassFunction) -> MassFunction:
+    """Combine N mass functions via iterated Dempster’s rule."""
+    if len(masses) == 0:
+        return MassFunction.vacuous()
+    result = masses[0]
+    for m in masses[1:]:
+        result = dempster_combine(result, m)
+    return result
+
+
+# ── Evidence-to-mass mappings (parallel to SL formation functions) ──
+
+def _ds_serialization(ev: Optional[SerializationEvidence],
+                      W: float = 2.0) -> MassFunction:
+    """Map serialization evidence to D-S mass function.
+
+    Positive evidence (successful scans) → m(safe)
+    Negative evidence (failures) → m(compromised)
+    Remaining mass → m(Θ) based on total evidence vs prior weight
+    """
+    if ev is None:
+        return MassFunction.vacuous()
+    total_scanned = ev.scanned_success + ev.scanned_failure
+    if total_scanned == 0:
+        return MassFunction.vacuous()
+    # Evidence strength relative to prior weight
+    total_evidence = total_scanned
+    denom = total_evidence + W
+    m_safe = ev.scanned_success / denom
+    m_comp = ev.scanned_failure / denom
+    m_theta = W / denom
+    # Adjust for scan coverage (discount by coverage)
+    coverage = total_scanned / ev.total_packages
+    m_safe *= coverage
+    m_comp *= coverage
+    m_theta = 1.0 - m_safe - m_comp
+    return MassFunction(max(0, m_safe), max(0, m_comp), max(0, m_theta))
+
+
+def _ds_cold_chain(ev: Optional[ColdChainEvidence],
+                    W: float = 2.0) -> MassFunction:
+    """Map cold chain evidence to D-S mass function."""
+    if ev is None:
+        return MassFunction.vacuous()
+    if len(ev.readings) == 0:
+        return MassFunction.vacuous()
+    in_range = sum(1 for t in ev.readings
+                   if ev.required_min <= t <= ev.required_max)
+    out_range = len(ev.readings) - in_range
+    total = len(ev.readings)
+    denom = total + W
+    # Weight by severity of deviations
+    severity = 0.0
+    if out_range > 0:
+        for t in ev.readings:
+            if t < ev.required_min:
+                severity += abs(t - ev.required_min)
+            elif t > ev.required_max:
+                severity += abs(t - ev.required_max)
+        severity = min(severity / out_range, 10.0) / 10.0  # normalize
+    m_safe = in_range / denom
+    m_comp = (out_range / denom) * (0.5 + 0.5 * severity)
+    # Coverage adjustment
+    coverage = total / ev.expected_readings
+    m_safe *= coverage
+    m_comp *= coverage
+    m_theta = max(0.0, 1.0 - m_safe - m_comp)
+    return MassFunction(max(0, m_safe), max(0, m_comp), max(0, m_theta))
+
+
+def _ds_shelf_life(ev: Optional[ShelfLifeEvidence],
+                    W: float = 2.0) -> MassFunction:
+    """Map shelf life evidence to D-S mass function."""
+    if ev is None:
+        return MassFunction.vacuous()
+    ratio = ev.remaining_days / ev.regulatory_min
+    if ratio >= 2.0:
+        # Well above threshold: strong evidence of safety
+        return MassFunction(0.8, 0.0, 0.2)
+    elif ratio >= 1.0:
+        # Above threshold but approaching: moderate evidence
+        strength = (ratio - 1.0) / 1.0  # 0.0 at threshold, 1.0 at 2×
+        return MassFunction(0.4 * strength + 0.1, 0.0, 0.9 - 0.4 * strength)
+    else:
+        # Below threshold: evidence of compromise
+        strength = 1.0 - ratio  # 0.0 at threshold, 1.0 at ratio=0
+        return MassFunction(0.0, 0.3 + 0.5 * strength, 0.7 - 0.5 * strength)
+
+
+def _ds_documentation(ev: Optional[DocumentationEvidence],
+                      W: float = 2.0) -> MassFunction:
+    """Map documentation evidence to D-S mass function."""
+    if ev is None:
+        return MassFunction.vacuous()
+    if len(ev.documents_required) == 0:
+        return MassFunction.vacuous()
+    present = len(ev.documents_present & ev.documents_required)
+    required = len(ev.documents_required)
+    completeness = present / required
+    # Critical documents check
+    crit_ok = ev.documents_critical.issubset(ev.documents_present) if ev.documents_critical else True
+    if completeness >= 1.0 and crit_ok:
+        return MassFunction(0.6, 0.0, 0.4)
+    elif crit_ok:
+        return MassFunction(0.3 * completeness, 0.1 * (1 - completeness), 0.6 + 0.1 * (1 - completeness))
+    else:
+        # Missing critical docs: moderate evidence of compromise
+        return MassFunction(0.1, 0.3, 0.6)
+
+
+def _ds_recall(recall: RecallStatus) -> MassFunction:
+    """Map recall status to D-S mass function."""
+    if recall == RecallStatus.ACTIVE_RECALL:
+        return MassFunction(0.0, 0.99, 0.01)
+    else:
+        return MassFunction.vacuous()  # NO_RECALL = no evidence
+
+
+def evaluate_dempster_shafer(
+    path: List[str],
+    node_evidence: Dict[str, NodeEvidence],
+    detection_threshold: float = 0.5,
+) -> BaselineResult:
+    """B4: Dempster-Shafer evidence theory.
+
+    Maps each evidence type to a D-S mass function, combines within-node
+    via Dempster’s rule, then combines cross-node via Dempster’s rule.
+    Uses pignistic probability BetP(safe) as the integrity score.
+
+    Key limitations vs. SL algebra:
+    - No deduce operator: cross-node combination is Dempster’s rule
+      (treats nodes as independent evidence, doesn’t model causal
+      propagation of compromise)
+    - Subject to Zadeh’s paradox under high conflict
+    - No base rate: pignistic probability assumes uniform prior
+    - No trust discounting for sensor coverage
+    """
+    node_scores: Dict[str, float] = {}
+    node_masses: Dict[str, MassFunction] = {}
+
+    for node_id in path:
+        ev = node_evidence.get(node_id, NodeEvidence())
+        masses = [
+            _ds_serialization(ev.serialization),
+            _ds_cold_chain(ev.cold_chain),
+            _ds_shelf_life(ev.shelf_life),
+            _ds_documentation(ev.documentation),
+            _ds_recall(ev.recall),
+        ]
+        fused = dempster_combine_multi(*masses)
+        node_masses[node_id] = fused
+        node_scores[node_id] = fused.pignistic_safe()
+
+    # Cross-node: Dempster’s rule across all nodes (no deduce equivalent)
+    chain_mass = dempster_combine_multi(*[node_masses[n] for n in path])
+    chain_score = chain_mass.pignistic_safe()
+    weakest = min(path, key=lambda n: node_scores[n])
+
+    return BaselineResult(
+        method="B4_DempsterShafer",
+        path=path,
+        chain_score=chain_score,
+        node_scores=node_scores,
+        detected=(chain_score < detection_threshold),
+        weakest_node=weakest,
+        detection_threshold=detection_threshold,
+    )
+
+
+# Update registry
+BASELINE_METHODS["B4_DempsterShafer"] = evaluate_dempster_shafer
+
+
 def evaluate_all_baselines(
     path: List[str],
     node_evidence: Dict[str, NodeEvidence],

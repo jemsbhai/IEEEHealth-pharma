@@ -1,11 +1,13 @@
 """
-Full Experiment Suite v2.1 — with per-dimension uncertainty + product-relative F5.
+Full Experiment Suite v3.0 — with B4 Dempster-Shafer baseline.
 
-Fixes from v2:
-1. Per-dimension detection now checks BOTH disbelief > 5% AND uncertainty > 30%.
-   This catches F4 (scan omission) where the serialization dimension has u≈0.8.
-2. F5 (expired batch) is now product-relative: remaining = 50% of regulatory minimum.
-   This ensures F5 is a genuine failure for all three product categories.
+v3.0 changes:
+- Added B4 (Dempster-Shafer evidence theory) baseline alongside B1-B3.
+- Saves to full_results_v3.json to preserve v2 results.
+
+Prior fixes (v2.1):
+1. Per-dimension detection checks BOTH disbelief > 2% AND uncertainty > 50%.
+2. F5 (expired batch) is product-relative: remaining = 50% of regulatory minimum.
 """
 
 from __future__ import annotations
@@ -33,6 +35,7 @@ from models.chain_integrity import (
 )
 from baselines.baselines import (
     evaluate_threshold, evaluate_weighted_scoring, evaluate_bayesian,
+    evaluate_dempster_shafer,
 )
 
 # ═══════════════════════════════════════════════════════════════════
@@ -158,7 +161,7 @@ def calibrate_thresholds(
     fpr_target: float = FPR_TARGET,
 ) -> Dict[str, float]:
     rng = np.random.default_rng(seed)
-    sl_scores, b1_scores, b2_scores, b3_scores = [], [], [], []
+    sl_scores, b1_scores, b2_scores, b3_scores, b4_scores = [], [], [], [], []
 
     for _ in range(n_trials):
         evidence = {nid: generate_normal_evidence(product, rng=rng) for nid in path}
@@ -166,6 +169,7 @@ def calibrate_thresholds(
         b1_scores.append(evaluate_threshold(path, evidence).chain_score)
         b2_scores.append(evaluate_weighted_scoring(path, evidence).chain_score)
         b3_scores.append(evaluate_bayesian(path, evidence).chain_score)
+        b4_scores.append(evaluate_dempster_shafer(path, evidence).chain_score)
 
     pct = fpr_target * 100
     thresholds = {
@@ -173,6 +177,7 @@ def calibrate_thresholds(
         "B1_Threshold": 0.5,  # binary, only sensible choice
         "B2_WeightedScoring": float(np.percentile(b2_scores, pct)),
         "B3_Bayesian": float(np.percentile(b3_scores, pct)),
+        "B4_DempsterShafer": float(np.percentile(b4_scores, pct)),
     }
     return thresholds
 
@@ -214,7 +219,7 @@ def run_full_experiment(
         scenario_list: List[Tuple[str, Optional[FailureScenario]]] = [("Normal", None)]
         scenario_list += [(name, sc) for name, sc in scenarios.items()]
 
-        total_per_product = len(scenario_list) * 4
+        total_per_product = len(scenario_list) * 5
         done = 0
 
         print(f"\n{'='*60}")
@@ -232,7 +237,7 @@ def run_full_experiment(
             target_node = scenario.target_node if scenario else None
             rng = np.random.default_rng(seed)
 
-            sl_list, b1_list, b2_list, b3_list = [], [], [], []
+            sl_list, b1_list, b2_list, b3_list, b4_list = [], [], [], [], []
 
             for _ in range(n_trials):
                 evidence = {nid: generate_normal_evidence(product, rng=rng) for nid in EVAL_PATH}
@@ -246,6 +251,7 @@ def run_full_experiment(
                 b1_list.append(evaluate_threshold(EVAL_PATH, evidence, detection_threshold=thresholds["B1_Threshold"]))
                 b2_list.append(evaluate_weighted_scoring(EVAL_PATH, evidence, detection_threshold=thresholds["B2_WeightedScoring"]))
                 b3_list.append(evaluate_bayesian(EVAL_PATH, evidence, detection_threshold=thresholds["B3_Bayesian"]))
+                b4_list.append(evaluate_dempster_shafer(EVAL_PATH, evidence, detection_threshold=thresholds["B4_DempsterShafer"]))
 
             # ── SL Algebra aggregation ──
             sl_scores = [r[0].integrity_score for r in sl_list]
@@ -273,6 +279,7 @@ def run_full_experiment(
                 ("B1_Threshold", b1_list, "B1_Threshold"),
                 ("B2_WeightedScoring", b2_list, "B2_WeightedScoring"),
                 ("B3_Bayesian", b3_list, "B3_Bayesian"),
+                ("B4_DempsterShafer", b4_list, "B4_DempsterShafer"),
             ]:
                 bl_scores = [r.chain_score for r in bl_list]
                 bl_dets = [r.detected for r in bl_list]
@@ -298,8 +305,8 @@ def run_full_experiment(
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("Drug Integrity Algebra — Experiment Suite v2.1")
-    print("  Adaptive thresholds | Per-dim disbelief+uncertainty | Product-rel F5")
+    print("Drug Integrity Algebra — Experiment Suite v3.0")
+    print("  SL + B1-B4 | Adaptive thresholds | Per-dim d+u | Product-rel F5")
     print("=" * 70)
     print(f"Trials: {N_TRIALS} | Seed: {SEED} | FPR target: {FPR_TARGET*100:.0f}%")
     print()
@@ -313,6 +320,6 @@ if __name__ == "__main__":
 
     out_dir = Path(__file__).resolve().parents[1] / "experiments"
     out_dir.mkdir(exist_ok=True)
-    out_path = out_dir / "full_results_v2.json"
+    out_path = out_dir / "full_results_v3.json"
     suite.save(str(out_path))
     print(f"\nResults saved to {out_path}")
