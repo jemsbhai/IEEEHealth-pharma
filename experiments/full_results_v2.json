@@ -1,5 +1,5 @@
 {
-  "runtime_seconds": 12.298366069793701,
+  "runtime_seconds": 12.22871732711792,
   "adaptive_thresholds": {
     "Insulin ": {
       "SL_Algebra": 0.9962124238789577,
@@ -184,7 +184,7 @@
       "n_trials": 1000,
       "detection_rate": 1.0,
       "false_positive_rate": 0.0,
-      "localization_accuracy": 0.0,
+      "localization_accuracy": 1.0,
       "mean_score": 0.9771034001640808,
       "std_score": 0.00021936371747046583,
       "mean_uncertainty": 0.009525195762959302,
@@ -600,7 +600,7 @@
       "n_trials": 1000,
       "detection_rate": 1.0,
       "false_positive_rate": 0.0,
-      "localization_accuracy": 0.0,
+      "localization_accuracy": 1.0,
       "mean_score": 0.9650783610681256,
       "std_score": 0.0005590748201609867,
       "mean_uncertainty": 0.014433889761355677,
@@ -1016,7 +1016,7 @@
       "n_trials": 1000,
       "detection_rate": 1.0,
       "false_positive_rate": 0.0,
-      "localization_accuracy": 0.0,
+      "localization_accuracy": 1.0,
       "mean_score": 0.9808679735893804,
       "std_score": 9.542148420422696e-05,
       "mean_uncertainty": 0.009119149774795623,

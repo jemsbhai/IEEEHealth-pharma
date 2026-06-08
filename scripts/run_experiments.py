@@ -48,7 +48,7 @@ EVAL_PATH = [
     "distributor_a", "pharmacy_a",
 ]
 
-DIM_DISBELIEF_THRESHOLD = 0.05
+DIM_DISBELIEF_THRESHOLD = 0.02
 DIM_UNCERTAINTY_THRESHOLD = 0.50  # flag if per-dimension uncertainty exceeds 50%
 
 # ═══════════════════════════════════════════════════════════════════
