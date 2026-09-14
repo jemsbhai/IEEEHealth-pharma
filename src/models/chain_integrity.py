@@ -101,6 +101,36 @@ COMPROMISED_CONDITIONAL = Opinion(0.0, 1.0, 0.0, 0.01)
 
 
 # ═══════════════════════════════════════════════════════════════════
+# FORMATION PARAMETERS (application-specific modeling choices, Definition 3)
+# ═══════════════════════════════════════════════════════════════════
+
+
+@dataclass(frozen=True)
+class FormationParams:
+    """The application-specific parameters of the formation functions.
+
+    These are modeling assumptions of the drug integrity algebra, distinct
+    from Josang's operators: the per-type base rates, the weight of a
+    missing critical document, the shelf-life evidence scale and the
+    cold-chain severity cap. Defaults equal the values that were
+    hard-coded before EXP-008 (camera-ready), so evaluate_path with the
+    default parameters reproduces every published result exactly.
+    EXP-008 varies them one at a time.
+    """
+    base_rate_serialization: float = 0.99
+    base_rate_cold_chain: float = 0.95
+    base_rate_shelf_life: float = 0.90
+    base_rate_documentation: float = 0.80
+    base_rate_recall: float = 0.99
+    critical_weight: float = 3.0
+    shelf_life_scale: float = 10.0
+    severity_cap: float = 5.0
+
+
+DEFAULT_FORMATION = FormationParams()
+
+
+# ═══════════════════════════════════════════════════════════════════
 # TEMPORAL DECAY CONFIGURATION (Definition 6)
 # ═══════════════════════════════════════════════════════════════════
 
@@ -149,6 +179,7 @@ def evaluate_node(
     decay_config: Optional[TemporalDecayConfig] = None,
     evidence_timestamps: Optional[Dict[str, datetime]] = None,
     eval_time: Optional[datetime] = None,
+    formation: Optional[FormationParams] = None,
 ) -> NodeEvaluationResult:
     """Evaluate drug integrity at a single supply chain node.
 
@@ -192,12 +223,13 @@ def evaluate_node(
     opinions: List[Opinion] = []
     evidence_opinions: Dict[str, DrugIntegrityOpinion] = {}
     missing: List[str] = []
+    fp = formation if formation is not None else DEFAULT_FORMATION
 
     # ── F1: Serialization ──────────────────────────────────────
     if evidence.serialization is not None:
         eff_w = base_prior_weight / weights.serialization
         op = form_serialization_opinion(
-            evidence.serialization, prior_weight=eff_w, base_rate=0.99,
+            evidence.serialization, prior_weight=eff_w, base_rate=fp.base_rate_serialization,
         )
         op = _maybe_decay(
             op, "serialization", decay_config, evidence_timestamps, eval_time,
@@ -205,7 +237,7 @@ def evaluate_node(
         )
         evidence_opinions["serialization"] = op
     else:
-        op = DrugIntegrityOpinion.vacuous(0.99)
+        op = DrugIntegrityOpinion.vacuous(fp.base_rate_serialization)
         evidence_opinions["serialization"] = op
         missing.append("serialization")
     opinions.append(op)
@@ -214,7 +246,8 @@ def evaluate_node(
     if evidence.cold_chain is not None:
         eff_w = base_prior_weight / weights.cold_chain
         op = form_cold_chain_opinion(
-            evidence.cold_chain, prior_weight=eff_w, base_rate=0.95,
+            evidence.cold_chain, prior_weight=eff_w, base_rate=fp.base_rate_cold_chain,
+            severity_cap=fp.severity_cap,
         )
         op = _maybe_decay(
             op, "cold_chain", decay_config, evidence_timestamps, eval_time,
@@ -222,7 +255,7 @@ def evaluate_node(
         )
         evidence_opinions["cold_chain"] = op
     else:
-        op = DrugIntegrityOpinion.vacuous(0.95)
+        op = DrugIntegrityOpinion.vacuous(fp.base_rate_cold_chain)
         evidence_opinions["cold_chain"] = op
         missing.append("cold_chain")
     opinions.append(op)
@@ -231,12 +264,13 @@ def evaluate_node(
     if evidence.shelf_life is not None:
         eff_w = base_prior_weight / weights.shelf_life
         op = form_shelf_life_opinion(
-            evidence.shelf_life, prior_weight=eff_w, base_rate=0.90,
+            evidence.shelf_life, prior_weight=eff_w, base_rate=fp.base_rate_shelf_life,
+            scale=fp.shelf_life_scale,
         )
         # No temporal decay for shelf life (already time-dependent)
         evidence_opinions["shelf_life"] = op
     else:
-        op = DrugIntegrityOpinion.vacuous(0.90)
+        op = DrugIntegrityOpinion.vacuous(fp.base_rate_shelf_life)
         evidence_opinions["shelf_life"] = op
         missing.append("shelf_life")
     opinions.append(op)
@@ -245,7 +279,8 @@ def evaluate_node(
     if evidence.documentation is not None:
         eff_w = base_prior_weight / weights.documentation
         op = form_documentation_opinion(
-            evidence.documentation, prior_weight=eff_w, base_rate=0.80,
+            evidence.documentation, prior_weight=eff_w, base_rate=fp.base_rate_documentation,
+            critical_weight=fp.critical_weight,
         )
         op = _maybe_decay(
             op, "documentation", decay_config, evidence_timestamps, eval_time,
@@ -253,13 +288,13 @@ def evaluate_node(
         )
         evidence_opinions["documentation"] = op
     else:
-        op = DrugIntegrityOpinion.vacuous(0.80)
+        op = DrugIntegrityOpinion.vacuous(fp.base_rate_documentation)
         evidence_opinions["documentation"] = op
         missing.append("documentation")
     opinions.append(op)
 
     # ── F5: Recall ─────────────────────────────────────────────
-    op = form_recall_opinion(evidence.recall, base_rate=0.99)
+    op = form_recall_opinion(evidence.recall, base_rate=fp.base_rate_recall)
     evidence_opinions["recall"] = op
     # No decay for recall (binary, always current)
     opinions.append(op)
@@ -334,6 +369,7 @@ def evaluate_path(
     evidence_timestamps: Optional[Dict[str, Dict[str, datetime]]] = None,
     eval_time: Optional[datetime] = None,
     compromised_conditional: Opinion = COMPROMISED_CONDITIONAL,
+    formation: Optional[FormationParams] = None,
 ) -> ChainEvaluationResult:
     """Evaluate drug integrity along a single supply chain path.
 
@@ -389,6 +425,7 @@ def evaluate_path(
             decay_config=decay_config,
             evidence_timestamps=ts,
             eval_time=eval_time,
+            formation=formation,
         )
         node_results[node_id] = result
 
@@ -444,6 +481,8 @@ def evaluate_chain(
     evidence_timestamps: Optional[Dict[str, Dict[str, datetime]]] = None,
     eval_time: Optional[datetime] = None,
     target_sink: Optional[str] = None,
+    compromised_conditional: Opinion = COMPROMISED_CONDITIONAL,
+    formation: Optional[FormationParams] = None,
 ) -> Dict[str, ChainEvaluationResult]:
     """Evaluate drug integrity across all paths in the supply chain.
 
@@ -481,6 +520,8 @@ def evaluate_chain(
             decay_config=decay_config,
             evidence_timestamps=evidence_timestamps,
             eval_time=eval_time,
+            compromised_conditional=compromised_conditional,
+            formation=formation,
         )
 
         # If multiple paths reach the same sink, keep the worst (conservative)
