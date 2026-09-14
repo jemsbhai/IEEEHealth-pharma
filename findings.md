@@ -114,6 +114,39 @@ for multi-dimensional, multi-node supply chain integrity assessment.
 
 ## Raw Findings Log
 
+### 2026-09-14 — EXP-007: Operational stress test (benign noise regimes R1, R2)
+
+**Key result:** under benign operational noise the deployed rule system and
+the paper's fixed per-dimension thresholds both flag nearly every clean
+chain (FPR 0.98-1.00); SL with all four criteria calibrated on the noisy
+Normal distribution holds FPR at 0.003-0.010 out of sample and detects
+F2, F4, F5, F6, F7 at 1.000, but loses F1 and F3 at N = 100 because the
+pooled per-dimension threshold is set by late-document noise; the 1%
+counterfeit detection does not survive noise for any method.
+
+**Numbers (experiments/stress_results.json, commit 7a8def6, insulin):**
+- FPR, R1 / R2: SL-fixed 0.989 / 1.000; SL-cal 0.003 / 0.006; B1-fixed
+  1.000 / 1.000; B1-tuned 0.004 / 0.003; B2 0.008 / 0.009; B3 0.019 / 0.009.
+- DR, R1 (SL-cal / B1-tuned / B2 / B3): F1 0.043 / 1.000 / 0.009 / 0.031;
+  F3 0.054 / 1.000 / 0.008 / 0.027; F2, F4, F5, F7 all 1.000 for SL-cal and
+  B1-tuned; F6 1.000 / 1.000 / 0.093 / 0.922.
+- DR, R2: F1 0.015 / 0.927 / 0.011 / 0.024; F3 0.014 / 0.002 / 0.010 /
+  0.016; F6 1.000 / 1.000 / 0.059 / 0.455; F4 1.000 / 1.000 / 1.000 / 0.843.
+- Calibrated SL thresholds under R1: score < 0.893, chain u > 0.037,
+  per-dimension d > 0.24 (set by two late routine documents), u > 0.40.
+- Spearman (global ordering): SL 0.690 (p = 0.058, R1), 0.619 (R2); no
+  method significant under noise. Pooled entropy rises with noise for all
+  graded methods and is not a usable information measure there.
+- Counterfeit sweep, SL-cal: R1 reaches 0.775 at 10% and 0.99 at 15%;
+  R2 0.151 at 10%, 0.758 at 15%, 0.984 at 20%. B1-tuned: 1.000 from 5%
+  (R1) and from 10% (R2).
+
+**Implications:** the paper must scope the 1% counterfeit and the
+severity-ranking claims to the noiseless regime, state that fixed
+thresholds (theirs and ours) fail under noise, and report the calibrated
+result. Per-evidence-type calibration and larger evidence volume are
+tested in EXP-007b before the camera-ready text is written.
+
 ### 2026-09-14 — EXP-006: Main Suite v3.1 (localization fairness, intervals, B1 in sweeps, per-product orderings)
 
 **Key result:** v3.1 reproduces every v3 DR, FPR and score exactly; crediting
