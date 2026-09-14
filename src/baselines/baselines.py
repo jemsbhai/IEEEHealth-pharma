@@ -103,6 +103,9 @@ def evaluate_threshold(
     path: List[str],
     node_evidence: Dict[str, NodeEvidence],
     detection_threshold: float = 0.5,  # unused for binary, kept for interface
+    min_scan_rate: float = 0.90,
+    max_failure_rate: float = 0.01,
+    temp_tolerance: float = 0.0,
 ) -> BaselineResult:
     """B1: Rule-based threshold — binary pass/fail per node, AND across chain.
 
@@ -116,14 +119,21 @@ def evaluate_threshold(
     - Scanning 10% and 100% of packages both "pass" if scanned items are clean
     - No information about HOW close to failure any check is
     - Missing data = silent pass (no flag for absence of evidence)
+
+    The rule limits (min_scan_rate, max_failure_rate, temp_tolerance) default
+    to the deployed values used throughout the main suite ("B1 as deployed").
+    EXP-007 fits them to a noisy calibration set to build "B1-tuned"; the
+    defaults are unchanged, so every existing result is unaffected.
     """
     node_scores: Dict[str, float] = {}
 
     for node_id in path:
         ev = node_evidence.get(node_id, NodeEvidence())
         checks = [
-            _threshold_serialization(ev.serialization),
-            _threshold_cold_chain(ev.cold_chain),
+            _threshold_serialization(ev.serialization,
+                                     min_scan_rate=min_scan_rate,
+                                     max_failure_rate=max_failure_rate),
+            _threshold_cold_chain(ev.cold_chain, tolerance=temp_tolerance),
             _threshold_shelf_life(ev.shelf_life),
             _threshold_documentation(ev.documentation),
             _threshold_recall(ev.recall),
