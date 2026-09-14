@@ -1816,7 +1816,7 @@ text; (2) and (3) are new support for its integration argument.
 **Date:** 2026-09-14 (America/New_York)
 **Researcher:** Muntaser Syed
 **Type:** computational
-**Status:** planned
+**Status:** completed
 
 ### Motivation
 
@@ -1914,21 +1914,94 @@ the same node.
 
 - **Hardware:** Windows laptop, 64 GB RAM, RTX 4090 (CPU-only workload)
 - **Software:** Python 3.12.2, numpy 2.0.2, scipy 1.17.1, jsonld-ex 0.7.4
-- **Git commit (code, before run):** TBD
+- **Git commit (code, before run):** 736cd23 (220 tests green)
 - **Config:** N_TRIALS = 1000, SEED = 42, correlation trials 2000 at seed 4242
 - **Seeds:** 42, 4242
 
 ### Results
 
-[to be filled after run]
+Run 2026-09-14, commit 736cd23, runtime 39.0 s. Output:
+experiments/fusion_results.json.
+
+Part A (N = 100, clean). Chain thresholds: cumulative 0.99621 / 0.99380 /
+0.99646, averaging 0.98068 / 0.96870 / 0.98190 (insulin / amoxicillin /
+mRNA). FPR = 0.010 for both operators on every product (in-sample).
+DR = 1.000 and LA = 1.000 for every failure scenario, F1-F7 and C1-C3,
+under both operators on every product.
+
+Mean chain scores, insulin, cumulative / averaging: Normal 0.9965 / 0.9821;
+F3 0.9771 / 0.9635; F6 0.9877 / 0.9735; C1 0.9702 / 0.9567; F1 0.9511 /
+0.9376; F5 0.9760 / 0.9619; C2 0.9290 / 0.9158; F4 0.9963 / 0.9811; F6nc
+0.9936 / 0.9792; C3 0.9925 / 0.9774; F2 0.3325 / 0.3323.
+
+Paired compound check (compound <= min(component) + 0.005): 1.000 of trials
+for C1, C2, C3 under both operators on all products. Mean gap
+(min(component) - compound): insulin C1 +0.0069, C2 +0.0221, C3 +0.0011;
+amoxicillin +0.0145, +0.0293, +0.0053; mRNA +0.0070, +0.0198, +0.0008
+(averaging within 0.002 of these).
+
+Spearman between operator mean scores over the eleven scenarios: 1.000
+(insulin), 0.991 (amoxicillin), 1.000 (mRNA). Averaging / cumulative chain
+uncertainty on Normal: 4.76x, 4.63x, 4.77x.
+
+Part B (N = 1000, insulin, clean), cumulative / averaging: Normal 0.9993 /
+0.9974; F5 0.9967 / 0.9948; F6 0.9982 / 0.9962; F3 0.9787 / 0.9769; F1
+0.9395 / 0.9377. Separation of F5 from Normal: 0.0026 under both operators
+(0.0205 at N = 100 under cumulative).
+
+Part C (insulin, N = 100, 2000 noisy Normal trials, 10,000 node rows):
+largest |Pearson r| over defined pairs 0.0101 (R1) and 0.0121 (R2);
+shelf_life disbelief is constant (0) under noise, so its pairs are
+undefined.
+
+Hypotheses:
+- H9.1 SUPPORTED: DR = LA = 1.000 for C1-C3 under both operators, all
+  products.
+- H9.2 SUPPORTED: 100% of paired trials; every compound scores below its
+  worse component on average (gaps +0.0008 to +0.0293).
+- H9.3 SUPPORTED: between-operator Spearman >= 0.991; uncertainty ratio
+  4.6-4.8x (EXP-003 A2 reported 4.8x).
+- H9.4 SUPPORTED: averaging fusion leaves F5 and F6 within 0.003 of
+  Normal at N = 1000, exactly as cumulative fusion does.
+- H9.5 SUPPORTED: all defined correlations within +/-0.013.
 
 ### Observations
 
-[to be filled after run]
+- The averaging operator's higher uncertainty comes in part from the
+  vacuous no-recall opinion: under cumulative fusion a vacuous source is
+  the identity, under averaging fusion it is a fifth source pulling the
+  fused opinion toward vacuity. This is a property of the operator, not
+  an error, and it is why averaging shifts every score down by about
+  0.015 (insulin) while preserving the ordering.
+- Dilution at N = 1000 is operator-independent: both operators weight a
+  source by its confidence, so a five-unit documentation opinion or a
+  ten-unit shelf-life opinion is dominated by thousand-unit serialization
+  and cold-chain opinions under either. The remedy is not a different
+  fusion operator but normalizing evidence volume per type before fusion
+  (or detecting per type, as EXP-007b does).
+- The compound scenarios add severity rather than replace it: C2 (mild
+  excursion plus short dating) scores 0.929, below F1 (0.951) and F5
+  (0.976), and C1 (counterfeit plus missing CoA) scores 0.970, below F3
+  (0.977) and F6 (0.988). Cumulative fusion behaves as additive evidence
+  should when two distinct observation processes report on one root
+  cause.
+- Independence of the observation processes under noise holds by
+  construction (|r| about 0.01); this is a property of the simulator and
+  must be stated as such, since operational data may correlate types
+  (a warehouse in disarray affects scans and paperwork together).
 
 ### Interpretation
 
-[to be filled after run]
+For Reviewer 2's rec 6 the paper can say: the five evidence types are
+modeled as independent observation processes (verified, |r| <= 0.013
+under noise); when a single root cause degrades two types, cumulative
+fusion detects, localizes and orders the compound failure correctly and
+scores it below its worse component in 100% of paired trials; averaging
+fusion, the dependent-source operator, gives the same detection and the
+same ordering (Spearman >= 0.99) with 4.7x higher uncertainty and slightly
+lower scores; and neither operator prevents high-volume evidence types
+from diluting low-volume ones as observation counts grow, which is a
+limitation of evidence-count fusion that per-type detection addresses.
 
 ### Artifacts
 

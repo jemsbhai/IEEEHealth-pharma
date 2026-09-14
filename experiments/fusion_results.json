@@ -1,0 +1,2058 @@
+{
+  "config": {
+    "n_trials": 1000,
+    "seed": 42,
+    "corr_seed": 4242,
+    "n_corr": 2000,
+    "fpr_target": 0.01,
+    "operators": [
+      "cumulative",
+      "averaging"
+    ],
+    "components": {
+      "C1": [
+        "F3",
+        "F6"
+      ],
+      "C2": [
+        "F1",
+        "F5"
+      ],
+      "C3": [
+        "F4",
+        "F6nc"
+      ]
+    }
+  },
+  "part_a_rows": [
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "Normal",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9965016351873903,
+      "std_score": 0.0001480540629258044,
+      "mean_uncertainty": 0.009712606402224383,
+      "n_detected": 10,
+      "rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "mean_score_ci_halfwidth": 9.19204550516223e-06,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "F1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.951148524077798,
+      "std_score": 0.004513493210435325,
+      "mean_uncertainty": 0.009274382159199533,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0002802235491393006,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "F2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.33251372602249235,
+      "std_score": 0.033923025254858394,
+      "mean_uncertainty": 0.00326079757040894,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0021061359996023335,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "F3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9771034001640808,
+      "std_score": 0.00021936371747046583,
+      "mean_uncertainty": 0.009525195762959302,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 1.361935791103935e-05,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "F4",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9962919635329286,
+      "std_score": 0.0001326254038035371,
+      "mean_uncertainty": 0.009710581324752167,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 8.234145843829803e-06,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "F5",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9759803988948754,
+      "std_score": 0.002118940274929634,
+      "mean_uncertainty": 0.009514381529651719,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0001315559670904474,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "F6",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9876926201438061,
+      "std_score": 0.0008753056935320473,
+      "mean_uncertainty": 0.009627499599430716,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 5.434399844809558e-05,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "F7",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9509960678277082,
+      "std_score": 0.004385245897372309,
+      "mean_uncertainty": 0.009272871083939904,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0002722612202825721,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "C1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9701954614567637,
+      "std_score": 0.00027074895560595316,
+      "mean_uncertainty": 0.009458440771774502,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 1.6809648254315527e-05,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "C2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9290002455574972,
+      "std_score": 0.006774156305369737,
+      "mean_uncertainty": 0.00906024740372993,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0004205784818566264,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "C3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9924628623987157,
+      "std_score": 0.00014855831180649728,
+      "mean_uncertainty": 0.00967359757217764,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 9.223352168185575e-06,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "cumulative",
+      "product": "Insulin ",
+      "scenario": "F6nc",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9935552958215241,
+      "std_score": 0.0003633867527046225,
+      "mean_uncertainty": 0.009684149291638128,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 2.2561134094023208e-05,
+      "chain_threshold": 0.9962124238789577
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "Normal",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9821310078037415,
+      "std_score": 0.0007461043847640936,
+      "mean_uncertainty": 0.04620984730739119,
+      "n_detected": 10,
+      "rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "mean_score_ci_halfwidth": 4.632244006562343e-05,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "F1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9375598518038339,
+      "std_score": 0.004613841019355707,
+      "mean_uncertainty": 0.044198915806226854,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0002864537167396435,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "F2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.3322608600030316,
+      "std_score": 0.03204159493010498,
+      "mean_uncertainty": 0.016089849038848907,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0019893260126410688,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "F3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9634951253843912,
+      "std_score": 0.0007008334186108743,
+      "mean_uncertainty": 0.045368500249305214,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 4.3511758800148194e-05,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "F4",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9811094478952915,
+      "std_score": 0.0006727215704797154,
+      "mean_uncertainty": 0.04616384356207597,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 4.1766414010891596e-05,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "F5",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9618581975316096,
+      "std_score": 0.0024049221414006766,
+      "mean_uncertainty": 0.04529624282081841,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0001493113618314241,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "F6",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.973490421196241,
+      "std_score": 0.001291537826529118,
+      "mean_uncertainty": 0.04581986673442269,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 8.018607688627515e-05,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "F7",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9366352547725258,
+      "std_score": 0.004462879724258869,
+      "mean_uncertainty": 0.04415681980544052,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00027708117358462214,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "C1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9566670295388221,
+      "std_score": 0.000726201431022296,
+      "mean_uncertainty": 0.045059912903815884,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 4.508675052852896e-05,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "C2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9158205496421337,
+      "std_score": 0.006737655156154054,
+      "mean_uncertainty": 0.04321523736599474,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00041831228113270967,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "C3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.97738119892168,
+      "std_score": 0.0006830624879837707,
+      "mean_uncertainty": 0.04599591594607404,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 4.240843748788351e-05,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "averaging",
+      "product": "Insulin ",
+      "scenario": "F6nc",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9792305230660121,
+      "std_score": 0.0008931284108144208,
+      "mean_uncertainty": 0.046079220025428615,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 5.54505349729819e-05,
+      "chain_threshold": 0.9806800814489307
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "Normal",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.994606852573041,
+      "std_score": 0.00039839418933022066,
+      "mean_uncertainty": 0.014869502965072584,
+      "n_detected": 10,
+      "rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "mean_score_ci_halfwidth": 2.4734596572002228e-05,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "F1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9674174117586788,
+      "std_score": 0.004760882674102049,
+      "mean_uncertainty": 0.014468616062150063,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0002955829061375736,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "F2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.5558388313966522,
+      "std_score": 0.0554500537770178,
+      "mean_uncertainty": 0.008362169767292118,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.003442657415200219,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "F3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9650783610681256,
+      "std_score": 0.0005590748201609867,
+      "mean_uncertainty": 0.014433889761355677,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 3.471057184216248e-05,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "F4",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9939453544426019,
+      "std_score": 0.00035998148366471054,
+      "mean_uncertainty": 0.014859752426406615,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 2.2349715458467914e-05,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "F5",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9533227864755023,
+      "std_score": 0.007569116312838107,
+      "mean_uncertainty": 0.014260694113101003,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0004699341592289882,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "F6",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9721536849870772,
+      "std_score": 0.0037062081393024688,
+      "mean_uncertainty": 0.014538180103764458,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00023010266111470054,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "F7",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9668467177969963,
+      "std_score": 0.0045645579353512915,
+      "mean_uncertainty": 0.014460087759264894,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00028339394018335717,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "C1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9505817611538473,
+      "std_score": 0.000727202321555023,
+      "mean_uncertainty": 0.014219901456263668,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 4.514889155418339e-05,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "C2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9240525887825857,
+      "std_score": 0.012712295913828942,
+      "mean_uncertainty": 0.013828564284950492,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0007892522515478857,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "C3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9817359388945512,
+      "std_score": 0.0006046185303865921,
+      "mean_uncertainty": 0.014679748454159994,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 3.7538186624186284e-05,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "cumulative",
+      "product": "Amoxicil",
+      "scenario": "F6nc",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9870380921742051,
+      "std_score": 0.0014422858230088737,
+      "mean_uncertainty": 0.014757923825569622,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 8.95453772396087e-05,
+      "chain_threshold": 0.9938017447729587
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "Normal",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.972724814639625,
+      "std_score": 0.0019810651322431866,
+      "mean_uncertainty": 0.06890017184909604,
+      "n_detected": 10,
+      "rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "mean_score_ci_halfwidth": 0.00012299588734282388,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "F1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9462696691364381,
+      "std_score": 0.005449280450138054,
+      "mean_uncertainty": 0.06714399962102681,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.000338322588912416,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "F2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.5485698736810571,
+      "std_score": 0.05121735857405708,
+      "mean_uncertainty": 0.039971122796324185,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0031798674170993575,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "F3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9449127544943995,
+      "std_score": 0.0018897285644506067,
+      "mean_uncertainty": 0.06704600265683854,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00011732518928264657,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "F4",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9696611213799743,
+      "std_score": 0.0018095446874713892,
+      "mean_uncertainty": 0.06869705392556213,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0001123469142430574,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "F5",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9324277198298019,
+      "std_score": 0.007992414500309004,
+      "mean_uncertainty": 0.06622264240412752,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0004962149388617301,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "F6",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9509881743968503,
+      "std_score": 0.004522445453830917,
+      "mean_uncertainty": 0.06745098872238466,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0002807793557618235,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "F7",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.94336950077315,
+      "std_score": 0.005165215732042818,
+      "mean_uncertainty": 0.06695019164771207,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0003206862217398985,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "C1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9305924469659941,
+      "std_score": 0.0019914068337864234,
+      "mean_uncertainty": 0.06608888500512018,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00012363795949746562,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "C2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9042067463394214,
+      "std_score": 0.012598660361372688,
+      "mean_uncertainty": 0.06433855594241264,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0007821971046066931,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "C3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9581545764595113,
+      "std_score": 0.0019320832772824858,
+      "mean_uncertainty": 0.06793343986782274,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00011995481281350378,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "averaging",
+      "product": "Amoxicil",
+      "scenario": "F6nc",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9653496317310175,
+      "std_score": 0.0026879165246336692,
+      "mean_uncertainty": 0.06841104147180788,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00016688127647595898,
+      "chain_threshold": 0.9687034198747078
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "Normal",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9966680466860335,
+      "std_score": 0.00010544478993227401,
+      "mean_uncertainty": 0.009264788993420875,
+      "n_detected": 10,
+      "rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "mean_score_ci_halfwidth": 6.546617419242759e-06,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "F1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.952084121441315,
+      "std_score": 0.0032884501962329965,
+      "mean_uncertainty": 0.008853764188828687,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00020416585163476102,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "F2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.3818494275874194,
+      "std_score": 0.02758040321264375,
+      "mean_uncertainty": 0.003568719702508589,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0017123496402013136,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "F3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9808679735893804,
+      "std_score": 9.542148420422696e-05,
+      "mean_uncertainty": 0.009119149774795623,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 5.9243131032137276e-06,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "F4",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9965078031209138,
+      "std_score": 9.408541908600841e-05,
+      "mean_uncertainty": 0.009263312230092191,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 5.841362516638611e-06,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "F5",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9775808273850602,
+      "std_score": 0.0014478908267252,
+      "mean_uncertainty": 0.009088871269942466,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 8.989336802215748e-05,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "F6",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9882788479541816,
+      "std_score": 0.0006226870038419685,
+      "mean_uncertainty": 0.009187462653288283,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 3.865998110201746e-05,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "F7",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9519680723631871,
+      "std_score": 0.0031944781284737513,
+      "mean_uncertainty": 0.008852661183644672,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00019833152661870223,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "C1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9738250938017725,
+      "std_score": 9.703712932233294e-05,
+      "mean_uncertainty": 0.009054218427777967,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 6.024621619929448e-06,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "C2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.932313393635676,
+      "std_score": 0.004746376661727142,
+      "mean_uncertainty": 0.008671405172234074,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0002946822896788723,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "C3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9930276328161152,
+      "std_score": 9.476476759815819e-05,
+      "mean_uncertainty": 0.009231238887688285,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 5.883540369202334e-06,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "cumulative",
+      "product": "mRNA-bas",
+      "scenario": "F6nc",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9938625411894969,
+      "std_score": 0.00025796198574459784,
+      "mean_uncertainty": 0.009238933601874572,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 1.601575981575495e-05,
+      "chain_threshold": 0.9964575305877724
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "Normal",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9829651346270432,
+      "std_score": 0.000531714026764546,
+      "mean_uncertainty": 0.04418436752733817,
+      "n_detected": 10,
+      "rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "mean_score_ci_halfwidth": 3.3011856839093214e-05,
+      "chain_threshold": 0.9819034973556502
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "F1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9390998410494165,
+      "std_score": 0.003362064407044323,
+      "mean_uncertainty": 0.042290125985635724,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0002087362441132398,
+      "chain_threshold": 0.9819034973556502
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "F2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.3816991461379652,
+      "std_score": 0.026015161496424938,
+      "mean_uncertainty": 0.01759921625254388,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0016151704558024914,
+      "chain_threshold": 0.9819034973556502
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "F3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9677416051457988,
+      "std_score": 0.000482331299144567,
+      "mean_uncertainty": 0.043526673469711216,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 2.9945893835569564e-05,
+      "chain_threshold": 0.9819034973556502
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "F4",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9821805833757281,
+      "std_score": 0.00047742315836440556,
+      "mean_uncertainty": 0.04415054679849589,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 2.9641168301494922e-05,
+      "chain_threshold": 0.9819034973556502
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "F5",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9641297017669797,
+      "std_score": 0.001654423624513523,
+      "mean_uncertainty": 0.043371896436374714,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00010271610883765353,
+      "chain_threshold": 0.9819034973556502
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "F6",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9747265734484826,
+      "std_score": 0.0009207974572032275,
+      "mean_uncertainty": 0.04382852340917077,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 5.7168388090040985e-05,
+      "chain_threshold": 0.9819034973556502
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "F7",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.938390709738404,
+      "std_score": 0.003253634540251476,
+      "mean_uncertainty": 0.04225919185003764,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.00020200429599927277,
+      "chain_threshold": 0.9819034973556502
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "C1",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9607884587276685,
+      "std_score": 0.0004896116373423289,
+      "mean_uncertainty": 0.04322602100681204,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 3.039789899290412e-05,
+      "chain_threshold": 0.9819034973556502
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "C2",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9196740424707825,
+      "std_score": 0.0047332419668471605,
+      "mean_uncertainty": 0.0414490741794596,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 0.0002938668124765092,
+      "chain_threshold": 0.9819034973556502
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "C3",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9787803466168216,
+      "std_score": 0.00048090949409201536,
+      "mean_uncertainty": 0.04400394227431914,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 2.9857620022043258e-05,
+      "chain_threshold": 0.9819034973556502
+    },
+    {
+      "operator": "averaging",
+      "product": "mRNA-bas",
+      "scenario": "F6nc",
+      "n": 100,
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9802006593612218,
+      "std_score": 0.0006365483537177575,
+      "mean_uncertainty": 0.04406518521573621,
+      "n_detected": 1000,
+      "rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "mean_score_ci_halfwidth": 3.9520573214812626e-05,
+      "chain_threshold": 0.9819034973556502
+    }
+  ],
+  "part_a_summary": {
+    "Insulin ": {
+      "thresholds": {
+        "cumulative": 0.9962124238789577,
+        "averaging": 0.9806800814489307
+      },
+      "paired_compound_check": {
+        "cumulative": {
+          "C1": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9701954614567637,
+            "mean_component_min": 0.9771034001640808,
+            "mean_gap": 0.006907938707317099
+          },
+          "C2": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9290002455574972,
+            "mean_component_min": 0.951148524077798,
+            "mean_gap": 0.022148278520300824
+          },
+          "C3": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9924628623987157,
+            "mean_component_min": 0.9935552958215241,
+            "mean_gap": 0.0010924334228084567
+          }
+        },
+        "averaging": {
+          "C1": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9566670295388221,
+            "mean_component_min": 0.9634951253843912,
+            "mean_gap": 0.006828095845568953
+          },
+          "C2": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9158205496421337,
+            "mean_component_min": 0.9375598518038339,
+            "mean_gap": 0.021739302161700287
+          },
+          "C3": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.97738119892168,
+            "mean_component_min": 0.9792305230660121,
+            "mean_gap": 0.0018493241443322992
+          }
+        }
+      },
+      "operator_agreement": {
+        "spearman_between_operators": 1.0,
+        "pvalue": 0.0,
+        "n_scenarios": 11
+      },
+      "uncertainty_ratio_normal": 4.757718514857989
+    },
+    "Amoxicil": {
+      "thresholds": {
+        "cumulative": 0.9938017447729587,
+        "averaging": 0.9687034198747078
+      },
+      "paired_compound_check": {
+        "cumulative": {
+          "C1": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9505817611538473,
+            "mean_component_min": 0.9650783610681256,
+            "mean_gap": 0.014496599914278364
+          },
+          "C2": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9240525887825857,
+            "mean_component_min": 0.9533227864755023,
+            "mean_gap": 0.02927019769291661
+          },
+          "C3": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9817359388945512,
+            "mean_component_min": 0.9870380921742051,
+            "mean_gap": 0.005302153279653717
+          }
+        },
+        "averaging": {
+          "C1": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9305924469659941,
+            "mean_component_min": 0.9449127544943995,
+            "mean_gap": 0.014320307528405345
+          },
+          "C2": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9042067463394214,
+            "mean_component_min": 0.9324277198298019,
+            "mean_gap": 0.028220973490380524
+          },
+          "C3": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9581545764595113,
+            "mean_component_min": 0.9653478551898675,
+            "mean_gap": 0.007193278730356188
+          }
+        }
+      },
+      "operator_agreement": {
+        "spearman_between_operators": 0.990909090909091,
+        "pvalue": 3.7625718070854e-09,
+        "n_scenarios": 11
+      },
+      "uncertainty_ratio_normal": 4.633656687176276
+    },
+    "mRNA-bas": {
+      "thresholds": {
+        "cumulative": 0.9964575305877724,
+        "averaging": 0.9819034973556502
+      },
+      "paired_compound_check": {
+        "cumulative": {
+          "C1": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9738250938017725,
+            "mean_component_min": 0.9808679735893804,
+            "mean_gap": 0.007042879787607935
+          },
+          "C2": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.932313393635676,
+            "mean_component_min": 0.952084121441315,
+            "mean_gap": 0.01977072780563895
+          },
+          "C3": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9930276328161152,
+            "mean_component_min": 0.9938625411894969,
+            "mean_gap": 0.0008349083733817133
+          }
+        },
+        "averaging": {
+          "C1": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9607884587276685,
+            "mean_component_min": 0.9677416051457988,
+            "mean_gap": 0.006953146418130301
+          },
+          "C2": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9196740424707825,
+            "mean_component_min": 0.9390998410494165,
+            "mean_gap": 0.01942579857863383
+          },
+          "C3": {
+            "fraction_at_most_worse_component": 1.0,
+            "mean_compound": 0.9787803466168216,
+            "mean_component_min": 0.9802006593612218,
+            "mean_gap": 0.0014203127444002202
+          }
+        }
+      },
+      "operator_agreement": {
+        "spearman_between_operators": 1.0,
+        "pvalue": 0.0,
+        "n_scenarios": 11
+      },
+      "uncertainty_ratio_normal": 4.769063554357734
+    }
+  },
+  "part_b": {
+    "cumulative": {
+      "Normal": {
+        "mean_score": 0.9993374030985306,
+        "std_score": 0.0001396503654994249,
+        "mean_uncertainty": 0.0012973171388630036
+      },
+      "F1": {
+        "mean_score": 0.939454344935234,
+        "std_score": 0.004575946506208951,
+        "mean_uncertainty": 0.001219671815140452
+      },
+      "F3": {
+        "mean_score": 0.9787094657886275,
+        "std_score": 0.00012658410579048063,
+        "mean_uncertainty": 0.0012705699710814805
+      },
+      "F5": {
+        "mean_score": 0.9967157698111824,
+        "std_score": 0.00022059980620632504,
+        "mean_uncertainty": 0.0012939180353277982
+      },
+      "F6": {
+        "mean_score": 0.9981634314995446,
+        "std_score": 0.0001507507361636968,
+        "mean_uncertainty": 0.0012957946476378356
+      }
+    },
+    "averaging": {
+      "Normal": {
+        "mean_score": 0.9973966676970948,
+        "std_score": 0.00012229082742387843,
+        "mean_uncertainty": 0.006442881407646925
+      },
+      "F1": {
+        "mean_score": 0.9376516952813126,
+        "std_score": 0.004573529808656242,
+        "mean_uncertainty": 0.006059139431358155
+      },
+      "F3": {
+        "mean_score": 0.9769147268154099,
+        "std_score": 0.0001092569058401372,
+        "mean_uncertainty": 0.006311343805849162
+      },
+      "F5": {
+        "mean_score": 0.9947782994930069,
+        "std_score": 0.00023623586103076224,
+        "mean_uncertainty": 0.006426068980715941
+      },
+      "F6": {
+        "mean_score": 0.9962253952969691,
+        "std_score": 0.000150677488857671,
+        "mean_uncertainty": 0.006435358719728819
+      }
+    }
+  },
+  "part_c": {
+    "R1": {
+      "types": [
+        "serialization",
+        "cold_chain",
+        "shelf_life",
+        "documentation"
+      ],
+      "matrix": {
+        "serialization": {
+          "serialization": 1.0,
+          "cold_chain": 0.009456865634462311,
+          "shelf_life": null,
+          "documentation": 0.010119180039381073
+        },
+        "cold_chain": {
+          "serialization": 0.009456865634462311,
+          "cold_chain": 1.0,
+          "shelf_life": null,
+          "documentation": -0.0036787108412443897
+        },
+        "shelf_life": {
+          "serialization": null,
+          "cold_chain": null,
+          "shelf_life": 1.0,
+          "documentation": null
+        },
+        "documentation": {
+          "serialization": 0.010119180039381073,
+          "cold_chain": -0.0036787108412443897,
+          "shelf_life": null,
+          "documentation": 1.0
+        }
+      },
+      "max_abs_offdiag_defined": 0.010119180039381073,
+      "constant_types": [
+        "shelf_life"
+      ],
+      "n_rows": 10000
+    },
+    "R2": {
+      "types": [
+        "serialization",
+        "cold_chain",
+        "shelf_life",
+        "documentation"
+      ],
+      "matrix": {
+        "serialization": {
+          "serialization": 0.9999999999999998,
+          "cold_chain": 0.012093786337188654,
+          "shelf_life": null,
+          "documentation": 0.0005445936018606889
+        },
+        "cold_chain": {
+          "serialization": 0.012093786337188652,
+          "cold_chain": 0.9999999999999999,
+          "shelf_life": null,
+          "documentation": 0.005681114024784547
+        },
+        "shelf_life": {
+          "serialization": null,
+          "cold_chain": null,
+          "shelf_life": 1.0,
+          "documentation": null
+        },
+        "documentation": {
+          "serialization": 0.0005445936018606889,
+          "cold_chain": 0.005681114024784547,
+          "shelf_life": null,
+          "documentation": 1.0
+        }
+      },
+      "max_abs_offdiag_defined": 0.012093786337188652,
+      "constant_types": [
+        "shelf_life"
+      ],
+      "n_rows": 10000
+    }
+  },
+  "runtime_seconds": 38.95230436325073
+}
