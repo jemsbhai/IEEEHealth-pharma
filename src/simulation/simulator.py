@@ -20,7 +20,7 @@ from __future__ import annotations
 import copy
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 
@@ -182,13 +182,51 @@ class FailureScenario:
     """A failure scenario to inject into the supply chain.
 
     Attributes:
-        failure_type: Which failure from F1–F7.
-        target_node:  Node ID where the failure occurs.
-        params:       Failure-specific parameters.
+        failure_type:         Which failure from F1–F7.
+        target_node:          Node ID where the failure occurs (for F7, the
+                              node named here is where the first sub-failure
+                              is injected; see localization_targets).
+        params:               Failure-specific parameters.
+        localization_targets: Nodes credited as a correct localization. Empty
+                              (the default) means (target_node,). F7 injects
+                              failures at two nodes and lists both, so that
+                              flagging either compromised node counts as
+                              correct (EXP-006, H6.1).
     """
     failure_type: FailureType
     target_node: str
     params: Dict[str, Any] = field(default_factory=dict)
+    localization_targets: Tuple[str, ...] = ()
+
+    def localization_target_set(self) -> Tuple[str, ...]:
+        """Return the nodes credited as correct localization for this scenario."""
+        if self.localization_targets:
+            return self.localization_targets
+        return (self.target_node,)
+
+
+def localization_accuracy_from_trials(
+    detected: Sequence[bool],
+    localized: Sequence[Sequence[str]],
+    targets: Sequence[str],
+) -> float:
+    """Fraction of detected trials whose localized nodes include any target.
+
+    Shared by run_experiment (SL flagged-node sets) and by
+    scripts/run_experiments.py (baselines pass their single weakest node as
+    a one-element list), so every method is scored by the same rule.
+    Returns 0.0 when no trial was detected. Trials that were not detected
+    do not count toward the denominator (LA is conditional on detection).
+    """
+    n_detected = 0
+    n_correct = 0
+    for det, nodes in zip(detected, localized):
+        if not det:
+            continue
+        n_detected += 1
+        if any(n in nodes for n in targets):
+            n_correct += 1
+    return n_correct / n_detected if n_detected else 0.0
 
 
 def apply_failure(
@@ -407,6 +445,7 @@ def get_standard_scenarios() -> Dict[str, FailureScenario]:
                     {"scan_rate": 0.20},
                 ),
             ]},
+            localization_targets=("central_warehouse", "distributor_a"),
         ),
     }
 
@@ -570,18 +609,14 @@ def run_experiment(
         detection_rate = sum(detections) / n_trials
         false_positive_rate = 0.0  # by definition, no FP in failure trials
 
-        # Localization accuracy: of detected trials, how many correctly
-        # identified the target node?
-        target_node = scenario.target_node
-        detected_trials = [t for t in trials if t.detected]
-        if detected_trials:
-            correct_localizations = sum(
-                1 for t in detected_trials
-                if target_node in t.localized_nodes
-            )
-            localization_accuracy = correct_localizations / len(detected_trials)
-        else:
-            localization_accuracy = 0.0
+        # Localization accuracy: of detected trials, how many flagged at
+        # least one of the nodes where a failure was actually injected?
+        # (EXP-006: F7 injects at two nodes and credits either.)
+        localization_accuracy = localization_accuracy_from_trials(
+            detected=[t.detected for t in trials],
+            localized=[t.localized_nodes for t in trials],
+            targets=scenario.localization_target_set(),
+        )
     else:
         detection_rate = 0.0
         false_positive_rate = sum(detections) / n_trials
