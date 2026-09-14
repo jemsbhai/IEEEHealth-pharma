@@ -114,6 +114,32 @@ for multi-dimensional, multi-node supply chain integrity assessment.
 
 ## Raw Findings Log
 
+### 2026-09-14 — EXP-009: Fusion operator under compound failures and evidence volume
+
+**Key result:** compound failures whose root cause spans two evidence types
+at one node (C1 counterfeit + missing CoA; C2 mild excursion + short
+dating; C3 scan omission + late routine document) are detected and
+localized at 1.000 under both cumulative and averaging fusion, score below
+their worse component in 100% of paired trials, and the two operators
+agree on the severity ordering (Spearman 0.991-1.000) with averaging
+carrying 4.6-4.8x the uncertainty. Averaging fusion does not undo the
+evidence-volume dilution of F5/F6 at N = 1000 (both operators leave them
+within 0.003 of Normal). Per-dimension disbelief of different evidence
+types is uncorrelated under noise by construction (|r| <= 0.013).
+
+**Numbers (experiments/fusion_results.json, commit 736cd23, insulin):**
+- Cumulative scores: Normal 0.9965, F3 0.9771, F6 0.9877, C1 0.9702,
+  F1 0.9511, F5 0.9760, C2 0.9290, F4 0.9963, F6nc 0.9936, C3 0.9925.
+- Paired gaps min(component) - compound: C1 +0.0069, C2 +0.0221, C3 +0.0011
+  (amoxicillin +0.0145, +0.0293, +0.0053).
+- N = 1000: F5 - Normal separation 0.0026 under both operators (0.0205 at
+  N = 100).
+
+**Implications:** answers Reviewer 2 rec 6 in the camera-ready with one
+sentence on the independence assumption (a simulator property), one on
+compound failures, and one noting that the fusion operator does not
+address volume dilution.
+
 ### 2026-09-14 — EXP-007b: Per-evidence-type calibration and evidence volume
 
 **Key result:** calibrating one disbelief and one uncertainty threshold per
