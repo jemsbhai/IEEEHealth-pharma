@@ -2122,7 +2122,7 @@ of Table II); the other products are run for DR/FPR only.
 **Date:** 2026-09-14 (America/New_York)
 **Researcher:** Muntaser Syed
 **Type:** computational
-**Status:** planned
+**Status:** completed
 
 ### Motivation
 
@@ -2167,20 +2167,46 @@ paragraph can be replaced by one sentence.
 ### Environment
 
 - **Software:** Python 3.12.2, numpy 2.0.2, scipy 1.17.1
-- **Git commit (code, before run):** TBD
+- **Git commit (code, before run):** 7ac4f10 (233 tests green)
 - **Seeds:** 42 (clean), 4242 (R2)
 
 ### Results
 
-[to be filled after run]
+Run 2026-09-14, commit 7ac4f10, runtime 10.3 s. Output:
+experiments/ds_check_results.json.
+
+- Clean regime, all three products, Normal and F1-F7, 1000 trials each
+  (24,000 chains): max |BetP_flat - BetP_hier| = 1.55e-15, mean 2.6e-16 to
+  4.3e-16; total-conflict events 0 in both groupings.
+- R2 noisy Normal, insulin, 1000 chains: max |diff| = 2.33e-15; 0 events.
+- Largest pairwise conflict K observed in any combination step: 0.550 (F5),
+  0.490 (F2), 0.300 (F6), 0.081 (R2 Normal), below 0.05 elsewhere.
+
+Hypotheses:
+- H10.1 SUPPORTED (max |diff| 1.55e-15 < 1e-9; no conflict events).
+- H10.2 SUPPORTED (2.33e-15; no conflict events).
 
 ### Observations
 
-[to be filled after run]
+- The identity holds to floating-point precision, as the algebra
+  requires; the paper's hierarchical-combination paragraph can be replaced
+  by the statement that Dempster's rule is associative, so grouping
+  cannot change B4's result.
+- The conflict never approaches K = 1. B4's failure on F2 is the
+  normalization of moderate conflict (K about 0.49 at the failing node)
+  combined with dilution across 25 sources, which is the mechanism Zadeh's
+  example criticizes, not its extreme instance (K -> 1). The camera-ready
+  wording in Sec. IV.G should say "conflict normalization" and cite
+  Zadeh for the mechanism rather than call the F2 case the paradox
+  itself.
 
 ### Interpretation
 
-[to be filled after run]
+One sentence in the paper replaces fourteen lines: B4 is implemented
+hierarchically; because Dempster's rule is associative the flat and
+hierarchical combinations are identical (verified to 1e-15 on 25,000
+chains), so the grouping cannot rescue the baseline, and its failure is
+structural (normalization and dilution).
 
 ### Artifacts
 
