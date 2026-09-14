@@ -280,11 +280,25 @@ def compute_spearman(raw: Dict, order: Optional[Dict[str, int]] = None) -> Dict:
         # method score is descending safety (high=safe). So we expect
         # NEGATIVE correlation: higher severity → lower score.
         # We negate so positive ρ means correct ordering.
+        # EXP-007 fix: a method whose mean score is (numerically) the same for
+        # every scenario has no rank correlation. scipy returns NaN with a
+        # warning, and near-constant inputs (floating-point residue, e.g. B4's
+        # 1.0000000000000004) produce an arbitrary rho; report such methods
+        # as undefined instead.
+        if max(method_scores) - min(method_scores) < 1e-9:
+            results[method] = {
+                "rho": float("nan"),
+                "pvalue": float("nan"),
+                "constant_output": True,
+                "mean_scores": mean_scores,
+            }
+            continue
         rho, pvalue = sp_stats.spearmanr(gt_ranks, [-s for s in method_scores])
 
         results[method] = {
             "rho": float(rho),
             "pvalue": float(pvalue),
+            "constant_output": False,
             "mean_scores": mean_scores,
         }
     return results

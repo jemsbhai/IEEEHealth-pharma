@@ -153,3 +153,14 @@ class TestSpearmanOrdering:
         scores = {sc: 1.0 - 0.1 * rank for sc, rank in rm.SEVERITY_ORDER.items()}
         res = rm.compute_spearman(self._raw_from_scores(scores))
         assert res["M"]["rho"] == pytest.approx(1.0)
+        assert res["M"]["constant_output"] is False
+
+    def test_constant_output_is_reported_as_undefined(self):
+        """Floating-point residue on a constant output must not yield a rho."""
+        import math
+        scores = {sc: 1.0 for sc in rm.SEVERITY_ORDER}
+        scores["Normal"] = 1.0000000000000002
+        scores["F5"] = 1.0000000000000004
+        res = rm.compute_spearman(self._raw_from_scores(scores))
+        assert res["M"]["constant_output"] is True
+        assert math.isnan(res["M"]["rho"]) and math.isnan(res["M"]["pvalue"])
