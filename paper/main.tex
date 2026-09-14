@@ -361,8 +361,10 @@ architecture. Three product categories are evaluated: insulin
 (refrigerated biologic, 2-8\textdegree C), amoxicillin tablets
 (controlled room temperature, 15-25\textdegree C), and mRNA-based
 therapy (frozen, -15 to -25\textdegree C). Normal operation generates
-95-100\% scan rates with less than 0.1\% failure, Gaussian temperature
-noise ($\sigma = 1$\textdegree C), and complete documentation. Seven
+95-100\% scan rates with no scan failures (a nominal failure rate below
+0.1\% rounds to zero at 100 packages), product-specific Gaussian
+temperature noise ($\sigma$ = 0.8 to 1.5\textdegree C) clipped inside
+the range, and complete documentation. Seven
 failure scenarios (Table~\ref{tab:scenarios}) inject specific
 compromises at designated nodes. Each configuration runs 1000 Monte
 Carlo trials (seed 42, reproducible). Detection thresholds for the four
@@ -517,9 +519,11 @@ produces 0.0 bits (all scores identical at 1.0). B1 produces 0.5 bits
 
 We sweep the counterfeit infiltration rate in F3 from 1\% to 20\%
 (Fig.~\ref{fig:counterfeit}). The SL algebra maintains DR=1.000 at all
-levels, including 1\% infiltration, because per-dimension disbelief
-monitoring flags the serialization dimension even when the chain-level
-score remains high. B1 passes exactly-1\% infiltration by construction
+levels, including 1\% infiltration: a single failed scan lowers the chain
+score below the calibrated threshold because the noiseless Normal
+distribution has a spread of 0.0001, and from 3\% the serialization
+dimension's disbelief also exceeds the 0.02 per-dimension threshold. B1
+passes exactly-1\% infiltration by construction
 (its failure-rate limit is 1\%) and detects 2\% and above, so at this
 level the algebra's edge over B1 is narrow and its edge over B2 and B3
 wide; Section~\ref{sec:noise} shows that neither survives benign scan
