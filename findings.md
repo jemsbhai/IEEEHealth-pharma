@@ -114,6 +114,40 @@ for multi-dimensional, multi-node supply chain integrity assessment.
 
 ## Raw Findings Log
 
+### 2026-09-14 — EXP-007b: Per-evidence-type calibration and evidence volume
+
+**Key result:** calibrating one disbelief and one uncertainty threshold per
+evidence type (ten criteria sharing the 1% budget) recovers 5% counterfeit
+under moderate noise at N = 100 (DR 1.000, R1) and recovers both 5%
+counterfeit and the mild excursion at N = 1000 in both noise regimes
+(F3 1.000 / 1.000, F1 1.000 / 0.939), at out-of-sample FPR 0.001-0.009.
+A rule system tuned to the same noise matches this detection almost
+exactly. By mutual information, SL's projected probability identifies
+scenarios less well than B2 and B3 in every regime (1.74 vs 2.18 / 2.55
+bits, clean) and less well than binary B1-tuned under heavy noise.
+
+**Numbers (experiments/stress_results_b.json, commit 9572f8d, insulin):**
+- SL-cal-pt DR, N = 100: R1 F1 0.125, F3 1.000; R2 F1 0.028, F3 0.002.
+  N = 1000: R1 F1 1.000, F3 1.000; R2 F1 0.939, F3 1.000. F2, F4, F5, F6,
+  F7 = 1.000 everywhere. B1-tuned: identical except F1 at N = 100
+  (1.000 / 0.927) and F3 at N = 100 R2 (0.002).
+- Counterfeit floor, SL-cal-pt = B1-tuned: 5% (N = 100, R1), 10% (N = 100,
+  R2), 2% (N = 1000, R1), 3% (N = 1000, R2).
+- Spearman, SL: 0.976 / 0.690 / 0.619 (N = 100, R0 / R1 / R2); 0.881
+  (p = 0.004) / 0.762 (p = 0.028) / 0.619 (N = 1000).
+- Evidence-volume dilution at N = 1000 (R0): F5 score 0.976 -> 0.997, F6
+  0.988 -> 0.998, because shelf-life and document evidence counts do not
+  scale with N while serialization and cold-chain counts do.
+- Mutual information (bits), N = 100 R0 / R2: SL 1.739 / 0.498, B1-tuned
+  0.544 / 0.772, B2 2.181 / 1.572, B3 2.552 / 1.323, B4 0 / 0.
+
+**Implications:** the paper states per-evidence-type calibration as the
+deployment requirement, reports the noisy-regime results at both N, drops
+any claim that P(omega) carries more information than the baselines,
+scopes the severity-ranking claim to the clean regime and large volume,
+and adds evidence-volume dilution of low-count evidence types to
+Limitations.
+
 ### 2026-09-14 — EXP-007: Operational stress test (benign noise regimes R1, R2)
 
 **Key result:** under benign operational noise the deployed rule system and
