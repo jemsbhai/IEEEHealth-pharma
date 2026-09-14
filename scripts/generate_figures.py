@@ -206,19 +206,25 @@ def fig_severity_discrimination(results: list, out_dir: Path):
 # ═══════════════════════════════════════════════════════════════════
 
 def fig_counterfeit_sweep(metrics: dict, out_dir: Path):
-    """Line plot: DR vs counterfeit fraction for SL, B2, B3, B4."""
+    """Line plot: DR vs counterfeit fraction for SL, B1, B2, B3, B4.
+
+    EXP-006 (v3.1): B1 is included; its fixed failure-rate rule passes
+    exactly 1% infiltration and fails 2% and above."""
     fig, ax = plt.subplots(figsize=(SINGLE_COL, 2.5))
 
     sweep = metrics["sensitivity_insulin"]["counterfeit_fraction_sweep"]
     fractions = sorted(sweep.keys(), key=float)
     x_vals = [float(f) * 100 for f in fractions]  # convert to percentage
 
-    method_map = {"SL": "SL_Algebra", "B2": "B2_WeightedScoring",
+    method_map = {"SL": "SL_Algebra", "B1": "B1_Threshold", "B2": "B2_WeightedScoring",
                   "B3": "B3_Bayesian", "B4": "B4_DempsterShafer"}
+    markers = {"SL": "o", "B1": "s", "B2": "^", "B3": "v", "B4": "D"}
 
     for short_name, full_name in method_map.items():
-        drs = [sweep[f].get(short_name, 0.0) for f in fractions]
-        ax.plot(x_vals, drs, "o-", color=COLORS[full_name],
+        if not all(short_name in sweep[f] for f in fractions):
+            continue
+        drs = [sweep[f][short_name] for f in fractions]
+        ax.plot(x_vals, drs, markers[short_name] + "-", color=COLORS[full_name],
                 label=LABELS[full_name], markersize=4, linewidth=1.5)
 
     ax.set_xlabel("Counterfeit Infiltration Rate (%)")
@@ -227,7 +233,7 @@ def fig_counterfeit_sweep(metrics: dict, out_dir: Path):
     ax.set_xlim(0, 21)
     ax.set_xticks([1, 2, 3, 5, 10, 15, 20])
     ax.axhline(y=1.0, color="gray", linewidth=0.5, linestyle="--", alpha=0.5)
-    ax.legend(loc="center right", frameon=True, framealpha=0.9, fontsize=7)
+    ax.legend(loc="center right", frameon=True, framealpha=0.9, fontsize=6.5)
 
     # Annotate key finding
     ax.annotate("SL: DR=1.0\nat 1% infiltration",
@@ -360,14 +366,24 @@ def fig_spearman_entropy(metrics: dict, out_dir: Path):
                      "B3_Bayesian", "B4_DempsterShafer"]
     short_labels = ["SL\nAlgebra", "B1\nThreshold", "B2\nWeighted", "B3\nBayesian", "B4\nD-S"]
 
-    # Panel A: Spearman ρ
+    # Panel A: Spearman ρ. A method with constant output has no rank
+    # correlation (EXP-007 audit: B4's earlier 0.31 was rounding noise);
+    # it is drawn as an empty slot labelled "undef.".
     rhos = [spearman[m]["rho"] for m in methods_order]
     pvals = [spearman[m]["pvalue"] for m in methods_order]
     colors_bar = [COLORS[m] for m in methods_order]
 
-    bars = ax1.bar(range(len(methods_order)), rhos, color=colors_bar,
+    def _undefined(m):
+        v = spearman[m]
+        return bool(v.get("constant_output", False)) or (isinstance(v["rho"], float) and v["rho"] != v["rho"])
+
+    bar_heights = [0.0 if _undefined(m) else r for m, r in zip(methods_order, rhos)]
+    bars = ax1.bar(range(len(methods_order)), bar_heights, color=colors_bar,
                    edgecolor="white", linewidth=0.3)
-    for i, (rho, pval) in enumerate(zip(rhos, pvals)):
+    for i, (m, rho, pval) in enumerate(zip(methods_order, rhos, pvals)):
+        if _undefined(m):
+            ax1.text(i, 0.03, "undef.\n(constant\noutput)", ha="center", va="bottom", fontsize=6)
+            continue
         stars = "***" if pval < 0.001 else "**" if pval < 0.01 else "*" if pval < 0.05 else "n.s."
         ax1.text(i, rho + 0.03, f"{rho:.2f}\n{stars}",
                  ha="center", va="bottom", fontsize=6.5)
@@ -413,10 +429,18 @@ if __name__ == "__main__":
     fig_dir = base / "figures"
     fig_dir.mkdir(exist_ok=True)
 
-    print("Loading experiment data...")
-    main_results = load_json(exp_dir / "full_results_v3.json")["results"]
+    print("Loading experiment data (v3.1, EXP-006)...")
+    main_results = load_json(exp_dir / "full_results_v3_1.json")["results"]
     ablation = load_json(exp_dir / "ablation_results.json")
-    metrics = load_json(exp_dir / "metrics_results.json")
+    metrics = load_json(exp_dir / "metrics_results_v3_1.json")
+    # B4's Spearman in the v3.1 file predates the constant-output guard
+    # (LOGBOOK addendum item 8); mark it undefined here from its mean scores.
+    for pkey, pval in metrics.items():
+        if isinstance(pval, dict) and "spearman" in pval:
+            for m, v in pval["spearman"].items():
+                ms = list(v.get("mean_scores", {}).values())
+                if ms and max(ms) - min(ms) < 1e-9:
+                    v["constant_output"] = True
 
     print(f"Generating figures to {fig_dir}/")
 
