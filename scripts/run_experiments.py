@@ -1,5 +1,13 @@
 """
-Full Experiment Suite v3.0 — with B4 Dempster-Shafer baseline.
+Full Experiment Suite v3.1 — EXP-006 (camera-ready).
+
+v3.1 changes (EXP-006, see LOGBOOK.md):
+- Localization accuracy credits any node where a failure was injected
+  (F7 injects at two nodes); SL and every baseline are scored by the same
+  helper, simulation.simulator.localization_accuracy_from_trials.
+- 95% Clopper-Pearson intervals for DR, FPR and LA, and a 95% t-interval
+  half-width for the mean integrity score, are stored per result row.
+- Saves to full_results_v3_1.json; full_results_v3.json is left untouched.
 
 v3.0 changes:
 - Added B4 (Dempster-Shafer evidence theory) baseline alongside B1-B3.
@@ -28,6 +36,7 @@ from simulation.simulator import (
     INSULIN, AMOXICILLIN, MRNA_THERAPY, ALL_PRODUCTS,
     ProductProfile, FailureType, FailureScenario,
     generate_normal_evidence, apply_failure, get_standard_scenarios,
+    localization_accuracy_from_trials,
 )
 from models.drug_integrity_opinion import NodeEvidence, RecallStatus
 from models.chain_integrity import (
@@ -71,6 +80,31 @@ class MethodResult:
     std_score: float
     mean_uncertainty: float
     threshold_used: float = 0.0
+    # EXP-006 additions: 95% intervals. Rates use exact Clopper-Pearson
+    # bounds; the mean score uses a t-interval half-width (sample std).
+    detection_rate_ci: Tuple[float, float] = (0.0, 0.0)
+    false_positive_rate_ci: Tuple[float, float] = (0.0, 0.0)
+    localization_accuracy_ci: Tuple[float, float] = (0.0, 0.0)
+    n_detected: int = 0
+    mean_score_ci_halfwidth: float = 0.0
+
+
+def clopper_pearson(k: int, n: int, alpha: float = 0.05) -> Tuple[float, float]:
+    """Exact two-sided (1 - alpha) binomial confidence interval for k/n."""
+    if n <= 0:
+        return (0.0, 0.0)
+    lo = 0.0 if k == 0 else float(sp_stats.beta.ppf(alpha / 2, k, n - k + 1))
+    hi = 1.0 if k == n else float(sp_stats.beta.ppf(1 - alpha / 2, k + 1, n - k))
+    return (lo, hi)
+
+
+def mean_ci_halfwidth(values: List[float], alpha: float = 0.05) -> float:
+    """Half-width of the two-sided (1 - alpha) t-interval for the mean."""
+    n = len(values)
+    if n < 2:
+        return 0.0
+    sd = float(np.std(values, ddof=1))
+    return float(sp_stats.t.ppf(1 - alpha / 2, n - 1) * sd / np.sqrt(n))
 
 @dataclass
 class ExperimentSuite:
@@ -234,7 +268,7 @@ def run_full_experiment(
 
         for sc_name, scenario in scenario_list:
             is_failure = scenario is not None
-            target_node = scenario.target_node if scenario else None
+            targets = scenario.localization_target_set() if scenario else ()
             rng = np.random.default_rng(seed)
 
             sl_list, b1_list, b2_list, b3_list, b4_list = [], [], [], [], []
@@ -257,19 +291,25 @@ def run_full_experiment(
             sl_scores = [r[0].integrity_score for r in sl_list]
             sl_u = [r[0].uncertainty for r in sl_list]
             sl_dets = [r[1] for r in sl_list]
-            sl_dr = sum(sl_dets) / n_trials if is_failure else 0.0
-            sl_fpr = sum(sl_dets) / n_trials if not is_failure else 0.0
+            sl_flags = [r[2] for r in sl_list]
+            n_det = int(sum(sl_dets))
+            sl_dr = n_det / n_trials if is_failure else 0.0
+            sl_fpr = n_det / n_trials if not is_failure else 0.0
             sl_la = 0.0
-            if is_failure and target_node:
-                det_loc = [(r[0], r[2]) for r in sl_list if r[1]]
-                if det_loc:
-                    sl_la = sum(1 for _, f in det_loc if target_node in f) / len(det_loc)
+            if is_failure and targets:
+                sl_la = localization_accuracy_from_trials(sl_dets, sl_flags, targets)
+            rate_ci = clopper_pearson(n_det, n_trials)
 
             suite.results.append(MethodResult(
                 "SL_Algebra", sc_name, product.name[:8], n_trials,
                 sl_dr, sl_fpr, sl_la,
                 float(np.mean(sl_scores)), float(np.std(sl_scores)),
                 float(np.mean(sl_u)), thresholds["SL_Algebra"],
+                detection_rate_ci=rate_ci if is_failure else (0.0, 0.0),
+                false_positive_rate_ci=rate_ci if not is_failure else (0.0, 0.0),
+                localization_accuracy_ci=clopper_pearson(int(round(sl_la * n_det)), n_det) if is_failure else (0.0, 0.0),
+                n_detected=n_det,
+                mean_score_ci_halfwidth=mean_ci_halfwidth(sl_scores),
             ))
             done += 1
             print(f"  [{done}/{total_per_product}] SL_Algebra × {sc_name:<8} DR={sl_dr:.3f} FPR={sl_fpr:.3f} LA={sl_la:.3f}")
@@ -283,19 +323,27 @@ def run_full_experiment(
             ]:
                 bl_scores = [r.chain_score for r in bl_list]
                 bl_dets = [r.detected for r in bl_list]
-                bl_dr = sum(bl_dets) / n_trials if is_failure else 0.0
-                bl_fpr = sum(bl_dets) / n_trials if not is_failure else 0.0
+                bl_n_det = int(sum(bl_dets))
+                bl_dr = bl_n_det / n_trials if is_failure else 0.0
+                bl_fpr = bl_n_det / n_trials if not is_failure else 0.0
                 bl_la = 0.0
-                if is_failure and target_node:
-                    det_bl = [r for r in bl_list if r.detected]
-                    if det_bl:
-                        bl_la = sum(1 for r in det_bl if r.weakest_node == target_node) / len(det_bl)
+                if is_failure and targets:
+                    # Same rule as SL: the baseline's single weakest node is
+                    # credited if it is any node where a failure was injected.
+                    bl_la = localization_accuracy_from_trials(
+                        bl_dets, [[r.weakest_node] for r in bl_list], targets)
+                bl_rate_ci = clopper_pearson(bl_n_det, n_trials)
 
                 suite.results.append(MethodResult(
                     bl_name, sc_name, product.name[:8], n_trials,
                     bl_dr, bl_fpr, bl_la,
                     float(np.mean(bl_scores)), float(np.std(bl_scores)),
                     0.0, thresholds[thr_key],
+                    detection_rate_ci=bl_rate_ci if is_failure else (0.0, 0.0),
+                    false_positive_rate_ci=bl_rate_ci if not is_failure else (0.0, 0.0),
+                    localization_accuracy_ci=clopper_pearson(int(round(bl_la * bl_n_det)), bl_n_det) if is_failure else (0.0, 0.0),
+                    n_detected=bl_n_det,
+                    mean_score_ci_halfwidth=mean_ci_halfwidth(bl_scores),
                 ))
                 done += 1
                 print(f"  [{done}/{total_per_product}] {bl_name:<22} × {sc_name:<8} DR={bl_dr:.3f} FPR={bl_fpr:.3f}")
@@ -305,8 +353,9 @@ def run_full_experiment(
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("Drug Integrity Algebra — Experiment Suite v3.0")
+    print("Drug Integrity Algebra — Experiment Suite v3.1 (EXP-006)")
     print("  SL + B1-B4 | Adaptive thresholds | Per-dim d+u | Product-rel F5")
+    print("  Multi-node localization credit | 95% CIs per row")
     print("=" * 70)
     print(f"Trials: {N_TRIALS} | Seed: {SEED} | FPR target: {FPR_TARGET*100:.0f}%")
     print()
@@ -320,6 +369,6 @@ if __name__ == "__main__":
 
     out_dir = Path(__file__).resolve().parents[1] / "experiments"
     out_dir.mkdir(exist_ok=True)
-    out_path = out_dir / "full_results_v3.json"
+    out_path = out_dir / "full_results_v3_1.json"
     suite.save(str(out_path))
     print(f"\nResults saved to {out_path}")
