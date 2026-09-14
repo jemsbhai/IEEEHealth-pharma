@@ -582,7 +582,15 @@ def _ds_documentation(ev: Optional[DocumentationEvidence],
     if completeness >= 1.0 and crit_ok:
         return MassFunction(0.6, 0.0, 0.4)
     elif crit_ok:
-        return MassFunction(0.3 * completeness, 0.1 * (1 - completeness), 0.6 + 0.1 * (1 - completeness))
+        # Non-critical document(s) missing, critical documents present.
+        # EXP-007 fix: the original masses (0.3c, 0.1(1-c), 0.6+0.1(1-c)) sum
+        # to 0.8+0.1c and failed MassFunction's invariant; this branch is never
+        # reached in the main suite (Normal is complete, F6 removes a critical
+        # document), so no v3/v3.1 result is affected. The mapping below is
+        # continuous with the complete case at c = 1 and always sums to 1.
+        m_safe = 0.6 * completeness
+        m_comp = 0.2 * (1.0 - completeness)
+        return MassFunction(m_safe, m_comp, 1.0 - m_safe - m_comp)
     else:
         # Missing critical docs: moderate evidence of compromise
         return MassFunction(0.1, 0.3, 0.6)
