@@ -1,9 +1,20 @@
 """
-Richer Metrics Suite (EXP-004) — ROC/AUC, Spearman, Entropy, Calibration, Sensitivity.
+Richer Metrics Suite (EXP-004, extended in EXP-006) — ROC/AUC, Spearman, Entropy, Calibration, Sensitivity.
 
 Computes five metric families that go beyond detection rate to characterize
 the quality, calibration, and robustness of the drug integrity algebra
 relative to baselines.
+
+v3.1 changes (EXP-006, see LOGBOOK.md):
+- B1 is included in the failure-severity sweeps (fixed threshold 0.5, as in
+  run_experiments.py); all five methods share one sweep helper.
+- The excursion sweep passes the parameters apply_failure actually reads
+  (duration_fraction, magnitude); the EXP-004 version passed unknown keys
+  and silently ran the default F1 at every point.
+- Failure-severity sweeps run for all three products.
+- Spearman is computed under the global ordering and under the pre-registered
+  product-specific orderings (amoxicillin uses a CRT-specific ordering).
+- Saves to metrics_results_v3_1.json; metrics_results.json is left untouched.
 
 Usage (from project root):
     python scripts/run_metrics.py
@@ -56,10 +67,38 @@ DIM_UNCERTAINTY_THRESHOLD = 0.50
 # Based on physical impact to drug integrity:
 #   Normal: safe | F6: admin gap | F4: evidence gap | F3: 5% counterfeit
 #   F5: expired | F1: mild temp | F7: cascading | F2: severe temp
+# This is the GLOBAL ordering of EXP-004, applied to all products.
 SEVERITY_ORDER = {
     "Normal": 1, "F6": 2, "F4": 3, "F3": 4,
     "F5": 5, "F1": 6, "F7": 7, "F2": 8,
 }
+
+# EXP-006 pre-registered product-specific orderings (LOGBOOK.md, EXP-006).
+# Insulin and mRNA: cold chain is the dominant physical risk -> global ordering.
+# Amoxicillin (CRT solid oral dosage form): a +2 C excursion above 25 C on 5%
+# of readings is a minor stability risk; counterfeit packages and sub-minimum
+# shelf life are direct patient-safety and compliance failures; F2 (whole batch
+# near 42 C for half the window) remains the most severe.
+SEVERITY_ORDER_CRT = {
+    "Normal": 1, "F6": 2, "F4": 3, "F1": 4,
+    "F7": 5, "F3": 6, "F5": 7, "F2": 8,
+}
+
+PRODUCT_SEVERITY_ORDER = {
+    "Insulin": SEVERITY_ORDER,
+    "Amoxicil": SEVERITY_ORDER_CRT,
+    "mRNA-bas": SEVERITY_ORDER,
+}
+
+
+def product_key(product: ProductProfile) -> str:
+    """Stable short product key (name[:8], stripped of trailing spaces)."""
+    return product.name[:8].strip()
+
+
+def severity_order_for(product: ProductProfile) -> Dict[str, int]:
+    """Pre-registered product-specific ordering (falls back to the global one)."""
+    return PRODUCT_SEVERITY_ORDER.get(product_key(product), SEVERITY_ORDER)
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -210,8 +249,18 @@ def compute_all_roc(raw: Dict) -> Dict:
 # METRIC 2: SPEARMAN RANK CORRELATION
 # ═══════════════════════════════════════════════════════════════════
 
-def compute_spearman(raw: Dict) -> Dict:
-    """Compute Spearman ρ between ground-truth severity and method mean scores."""
+def compute_spearman(raw: Dict, order: Optional[Dict[str, int]] = None) -> Dict:
+    """Compute Spearman ρ between a severity ordering and method mean scores.
+
+    Args:
+        raw:   {method: {scenario: {"scores": [...]}}} as returned by
+               collect_raw_scores.
+        order: {scenario: rank} with 1 = safest. Defaults to the global
+               SEVERITY_ORDER; pass severity_order_for(product) for the
+               pre-registered product-specific ordering (EXP-006).
+    """
+    if order is None:
+        order = SEVERITY_ORDER
     results = {}
     for method, scenarios in raw.items():
         # Get mean scores per scenario
@@ -222,9 +271,9 @@ def compute_spearman(raw: Dict) -> Dict:
         # Build paired arrays (ground-truth rank, method mean score)
         gt_ranks = []
         method_scores = []
-        for sc_name in SEVERITY_ORDER:
+        for sc_name in order:
             if sc_name in mean_scores:
-                gt_ranks.append(SEVERITY_ORDER[sc_name])
+                gt_ranks.append(order[sc_name])
                 method_scores.append(mean_scores[sc_name])
 
         # Spearman: ground-truth rank is ascending severity (1=safest),
@@ -415,6 +464,103 @@ def sl_detect_with_params(
     return False
 
 
+# ═══════════════════════════════════════════════════════════════════
+# FAILURE-SEVERITY SWEEPS (EXP-006): all five methods, shared helper
+# ═══════════════════════════════════════════════════════════════════
+
+COUNTERFEIT_FRACTIONS = [0.01, 0.02, 0.03, 0.05, 0.10, 0.15, 0.20]
+EXCURSION_DURATIONS = [0.01, 0.02, 0.05, 0.10, 0.20, 0.30, 0.50]
+
+
+def counterfeit_scenario(fraction: float) -> FailureScenario:
+    """F3 at the standard importer node with the given counterfeit fraction."""
+    return FailureScenario(
+        FailureType.F3_COUNTERFEIT, "importer",
+        {"counterfeit_fraction": fraction},
+    )
+
+
+def excursion_scenario(duration_fraction: float, magnitude: float = 2.0) -> FailureScenario:
+    """F1-type excursion at the standard F1 node (distributor_a).
+
+    Uses the parameter names apply_failure reads (duration_fraction,
+    magnitude). The EXP-004 sweep passed excursion_fraction / temp_deviation,
+    which apply_failure ignores, so it ran the default F1 at every point.
+    """
+    return FailureScenario(
+        FailureType.F1_MILD_EXCURSION, "distributor_a",
+        {"duration_fraction": duration_fraction, "magnitude": magnitude},
+    )
+
+
+def sweep_methods(product: ProductProfile) -> List[Tuple[str, object, bool, Optional[float]]]:
+    """(name, evaluator, is_sl, fixed_threshold) for the five methods.
+
+    fixed_threshold None means the chain threshold is calibrated at the 1st
+    percentile of that method's Normal distribution, as in run_experiments.py.
+    B1's binary output is thresholded at 0.5, exactly as in run_experiments.py.
+    """
+    return [
+        ("SL", lambda ev: evaluate_path(EVAL_PATH, ev, weights=product.weights), True, None),
+        ("B1", lambda ev: evaluate_threshold(EVAL_PATH, ev), False, 0.5),
+        ("B2", lambda ev: evaluate_weighted_scoring(EVAL_PATH, ev), False, None),
+        ("B3", lambda ev: evaluate_bayesian(EVAL_PATH, ev), False, None),
+        ("B4", lambda ev: evaluate_dempster_shafer(EVAL_PATH, ev), False, None),
+    ]
+
+
+def detection_rates_for_scenario(
+    product: ProductProfile,
+    scenario: FailureScenario,
+    n_trials: int = N_TRIALS,
+    seed: int = SEED,
+) -> Dict[str, float]:
+    """Detection rate of every method on one scenario (same protocol as the
+    main suite: per-method 1st-percentile calibration on Normal, B1 at 0.5,
+    SL with the per-dimension rule)."""
+    rates: Dict[str, float] = {}
+    for name, eval_fn, is_sl, fixed_thr in sweep_methods(product):
+        if fixed_thr is None:
+            rng = np.random.default_rng(seed)
+            normal_scores = []
+            for _ in range(n_trials):
+                ev = {nid: generate_normal_evidence(product, rng=rng) for nid in EVAL_PATH}
+                r = eval_fn(ev)
+                normal_scores.append(r.integrity_score if is_sl else r.chain_score)
+            thr = float(np.percentile(normal_scores, 1.0))
+        else:
+            thr = fixed_thr
+
+        rng = np.random.default_rng(seed)
+        detections = 0
+        for _ in range(n_trials):
+            ev = {nid: generate_normal_evidence(product, rng=rng) for nid in EVAL_PATH}
+            ev = apply_failure(ev, scenario, product, rng)
+            r = eval_fn(ev)
+            det = sl_detect_with_params(r, thr) if is_sl else (r.chain_score < thr)
+            if det:
+                detections += 1
+        rates[name] = detections / n_trials
+    return rates
+
+
+def failure_severity_sweeps(
+    product: ProductProfile,
+    n_trials: int = N_TRIALS,
+    seed: int = SEED,
+) -> Dict[str, Dict[str, Dict[str, float]]]:
+    """Counterfeit-fraction and excursion-duration sweeps for one product."""
+    cf = {
+        str(f): detection_rates_for_scenario(product, counterfeit_scenario(f), n_trials, seed)
+        for f in COUNTERFEIT_FRACTIONS
+    }
+    ef = {
+        str(d): detection_rates_for_scenario(product, excursion_scenario(d), n_trials, seed)
+        for d in EXCURSION_DURATIONS
+    }
+    return {"counterfeit_fraction_sweep": cf, "excursion_duration_sweep": ef}
+
+
 def sensitivity_sweep(
     product: ProductProfile,
     n_trials: int = N_TRIALS,
@@ -527,98 +673,11 @@ def sensitivity_sweep(
 
     results["cold_chain_weight"] = cc_results
 
-    # ── Sweep 4: Failure severity (F3 counterfeit fraction) ────
-    # At what counterfeit rate does each method lose detection?
-    cf_values = [0.01, 0.02, 0.03, 0.05, 0.10, 0.15, 0.20]
-    cf_results = {}
-
-    for cf in cf_values:
-        cf_results[str(cf)] = {}
-        # Custom F3 scenario with this counterfeit fraction
-        f3_scenario = FailureScenario(
-            FailureType.F3_COUNTERFEIT, "importer",
-            {"counterfeit_fraction": cf},
-        )
-
-        for method_name, eval_fn, is_sl in [
-            ("SL", lambda ev: evaluate_path(EVAL_PATH, ev, weights=product.weights), True),
-            ("B2", lambda ev: evaluate_weighted_scoring(EVAL_PATH, ev), False),
-            ("B3", lambda ev: evaluate_bayesian(EVAL_PATH, ev), False),
-            ("B4", lambda ev: evaluate_dempster_shafer(EVAL_PATH, ev), False),
-        ]:
-            # Calibrate threshold
-            rng = np.random.default_rng(seed)
-            normal_scores = []
-            for _ in range(n_trials):
-                ev = {nid: generate_normal_evidence(product, rng=rng) for nid in EVAL_PATH}
-                r = eval_fn(ev)
-                s = r.integrity_score if is_sl else r.chain_score
-                normal_scores.append(s)
-            chain_thresh = float(np.percentile(normal_scores, 1.0))
-
-            # Run failure trials
-            rng = np.random.default_rng(seed)
-            detections = 0
-            for _ in range(n_trials):
-                ev = {nid: generate_normal_evidence(product, rng=rng) for nid in EVAL_PATH}
-                ev = apply_failure(ev, f3_scenario, product, rng)
-                r = eval_fn(ev)
-                s = r.integrity_score if is_sl else r.chain_score
-
-                if is_sl:
-                    det = sl_detect_with_params(r, chain_thresh)
-                else:
-                    det = s < chain_thresh
-                if det:
-                    detections += 1
-
-            cf_results[str(cf)][method_name] = detections / n_trials
-
-    results["counterfeit_fraction_sweep"] = cf_results
-
-    # ── Sweep 5: Failure severity (F1 excursion fraction) ────
-    ef_values = [0.01, 0.02, 0.05, 0.10, 0.20, 0.30, 0.50]
-    ef_results = {}
-
-    for ef in ef_values:
-        ef_results[str(ef)] = {}
-        f1_scenario = FailureScenario(
-            FailureType.F1_MILD_EXCURSION, "central_warehouse",
-            {"excursion_fraction": ef, "temp_deviation": 2.0},
-        )
-
-        for method_name, eval_fn, is_sl in [
-            ("SL", lambda ev: evaluate_path(EVAL_PATH, ev, weights=product.weights), True),
-            ("B2", lambda ev: evaluate_weighted_scoring(EVAL_PATH, ev), False),
-            ("B3", lambda ev: evaluate_bayesian(EVAL_PATH, ev), False),
-            ("B4", lambda ev: evaluate_dempster_shafer(EVAL_PATH, ev), False),
-        ]:
-            rng = np.random.default_rng(seed)
-            normal_scores = []
-            for _ in range(n_trials):
-                ev = {nid: generate_normal_evidence(product, rng=rng) for nid in EVAL_PATH}
-                r = eval_fn(ev)
-                s = r.integrity_score if is_sl else r.chain_score
-                normal_scores.append(s)
-            chain_thresh = float(np.percentile(normal_scores, 1.0))
-
-            rng = np.random.default_rng(seed)
-            detections = 0
-            for _ in range(n_trials):
-                ev = {nid: generate_normal_evidence(product, rng=rng) for nid in EVAL_PATH}
-                ev = apply_failure(ev, f1_scenario, product, rng)
-                r = eval_fn(ev)
-                s = r.integrity_score if is_sl else r.chain_score
-                if is_sl:
-                    det = sl_detect_with_params(r, chain_thresh)
-                else:
-                    det = s < chain_thresh
-                if det:
-                    detections += 1
-
-            ef_results[str(ef)][method_name] = detections / n_trials
-
-    results["excursion_fraction_sweep"] = ef_results
+    # ── Sweeps 4 and 5: failure severity (F3 counterfeit fraction, F1
+    #    excursion duration), all five methods, via the shared helper ──
+    severity = failure_severity_sweeps(product, n_trials=n_trials, seed=seed)
+    results["counterfeit_fraction_sweep"] = severity["counterfeit_fraction_sweep"]
+    results["excursion_duration_sweep"] = severity["excursion_duration_sweep"]
 
     return results
 
@@ -649,10 +708,17 @@ def run_all_metrics() -> Dict:
             print(f"      {method:<22} mean AUC = {np.mean(aucs):.4f}  "
                   f"(min={np.min(aucs):.4f} on {min(roc[method], key=lambda s: roc[method][s]['auc'])})")
 
-        # Metric 2: Spearman
-        print("  Computing Spearman rank correlation...")
+        # Metric 2: Spearman (global ordering, EXP-004)
+        print("  Computing Spearman rank correlation (global ordering)...")
         spearman = compute_spearman(raw)
         for method, res in spearman.items():
+            print(f"    {method:<22} ρ = {res['rho']:.4f}  (p = {res['pvalue']:.2e})")
+
+        # Metric 2b: Spearman under the pre-registered product-specific ordering (EXP-006)
+        ps_order = severity_order_for(product)
+        print("  Computing Spearman rank correlation (product-specific ordering)...")
+        spearman_ps = compute_spearman(raw, ps_order)
+        for method, res in spearman_ps.items():
             print(f"    {method:<22} ρ = {res['rho']:.4f}  (p = {res['pvalue']:.2e})")
 
         # Metric 3: Entropy
@@ -690,6 +756,8 @@ def run_all_metrics() -> Dict:
         all_results[pname] = {
             "roc_auc": roc,
             "spearman": spearman,
+            "spearman_product_specific": spearman_ps,
+            "severity_ordering": {"global": SEVERITY_ORDER, "product_specific": ps_order},
             "entropy": entropy,
             "calibration": calibration,
         }
@@ -715,17 +783,40 @@ def run_all_metrics() -> Dict:
         dr_str = " ".join(f"{sc}={dr:.3f}" for sc, dr in sorted(sc_drs.items()))
         print(f"    cc_weight={cc_val}: {dr_str}")
 
-    print("\n  F3 counterfeit_fraction sweep (SL vs B2 vs B3):")
+    print("\n  F3 counterfeit_fraction sweep (SL, B1, B2, B3, B4):")
     for cf_val, methods in sensitivity["counterfeit_fraction_sweep"].items():
         m_str = "  ".join(f"{m}={dr:.3f}" for m, dr in sorted(methods.items()))
         print(f"    cf={cf_val}: {m_str}")
 
-    print("\n  F1 excursion_fraction sweep (SL vs B2 vs B3):")
-    for ef_val, methods in sensitivity["excursion_fraction_sweep"].items():
+    print("\n  F1 excursion_duration sweep (SL, B1, B2, B3, B4):")
+    for ef_val, methods in sensitivity["excursion_duration_sweep"].items():
         m_str = "  ".join(f"{m}={dr:.3f}" for m, dr in sorted(methods.items()))
-        print(f"    ef={ef_val}: {m_str}")
+        print(f"    duration={ef_val}: {m_str}")
 
     all_results["sensitivity_insulin"] = sensitivity
+
+    # Failure-severity sweeps for the other products (EXP-006). Insulin's
+    # sweeps are the ones computed above; they are referenced, not recomputed.
+    print(f"\n{'='*60}")
+    print("Failure-severity sweeps, all products (EXP-006)")
+    print(f"{'='*60}")
+    severity_sweeps = {}
+    for product in ALL_PRODUCTS:
+        pname = product.name[:8]
+        if product is INSULIN:
+            severity_sweeps[pname] = {
+                k: sensitivity[k]
+                for k in ("counterfeit_fraction_sweep", "excursion_duration_sweep")
+            }
+        else:
+            print(f"  {product.name}")
+            severity_sweeps[pname] = failure_severity_sweeps(product)
+        for key in ("counterfeit_fraction_sweep", "excursion_duration_sweep"):
+            print(f"    {pname.strip()} {key}:")
+            for level, methods in severity_sweeps[pname][key].items():
+                m_str = "  ".join(f"{m}={dr:.3f}" for m, dr in sorted(methods.items()))
+                print(f"      {level}: {m_str}")
+    all_results["severity_sweeps"] = severity_sweeps
     all_results["runtime_seconds"] = time.time() - start
 
     return all_results
@@ -733,8 +824,8 @@ def run_all_metrics() -> Dict:
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("Drug Integrity Algebra — Richer Metrics (EXP-004)")
-    print("  ROC/AUC | Spearman | Entropy | Calibration | Sensitivity")
+    print("Drug Integrity Algebra — Richer Metrics v3.1 (EXP-004 + EXP-006)")
+    print("  ROC/AUC | Spearman (global + product-specific) | Entropy | Calibration | Sensitivity")
     print("=" * 60)
 
     results = run_all_metrics()
@@ -745,7 +836,7 @@ if __name__ == "__main__":
 
     out_dir = Path(__file__).resolve().parents[1] / "experiments"
     out_dir.mkdir(exist_ok=True)
-    out_path = out_dir / "metrics_results.json"
+    out_path = out_dir / "metrics_results_v3_1.json"
     with open(out_path, "w") as f:
         json.dump(results, f, indent=2, default=str)
     print(f"\nResults saved to {out_path}")
