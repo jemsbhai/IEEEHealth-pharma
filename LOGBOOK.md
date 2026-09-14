@@ -1544,3 +1544,147 @@ written into the camera-ready.
 - experiments/stress_results.json
 
 ---
+
+## EXP-007b: Stress Test, Per-Evidence-Type Calibration and Evidence Volume
+
+**Date:** 2026-09-14 (America/New_York)
+**Researcher:** Muntaser Syed
+**Type:** computational
+**Status:** planned
+
+### Motivation
+
+EXP-007 showed that SL with all four criteria calibrated holds a 1%
+false-alarm target under benign noise but loses F1 and F3 at N = 100,
+because its per-dimension disbelief threshold was pooled across evidence
+types and the documentation dimension's late-document noise (d = 0.24 for
+two late routine documents) set the threshold for the cold-chain and
+serialization dimensions. It also showed that pooled Shannon entropy grows
+with noise for every graded method and is not a measure of severity
+information under noise. This follow-up (i) calibrates one disbelief and
+one uncertainty threshold per evidence type, (ii) adds evidence volume
+N (packages and readings per node) as a factor, and (iii) replaces pooled
+entropy with the mutual information between scenario and score. It is a
+post-hoc refinement motivated by EXP-007's result; EXP-007 stands as
+recorded and both are reported.
+
+### Hypotheses (pre-registered before any code change)
+
+Predictions for N = 100 are derived from binomial tail estimates of the
+noise regimes against the F1 and F3 evidence magnitudes (cold-chain
+d about 0.065 for F1; serialization d about 0.047 for F3); they are
+mixed on purpose and each can fail.
+
+- H7b.1 (false alarms): SL-cal-pt out-of-sample FPR <= 0.02 in R1 and R2
+  at both N.
+- H7b.2 (F3 at N = 100): SL-cal-pt DR on F3 >= 0.80 in R1 and < 0.50 in
+  R2 (the 99.9th percentile of benign serialization disbelief is below
+  0.047 at 0.5% scan errors and above it at 1%).
+- H7b.3 (F1 at N = 100): SL-cal-pt DR on F1 < 0.20 in both regimes (benign
+  blips alone reach cold-chain d about 0.10 at the 99.9th percentile).
+- H7b.4 (evidence volume): at N = 1000 (insulin), SL-cal-pt DR on F3
+  >= 0.99 in R1 and R2, and DR on F1 >= 0.90 in R1; F1 in R2 is reported
+  as found (predicted >= 0.50).
+- H7b.5 (B1-tuned and volume): at N = 1000, B1-tuned DR on F3 = 1.000 in
+  both regimes, because the 99.9th percentile of the benign failure rate
+  falls below 5% as N grows.
+- H7b.6 (large failures): SL-cal-pt DR = 1.000 on F2, F4, F5, F6, F7 in
+  every regime at both N.
+- H7b.7 (information): mutual information I(scenario; score), 8
+  equiprobable scenarios, score discretized into 50 equal-width bins on
+  [0, 1], is higher for SL than for B1-tuned in every regime at both N;
+  B1-tuned cannot exceed the binary ceiling (3 - (7/8) log2 7 = 0.544 bits
+  when it separates Normal from all failures, less otherwise).
+- H7b.8 (ranking at volume): SL Spearman rho against the global ordering
+  (insulin) at N = 1000 in R1 is >= 0.85 with p < 0.05.
+
+### Design
+
+- Regimes: R0, R1, R2 (definitions unchanged from EXP-007).
+- Evidence volume N in {100, 1000}: n_packages = n_readings = N per node.
+  Failure injections are defined as fractions and scale with N unchanged.
+  All three products at N = 100; insulin only at N = 1000 (runtime).
+- Method variants: SL-cal-pt (new), SL-cal (EXP-007 pooled variant, kept
+  for direct comparison), B1-tuned, B2, B3, B4. SL-fixed and B1-fixed are
+  not repeated (EXP-007 established FPR about 1).
+- SL-cal-pt criteria (10): chain score (0.1st percentile), chain
+  uncertainty (99.9th), and for each of serialization, cold_chain,
+  shelf_life, documentation the maximum over nodes of disbelief (99.9th)
+  and of uncertainty (99.9th). Equal split of the 1% budget: 0.1% each.
+  Flagged nodes: any node where any type exceeds its own threshold.
+- Calibration set: 20,000 noisy Normal trials at CALIB_SEED = 4242, so
+  the 99.9th percentile rests on about 20 tail samples. Evaluation: 1000
+  fresh trials at SEED = 42 per scenario. B1-tuned limits at 99.9% / 0.1%
+  of the per-trial chain-level statistics (three rules, 0.1% each; the
+  document and shelf-life rules are unchanged), B2/B3/B4 at the 1st
+  percentile.
+- Metrics: FPR, DR, LA with 95% intervals; mean and std score; Spearman
+  (global ordering); mutual information I(scenario; score) in bits;
+  counterfeit sweep (insulin, R1 and R2, both N).
+
+### Independent Variables
+
+- Noise regime: R0, R1, R2
+- Evidence volume N: 100, 1000 (insulin only at 1000)
+- Method variant: SL-cal-pt, SL-cal, B1-tuned, B2, B3, B4
+- Scenario: Normal, F1-F7; counterfeit fraction
+
+### Dependent Variables / Metrics
+
+- FPR (out-of-sample), DR, LA, each with Clopper-Pearson interval
+- Mean score and std; Spearman rho and p; I(scenario; score) in bits
+- Calibrated per-type thresholds (logged)
+
+### Control Conditions
+
+- R0 at N = 100 reproduces EXP-007's R0 rows for the shared methods
+  (same evaluation seed), up to the change in calibration percentiles.
+- Product weights, formation functions, propagation and the compromised
+  conditional unchanged.
+
+### Protocol
+
+1. scripts/run_stress_test.py: per-type feature extraction (max over
+   nodes of d and u for each evidence type), SLTypeThresholds and
+   sl_detect_per_type, calibrate_per_type, mutual_information, and an N
+   parameter plumbed to generate_noisy_normal_evidence; driver
+   run_stress_test_b writing experiments/stress_results_b.json. The
+   EXP-007 driver is left unchanged.
+2. tests: per-type detection equals pooled detection when all type
+   thresholds are equal; mutual information is 0 for scenario-independent
+   scores and log2(8) = 3 bits for perfectly separated ones; N plumbing
+   produces N packages and N readings; harness smoke run at small n.
+3. Commit code: feat(exp007b): per-type calibration, evidence volume,
+   mutual information. Record SHA below.
+4. Run: python scripts/run_stress_test.py --variant b (or the b driver);
+   paste console output.
+5. Evaluate H7b.1-H7b.8, fill Results/Observations/Interpretation, update
+   findings.md, commit docs(logbook): EXP-007b completed, tag
+   exp-007b-final.
+
+### Environment
+
+- **Hardware:** Windows laptop, 64 GB RAM, RTX 4090 (CPU-only workload)
+- **Software:** Python 3.12.2, numpy 2.0.2, scipy 1.17.1, jsonld-ex 0.7.4
+- **Git commit (code, before run):** TBD
+- **Config:** N_TRIALS = 1000, N_CALIB = 20000, SEED = 42, CALIB_SEED = 4242,
+  FPR_TARGET = 0.01, SL-cal-pt criteria = 10, N in {100, 1000}
+- **Seeds:** 42 (evaluation), 4242 (calibration)
+
+### Results
+
+[to be filled after run]
+
+### Observations
+
+[to be filled after run]
+
+### Interpretation
+
+[to be filled after run]
+
+### Artifacts
+
+- experiments/stress_results_b.json
+
+---
