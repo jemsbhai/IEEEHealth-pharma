@@ -1245,7 +1245,7 @@ must not be cited.
 **Date:** 2026-09-14 (America/New_York)
 **Researcher:** Muntaser Syed
 **Type:** computational
-**Status:** planned
+**Status:** completed
 
 ### Motivation
 
@@ -1393,22 +1393,151 @@ openings, logger gaps, routine paperwork lag); they are not measurements.
 
 - **Hardware:** Windows laptop, 64 GB RAM, RTX 4090 (CPU-only workload)
 - **Software:** Python 3.12.2, numpy 2.0.2, scipy 1.17.1, jsonld-ex 0.7.4
-- **Git commit (code, before run):** TBD
+- **Git commit (code, before run):** 7a8def6 (harness commits da08eb7, 03641ab,
+  2e540f8, b57445a, 7a8def6; 187 tests green)
 - **Config:** constants in scripts/run_stress_test.py (N_TRIALS = 1000,
   N_CALIB = 5000, SEED = 42, CALIB_SEED = 4242, FPR_TARGET = 0.01)
 - **Seeds:** 42 (evaluation), 4242 (calibration)
 
 ### Results
 
-[to be filled after run]
+Run 2026-09-14, commit 7a8def6, runtime 70.8 s. Output:
+experiments/stress_results.json (calibrated thresholds, 504 rows with 95%
+intervals, ranking and entropy per regime and product, insulin counterfeit
+sweeps under R1 and R2).
+
+Calibrated thresholds (insulin; other products differ in the third decimal
+except SL-cal dim_u = 0.286 (R1) / 0.332 (R2) on amoxicillin):
+
+| regime | SL-cal score< | chain_u> | dim_d> | dim_u> | B1-tuned max_fr | temp_tol | B2< | B3< |
+|--------|---------------|----------|--------|--------|-----------------|----------|-----|-----|
+| R0 | 0.99616 | 0.0111 | 0.0000 | 0.400 | 0.0000 | 0.000 | 0.9875 | 0.8071 |
+| R1 | 0.89336 | 0.0365 | 0.2400 | 0.400 | 0.0415 | 1.000 | 0.9121 | 0.4719 |
+| R2 | 0.81865 | 0.0399 | 0.2400 | 0.400 | 0.0524 | 2.000 | 0.8922 | 0.2767 |
+
+Out-of-sample FPR (Normal, n = 1000, insulin; amoxicillin and mRNA within
++/-0.004 unless noted):
+
+| regime | SL-fixed | SL-cal | B1-fixed | B1-tuned | B2 | B3 | B4 |
+|--------|----------|--------|----------|----------|-------|-------|-------|
+| R0 | 0.007 | 0.002 | 0.000 | 0.000 | 0.000 | 0.009 | 0.000 |
+| R1 | 0.989 | 0.003 [0.0006, 0.0087] | 1.000 [0.9963, 1] | 0.004 | 0.008 | 0.019 | 0.011 |
+| R2 | 1.000 | 0.006 [0.0022, 0.0130] (amox 0.010) | 1.000 | 0.003 | 0.009 | 0.009 | 0.011 |
+
+Detection rates, insulin (amoxicillin and mRNA within +/-0.03 except
+SL-cal F3 in R1 on amoxicillin = 0.112):
+
+| regime | scenario | SL-fixed | SL-cal | B1-fixed | B1-tuned | B2 | B3 | B4 |
+|--------|----------|----------|--------|----------|----------|-------|-------|-------|
+| R1 | F1 | 1.000 | 0.043 | 1.000 | 1.000 | 0.009 | 0.031 | 0.007 |
+| R1 | F2 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.063 |
+| R1 | F3 | 1.000 | 0.054 | 1.000 | 1.000 | 0.008 | 0.027 | 0.008 |
+| R1 | F4 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.106 |
+| R1 | F5 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.097 |
+| R1 | F6 | 1.000 | 1.000 | 1.000 | 1.000 | 0.093 | 0.922 | 0.024 |
+| R1 | F7 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.147 |
+| R2 | F1 | 1.000 | 0.015 | 1.000 | 0.927 | 0.011 | 0.024 | 0.015 |
+| R2 | F2 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.971 | 0.178 |
+| R2 | F3 | 1.000 | 0.014 | 1.000 | 0.002 | 0.010 | 0.016 | 0.019 |
+| R2 | F4 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.843 | 0.447 |
+| R2 | F5 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.374 |
+| R2 | F6 | 1.000 | 1.000 | 1.000 | 1.000 | 0.059 | 0.455 | 0.093 |
+| R2 | F7 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.909 | 0.506 |
+
+(SL-fixed and B1-fixed detect everything because they flag nearly every
+trial, including Normal; their DR is uninterpretable at FPR about 1.)
+
+SL-cal mean score +/- std, insulin: R0 Normal 0.997 +/- 0.000, F1 0.951,
+F3 0.977, F5 0.976, F2 0.332 +/- 0.032. R1: Normal 0.944 +/- 0.015,
+F1 0.928 +/- 0.018, F3 0.916 +/- 0.014, F4 0.938, F6 0.924, F7 0.923,
+F5 0.894 +/- 0.021, F2 0.708 +/- 0.132. R2: Normal 0.899 +/- 0.023,
+F1 0.891, F3 0.875, F5 0.842, F2 0.750 +/- 0.127.
+
+Spearman (global ordering, insulin): SL 0.976 (R0), 0.690 (p = 0.058, R1),
+0.619 (p = 0.102, R2); B1-tuned 0.577 (R0, R1), 0.327 (R2); B2 0.431 /
+0.381 / 0.381; B3 0.619 in all; B1-fixed and B4 undefined (constant
+output). Pooled entropy (bits): SL 2.19 / 3.03 / 3.14; B1-tuned 0.54 /
+0.54 / 0.82; B2 2.41 / 3.15 / 3.25; B3 3.69 / 4.33 / 4.04; B4 0.
+
+Counterfeit sweep, insulin, SL-cal / B1-tuned (all others < 0.13):
+R1: 1% 0.002 / 0.004; 2% 0.004 / 0.004; 3% 0.007 / 0.004; 5% 0.054 / 1.000;
+10% 0.775 / 1.000; 15% 0.990 / 1.000; 20% 0.999 / 1.000.
+R2: 1% 0.003 / 0.002; 5% 0.014 / 0.002; 10% 0.151 / 1.000; 15% 0.758 /
+1.000; 20% 0.984 / 1.000.
+
+Hypotheses:
+- H7.1 SUPPORTED: B1-fixed FPR = 1.000 in R1 and R2, all products.
+- H7.2 SUPPORTED: SL-fixed FPR = 0.983-0.989 in R1 (1.000 in R2).
+- H7.3 SUPPORTED: SL-cal FPR 0.003-0.004 (R1) and 0.006-0.010 (R2), inside
+  [0.003, 0.02]; DR = 1.000 on F2, F5, F6, F7 in both regimes.
+- H7.4 SUPPORTED: at 1% infiltration in R2 every calibrated method is below
+  0.01; SL-cal 0.014 >= B1-tuned 0.002 at 5% (both near zero).
+- H7.5 REFUTED: SL-cal rho = 0.690 (p = 0.058) in R1 and 0.619 (p = 0.102)
+  in R2; B1 variants and B2/B3 remain non-significant as predicted.
+- H7.6 SUPPORTED nominally (SL 3.03 / 3.14 bits vs B1-tuned 0.54 / 0.82),
+  but see Observations: pooled entropy increases with noise for every
+  graded method, so it does not measure severity information under noise.
+- H7.7 SUPPORTED: SL-cal DR on F4 = 1.000 in R2 (dim_u threshold 0.40 vs
+  F4's u about 0.80).
 
 ### Observations
 
-[to be filled after run]
+- Deviation from the plan wording: B1-tuned limits were taken from the
+  per-trial maximum (failure rate, excursion) and minimum (scan rate) over
+  the five nodes rather than from per-node values, so that B1-tuned's
+  false-alarm budget is a chain-level budget comparable to SL-cal's. This
+  makes B1-tuned stronger, not weaker (realized FPR 0.003-0.004).
+- Unplanned, and the main finding: SL-cal loses F1 (DR 0.043 in R1, 0.015
+  in R2) and F3 (0.054, 0.014). The pre-registered SL-cal pools the
+  per-dimension disbelief maximum over evidence types; under noise that
+  maximum is set by the documentation dimension (one late routine document
+  gives d = 0.12, two give d = 0.24), so the calibrated dim_d = 0.24 masks
+  the cold-chain disbelief of F1 (about 0.065) and the serialization
+  disbelief of F3 (about 0.047). The chain-score criterion cannot recover
+  them either: F1 and F3 shift the mean chain score by 0.016 and 0.028
+  against a Normal std of 0.015. Per-evidence-type calibration is the
+  natural fix and is tested in EXP-007b.
+- B1-tuned detects F1 in R1 because its tolerance (1.0 C) is below the +2 C
+  excursion, and F3 in R1 because its failure-rate limit (0.0415) is below
+  5%; in R2 the limits move to 2.0 C and 0.0524 and F3 is lost (0.002)
+  while F1 survives at 0.927 (the +2 C readings carry N(0, 0.5) noise and
+  exceed the 2.0 C tolerance in about half the readings). Its F1 detection
+  is a magnitude test that the SL cold-chain mapping (severity = excursion /
+  range width, so +2 C on a 6 C range weighs 1.33 per reading) does not
+  amplify.
+- Under noise, F1's mean SL score is closer to Normal than F5's, which
+  inverts the global ordering's F5 < F1 and drives rho down; the SL ordering
+  under noise (F2 << F5 < F3 < F7 < F6 < F1 < F4 < Normal) is defensible on
+  physical grounds and the disagreement is with the author-defined ordering
+  as much as with the algebra. EXP-012 (expert rankings) is the arbiter.
+- Pooled Shannon entropy grows with noise for every graded method (SL 2.19
+  -> 3.14, B2 2.41 -> 3.25, B3 3.69 -> 4.04) because it measures spread, not
+  separation. A separation-based measure (mutual information between
+  scenario and score) is added in EXP-007b.
+- B1-fixed's chain score is 0 on almost every trial under noise (entropy
+  0.0, Spearman undefined).
+- SL-cal's realized FPR (0.3-1.0%) sits below the 1% target because the
+  equal-split calibration is conservative (Bonferroni-like).
 
 ### Interpretation
 
-[to be filled after run]
+For the paper, three statements are now supported by data and were not
+before: (1) fixed rules and fixed per-dimension thresholds, whether the
+regulator's or ours, are unusable under benign operational noise (FPR near
+1.0); (2) with all four SL criteria calibrated on the operational Normal
+distribution, SL holds a 1% false-alarm target out of sample and detects
+every large failure (F2, F4, F5, F6, F7) at 1.000 where B2 and B3 lose F6
+and B4 loses everything; (3) at N = 100 packages and 100 readings, a +2 C
+excursion on 5% of readings and 5% counterfeit are not separable from
+benign noise at 1% FPR by any calibrated method except where a rule
+threshold happens to fall between signal and noise (B1-tuned in R1), and
+1% counterfeit is not separable by any method. The paper's 1% counterfeit
+claim therefore holds only in the noiseless regime and must be stated that
+way. The loss of F1 and F3 by SL-cal is attributable to pooling the
+per-dimension threshold across evidence types (a choice made in this
+experiment's design, not in the published method); EXP-007b tests
+per-type calibration and evidence volume (N = 1000) before any of this is
+written into the camera-ready.
 
 ### Artifacts
 
