@@ -939,3 +939,199 @@ The paper can claim:
 - tests/test_baselines.py (5 B4 tests including Zadeh’s paradox test)
 
 ---
+
+## Addendum 2026-09-14 (camera-ready audit, references EXP-004 and EXP-005)
+
+The paper was accepted at IEEE HealthCom 2026 (three reviews received
+2026-09-14; camera-ready capped at 6 pages). A code and data audit during
+camera-ready preparation found the following. Earlier entries are left as
+written; these notes supersede them where they conflict.
+
+1. EXP-004 excursion_fraction_sweep is invalid. scripts/run_metrics.py
+   passes scenario params {"excursion_fraction": ef, "temp_deviation": 2.0}
+   but simulator.apply_failure reads "duration_fraction" and "magnitude".
+   Every sweep point therefore ran the default F1 (5% duration, +2 C), which
+   is why all methods show identical DR at every sweep value (SL 1.000,
+   B2 0.888, B3 0.739, B4 0.036). The sweep was never used in the paper.
+   It is re-run correctly in EXP-006.
+
+2. Jøsang section numbers used in this logbook, in code docstrings, in
+   findings.md, in PAPER_PLAN.md, and in the submitted paper do not match
+   the published Springer edition (2016) table of contents. Correct
+   references: deduction is Chapter 9 (binomial deduction §9.4, method
+   §9.4.3), not §12.6 (which is Consensus & Compromise Fusion); the
+   evidence-to-opinion mapping is §3.4.2-3.4.3 (Beta binomial model and
+   its mapping), not §3.2 (Opinion Classes); temporal decay/ageing is
+   §16.2.2-16.2.3, not §10.4 (Binomial Abduction). Cumulative fusion §12.3
+   and trust discounting §14.3 are correct. Averaging fusion is §12.4, not
+   §12.5. The paper is corrected in the camera-ready; code docstrings and
+   notes are corrected in a separate docs commit.
+
+3. Table I of the submitted paper listed the wrong target nodes for F1, F2
+   (Warehouse; the simulator injects at distributor_a) and F4 (Distributor;
+   the simulator injects at central_warehouse). Simulator unchanged since
+   commit 9db29d2 (2026-06-07), v3 results committed in 196f496
+   (2026-06-08), so the results stand and the table was wrong. Corrected in
+   paper commit b9d5e1d.
+
+4. The submitted paper's description of F1 ("prior weight
+   W = kappa (N - s - f) / N") does not match form_serialization_opinion,
+   which uses W = 2 / w_i and encodes coverage only through trust
+   discounting. The paper is corrected in the camera-ready.
+
+5. B4 is implemented hierarchically (Dempster's rule over the five evidence
+   masses at each node, then over the five node masses), not as a flat
+   25-source pool as the paper states. Since Dempster's rule is associative
+   and commutative the two are identical; verified numerically in EXP-010.
+
+6. Reviewer 2 is correct that B1 reaches DR = 1.000 and LA = 1.000 on all
+   21 scenario-product combinations (full_results_v3.json). The paper's
+   "the only method to do so" is false and is removed in the camera-ready.
+   Realized FPRs were SL 0.010, B3 0.010, B1 0.000, B2 0.000, B4 0.000;
+   B1 is not percentile-calibrated (fixed threshold 0.5).
+
+---
+
+## EXP-006: Main Suite v3.1 - Localization Fairness, Confidence Intervals, B1 in Counterfeit Sweep, Per-Product Severity Orderings
+
+**Date:** 2026-09-14 (America/New_York)
+**Researcher:** Muntaser Syed
+**Type:** computational
+**Status:** planned
+
+### Motivation
+
+Camera-ready preparation for the accepted HealthCom 2026 paper. Reviewer 2
+requested confidence intervals across Monte Carlo trials (rec 7) and
+product-specific severity rankings (rec 3), and observed that B1 matches
+SL on binary detection. The audit above found that (a) F7 localization
+credits only central_warehouse although F7 injects failures at both
+central_warehouse and distributor_a, and B1's F7 LA = 1.000 results from
+min() returning the first zero-scoring node in path order; (b) B1 was
+never included in the counterfeit fraction sweep; (c) the excursion
+duration sweep was invalid; (d) per-product Spearman is already in
+metrics_results.json but only the insulin value is in the paper:
+SL rho = 0.976 (insulin), 0.976 (mRNA), 0.786 with p = 0.021 (amoxicillin).
+
+### Hypotheses (pre-registered before any code change)
+
+- H6.1 (localization fairness): crediting either injected node for F7
+  leaves SL and B1 at LA = 1.000 and raises B2 and B3 F7 LA from 0.000 to
+  1.000, because their weakest node is the scan-omission distributor. If
+  their weakest node is elsewhere, LA stays 0.000 and H6.1 is refuted.
+- H6.2 (intervals): all DR = 1.000 entries carry 95% Clopper-Pearson
+  intervals [0.9963, 1.000]; the widest nonzero-DR interval is B3 on F3
+  (0.461, about +/-0.031); every mean-score 95% half-width is below 0.004.
+  This restates what the v3 std fields imply and is a verification.
+- H6.3 (B1 in sweep): B1 DR = 0.000 at 1% infiltration (one failure in
+  100 scans is a failure rate of exactly 0.01, which does not exceed
+  B1's max_failure_rate of 0.01) and DR = 1.000 at 2% and above.
+- H6.4 (excursion duration sweep, corrected): B2 detection of a +2 C
+  excursion rises monotonically with duration; SL DR >= B2 DR and
+  >= B3 DR at every duration. SL DR at the shortest duration (1 reading
+  of 100) is not predicted; it is reported as found.
+- H6.5 (per-product ordering): under the global ordering, per-product
+  SL rho reproduces the v3 values above. Under the CRT-specific ordering
+  below, amoxicillin SL rho rises to at least 0.90 and remains the only
+  significant method for that product. If rho does not rise, the CRT
+  ordering is reported as refuted.
+- H6.6 (reproducibility): all DR, FPR, and mean-score values equal the v3
+  values to the reported precision (same seed, same simulator, same
+  calibration); only F7 LA and the new sweep rows may differ.
+
+### Pre-registered severity orderings (increasing severity)
+
+- Global (unchanged from EXP-004, used for all three products):
+  Normal < F6 < F4 < F3 < F5 < F1 < F7 < F2.
+- Insulin and mRNA product-specific ordering = global (cold chain is the
+  dominant physical risk for a refrigerated biologic and a frozen product).
+- Amoxicillin (CRT solid oral dosage form) product-specific ordering:
+  Normal < F6 < F4 < F1 < F7 < F3 < F5 < F2.
+  Rationale, written before recomputation: a +2 C excursion above 25 C on
+  5% of readings is a minor stability risk for a CRT tablet, whereas 5%
+  counterfeit packages and sub-minimum remaining shelf life are direct
+  patient-safety and compliance failures; F7 adds scan omission to the
+  mild excursion and ranks above F1 and F4 but below counterfeit; F2
+  (+17 C on 50% of readings) exposes the entire batch to about 42 C for
+  half the monitoring window and remains the most severe. All orderings
+  are author-defined; EXP-012 replaces them with independent expert
+  rankings and reports inter-rater agreement.
+
+### Independent Variables
+
+- F7 localization credit: single target (v3) vs either injected node (v3.1)
+- Counterfeit fraction: {1, 2, 3, 5, 10, 15, 20}%, methods SL, B1, B2, B3, B4
+- Excursion duration at +2 C: {1, 2, 5, 10, 20, 30, 50}% of readings,
+  methods SL, B1, B2, B3, B4 (bug fixed)
+- Severity ordering: global vs product-specific, per product
+
+### Dependent Variables / Metrics
+
+- DR, FPR, LA per method x scenario x product, each with a 95%
+  Clopper-Pearson interval (n = 1000)
+- Mean integrity score with std and 95% t-interval half-width
+- Spearman rho and p per method x product x ordering
+- AUC and Shannon entropy per product, recomputed for verification only
+
+### Control Conditions
+
+- Seed 42, N_TRIALS = 1000, five-node path, three products, adaptive
+  thresholds at the 1st percentile of each graded method's Normal
+  distribution, B1 fixed at 0.5, per-dimension thresholds d > 0.02 and
+  u > 0.50, chain-level u > 0.30: all identical to v3.
+- Simulator unchanged (commit 9db29d2). v3 results (196f496) are the
+  reference for H6.6.
+
+### Protocol
+
+1. simulator.FailureScenario gains an optional localization_targets tuple;
+   F7 sets ("central_warehouse", "distributor_a"); all others default to
+   (target_node,).
+2. scripts/run_experiments.py: LA credits a detected trial when the SL
+   flagged-node set intersects localization_targets, or when a baseline's
+   weakest node is in localization_targets; add Clopper-Pearson bounds for
+   DR/FPR/LA and t-interval half-widths for mean scores to MethodResult;
+   write experiments/full_results_v3_1.json (v3 file left untouched).
+3. scripts/run_metrics.py: add B1 to counterfeit_fraction_sweep; fix the
+   excursion sweep to pass duration_fraction and magnitude; add B1 and the
+   corrected sweep for all products; compute Spearman per product under
+   both orderings; write experiments/metrics_results_v3_1.json.
+4. tests: LA credit with two targets (SL and baseline paths), CI helper
+   bounds, B1 present in sweep output, excursion sweep passes the
+   parameters apply_failure reads (regression test for item 1 of the
+   addendum), ordering definitions. All existing 89 tests must stay green.
+5. Commit code: feat(exp006): v3.1 harness (F7 localization, CIs, B1 sweep,
+   excursion fix, per-product orderings). Record SHA below.
+6. Run: python scripts/run_experiments.py then python scripts/run_metrics.py
+   from the project root; paste console output into this entry.
+7. Evaluate H6.1-H6.6, fill Results/Observations/Interpretation, update
+   findings.md, commit docs(logbook): EXP-006 completed, tag exp-006-final.
+
+### Environment
+
+- **Hardware:** Windows laptop, 64 GB RAM, RTX 4090 (CPU-only workload)
+- **Software:** Windows / PowerShell, Python 3.11+, numpy, scipy, jsonld-ex
+  (versions to be recorded from pip freeze at run time)
+- **Git commit (code, before run):** TBD
+- **Config:** constants in scripts/run_experiments.py and
+  scripts/run_metrics.py (SEED = 42, N_TRIALS = 1000, FPR_TARGET = 0.01)
+- **Seeds:** 42
+
+### Results
+
+[to be filled after run]
+
+### Observations
+
+[to be filled after run]
+
+### Interpretation
+
+[to be filled after run]
+
+### Artifacts
+
+- experiments/full_results_v3_1.json
+- experiments/metrics_results_v3_1.json
+
+---
