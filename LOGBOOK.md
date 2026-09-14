@@ -1550,7 +1550,7 @@ written into the camera-ready.
 **Date:** 2026-09-14 (America/New_York)
 **Researcher:** Muntaser Syed
 **Type:** computational
-**Status:** planned
+**Status:** completed
 
 ### Motivation
 
@@ -1666,22 +1666,144 @@ mixed on purpose and each can fail.
 
 - **Hardware:** Windows laptop, 64 GB RAM, RTX 4090 (CPU-only workload)
 - **Software:** Python 3.12.2, numpy 2.0.2, scipy 1.17.1, jsonld-ex 0.7.4
-- **Git commit (code, before run):** TBD
+- **Git commit (code, before run):** 9572f8d (208 tests green)
 - **Config:** N_TRIALS = 1000, N_CALIB = 20000, SEED = 42, CALIB_SEED = 4242,
   FPR_TARGET = 0.01, SL-cal-pt criteria = 10, N in {100, 1000}
 - **Seeds:** 42 (evaluation), 4242 (calibration)
 
 ### Results
 
-[to be filled after run]
+Run 2026-09-14, commit 9572f8d, runtime 347.8 s. Output:
+experiments/stress_results_b.json.
+
+Calibrated SL-cal-pt disbelief thresholds (insulin): N = 100, R1:
+serialization 0.039, cold_chain 0.086, shelf_life 0.000, documentation
+0.240; R2: 0.059, 0.149, 0.000, 0.240. N = 1000, R1: 0.015, 0.039, 0.000,
+0.240; R2: 0.023, 0.082, 0.000, 0.240. B1-tuned max failure rate: 0.042 /
+0.062 (N = 100, R1 / R2), 0.015 / 0.023 (N = 1000).
+
+Out-of-sample FPR, SL-cal-pt: N = 100: R1 0.002 (all products), R2 0.001 /
+0.004 / 0.002 (insulin / amoxicillin / mRNA); N = 1000 (insulin): R1 0.004,
+R2 0.009. B1-tuned: 0.000-0.004. B2/B3/B4 0.005-0.017.
+
+Detection, insulin (amoxicillin and mRNA within +/-0.02):
+
+| N | regime | scenario | SL-cal-pt | SL-cal | B1-tuned | B2 | B3 |
+|---|--------|----------|-----------|--------|----------|-------|-------|
+| 100 | R1 | F1 | 0.125 | 0.045 | 1.000 | 0.010 | 0.027 |
+| 100 | R1 | F3 | 1.000 | 0.063 | 1.000 | 0.010 | 0.025 |
+| 100 | R1 | F6 | 1.000 | 1.000 | 1.000 | 0.103 | 0.908 |
+| 100 | R2 | F1 | 0.028 | 0.009 | 0.927 | 0.012 | 0.024 |
+| 100 | R2 | F3 | 0.002 | 0.009 | 0.002 | 0.011 | 0.017 |
+| 100 | R2 | F4 | 1.000 | 1.000 | 1.000 | 1.000 | 0.857 |
+| 100 | R2 | F6 | 1.000 | 1.000 | 1.000 | 0.060 | 0.471 |
+| 1000 | R0 | F3 | 1.000 | 1.000 | 1.000 | 0.000 | 0.506 |
+| 1000 | R1 | F1 | 1.000 | 0.212 | 1.000 | 0.005 | 0.031 |
+| 1000 | R1 | F3 | 1.000 | 0.806 | 1.000 | 0.011 | 0.021 |
+| 1000 | R2 | F1 | 0.939 | 0.028 | 1.000 | 0.019 | 0.023 |
+| 1000 | R2 | F3 | 1.000 | 0.033 | 1.000 | 0.007 | 0.013 |
+| 1000 | R2 | F6 | 1.000 | 1.000 | 1.000 | 0.035 | 0.514 |
+
+F2, F4, F5, F7 = 1.000 for SL-cal-pt, SL-cal and B1-tuned in every cell;
+B4 never exceeds 0.52. Counterfeit sweep (insulin), SL-cal-pt / B1-tuned:
+N = 100 R1 detects 5% and above (1.000) and nothing at 3% or below
+(<= 0.003); N = 100 R2 detects 10% and above only (both methods); N = 1000
+R1 detects 2% and above (1.000 / 1.000), 1% not (0.004 / 0.000); N = 1000
+R2 detects 3% and above, 2% not (0.008 / 0.004).
+
+Spearman (global ordering, insulin), SL: N = 100: 0.976 (R0), 0.690
+(p = 0.058, R1), 0.619 (R2); N = 1000: 0.881 (p = 0.004, R0), 0.762
+(p = 0.028, R1), 0.619 (R2). No baseline significant anywhere; B4
+undefined.
+
+Mutual information I(scenario; score), bits, insulin:
+
+| N | regime | SL | B1-tuned | B2 | B3 | B4 |
+|---|--------|-------|----------|-------|-------|-----|
+| 100 | R0 | 1.739 | 0.544 | 2.181 | 2.552 | 0 |
+| 100 | R1 | 0.831 | 0.544 | 1.716 | 1.702 | 0 |
+| 100 | R2 | 0.498 | 0.772 | 1.572 | 1.323 | 0 |
+| 1000 | R0 | 1.733 | 0.544 | 2.245 | 2.581 | 0 |
+| 1000 | R1 | 0.812 | 0.544 | 1.895 | 1.813 | 0 |
+| 1000 | R2 | 0.375 | 0.537 | 1.651 | 1.423 | 0 |
+
+SL mean scores, insulin, N = 1000, R0: Normal 0.999, F4 0.999, F6 0.998,
+F5 0.997, F3 0.979, F1 0.939, F7 0.939, F2 0.239 (compare N = 100: F5
+0.976, F6 0.988, F3 0.977).
+
+Hypotheses:
+- H7b.1 SUPPORTED: SL-cal-pt FPR 0.001-0.009 in every noisy cell.
+- H7b.2 SUPPORTED: F3 at N = 100 is 1.000 in R1 (threshold 0.039 <
+  0.047) and 0.002-0.010 in R2 (threshold 0.059 > 0.047), on all products.
+- H7b.3 SUPPORTED: F1 at N = 100 is 0.108-0.125 in R1 and 0.025-0.029 in
+  R2 (cold-chain threshold 0.086 / 0.149 above F1's about 0.065).
+- H7b.4 SUPPORTED: at N = 1000, F3 = 1.000 in R1 and R2; F1 = 1.000 in R1
+  and 0.939 in R2.
+- H7b.5 SUPPORTED: B1-tuned F3 = 1.000 in both regimes at N = 1000.
+- H7b.6 SUPPORTED: F2, F4, F5, F6, F7 = 1.000 in every cell.
+- H7b.7 REFUTED: SL's I(scenario; score) is below B1-tuned's in R2 at
+  both N (0.498 vs 0.772; 0.375 vs 0.537) and below B2's and B3's in every
+  cell including R0 (1.739 vs 2.181 and 2.552).
+- H7b.8 REFUTED on magnitude: at N = 1000 in R1 SL reaches rho = 0.762
+  with p = 0.028 (significant, but below the pre-registered 0.85).
 
 ### Observations
 
-[to be filled after run]
+- Per-type calibration does what the EXP-007 diagnosis said it would: F3 is
+  recovered wherever the serialization noise threshold falls below 0.047
+  (R1 at N = 100, both regimes at N = 1000), and F1 is recovered only when
+  evidence volume separates a +2 C excursion from blip noise (N = 1000).
+  Once tuned to the same noise, B1-tuned detects the same failures as
+  SL-cal-pt in every cell except that it keeps F1 at N = 100 (0.927-1.000)
+  through its magnitude rule, and both lose F3 at N = 100 in R2. On binary
+  detection under noise, a well-calibrated rule system and the calibrated
+  algebra are equivalent; the algebra's remaining differences are the
+  graded score, the explicit uncertainty, and node-level localization.
+- Mutual information ranks the methods differently from Spearman. B3's
+  product-of-probabilities spreads the eight scenarios across [0.06, 0.84]
+  with small spread within each, so it identifies scenarios well (2.55
+  bits) while ordering them wrongly (F5 at 0.06 below F2 at 0.43, rho
+  0.619 n.s.). SL's projected probability places six of eight scenarios in
+  [0.95, 1.00], so it orders them correctly in the clean regime but
+  identifies them less well (1.74 bits), and under noise those six merge
+  (0.50 bits in R2), which is also why the Spearman value falls. The paper
+  cannot claim that P(omega) carries more information than the baselines;
+  it can claim correct ordering and calibrated uncertainty.
+- Evidence-volume dilution: at N = 1000 the shelf-life and documentation
+  dimensions contribute the same few evidence units as at N = 100 (a date,
+  five documents) while serialization and cold chain contribute ten times
+  more, so cumulative fusion dilutes F5 and F6 in the chain score (0.976 ->
+  0.997 and 0.988 -> 0.998). Detection survives through the per-type
+  disbelief criteria (shelf_life threshold 0.000, documentation 0.24 <
+  0.29 for a missing CoA), but the chain-score ordering no longer places
+  F5 among the severe scenarios, which is why rho drops from 0.976 to
+  0.881 in R0. The product-specific weights (W / w_i) rescale the prior
+  weight, not the evidence count, and cannot offset a tenfold volume
+  difference. This is a property of cumulative fusion (evidence adds) and
+  belongs in Limitations; averaging fusion (EXP-009) is the natural
+  comparison.
+- SL-cal-pt's realized FPR (0.1-0.9%) is conservative because the ten-way
+  split is Bonferroni-like; a joint calibration would trade some of that
+  slack for sensitivity, at the cost of a less transparent rule.
+- The N = 1000 counterfeit floor (2% in R1, 3% in R2) equals B1-tuned's;
+  both are set by the benign scan-error tail.
 
 ### Interpretation
 
-[to be filled after run]
+What the camera-ready can say, all supported by EXP-006, EXP-007 and
+EXP-007b: (1) binary detection of the seven injected failures is matched
+by the rule-based baseline in the clean regime, and by a noise-tuned rule
+system under noise; (2) any fixed threshold, the regulator's or ours, fails
+under benign operational noise (FPR near 1); (3) calibrated per evidence
+type on the operational Normal distribution, the algebra holds a 1%
+false-alarm target out of sample, detects every large failure, and detects
+5% counterfeit and a +2 C excursion once evidence volume reaches 1000
+observations per node; (4) the algebra's correct severity ordering is a
+clean-regime and large-volume result, not a general one, and its projected
+probability is less scenario-discriminating than the Bayesian baseline by
+mutual information; (5) cumulative fusion dilutes low-count evidence types
+as volume grows. Claims (1), (4) and (5) are corrections to the submitted
+text; (2) and (3) are new support for its integration argument.
 
 ### Artifacts
 
