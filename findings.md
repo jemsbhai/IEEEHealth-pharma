@@ -6,6 +6,12 @@ The Drug Integrity Algebra achieves perfect detection (DR=1.000) and
 perfect localization (LA=1.000) across all 7 failure scenarios × 3
 pharmaceutical product categories (21 combinations, 1000 Monte Carlo
 trials each, seed=42), with a false positive rate of 1.0% (EXP-002b).
+The rule-based threshold baseline B1 reaches the same DR and LA on all 21
+combinations (confirmed in EXP-006, after localization credit was made
+uniform across methods), so binary detection of the injected failures is
+not the differentiator; graded severity and explicit uncertainty are. Every
+DR = 1.000 entry carries a 95% Clopper-Pearson interval of [0.9963, 1.000]
+and every mean-score 95% half-width is at most 0.0033 (EXP-006).
 
 The algebra’s core advantage over the three baselines is **graded severity
 discrimination with explicit uncertainty**. For insulin under a mild
@@ -59,16 +65,21 @@ estimates). Product-specific evidence weights (A5) adjust severity
 discrimination by 5–10% for temperature failures but do not affect detection
 capability.
 
-Richer metrics (EXP-004) confirm two additional advantages. First, the SL
-algebra is the only method with statistically significant severity ranking:
-Spearman ρ=0.976 (p=3.3×10⁻⁵) against a ground-truth physical severity
-ordering, while all three baselines fail significance (B1 p=0.134,
-B2 p=0.286, B3 p=0.102). Second, the F3 counterfeit fraction sensitivity
-sweep shows that the algebra detects counterfeiting at 1% infiltration
-rate with DR=1.000, while B2 requires ≥10% and B3 requires >5% for
-majority detection. The system is also completely robust to parameter
-variation, maintaining DR=1.000 across 20× variation in detection
-thresholds and 3× variation in evidence weights.
+Richer metrics (EXP-004, extended in EXP-006) confirm two additional
+advantages. First, the SL algebra is the only method with statistically
+significant severity ranking: Spearman ρ=0.976 (p=3.3×10⁻⁵) on insulin and
+mRNA against the global physical severity ordering; on amoxicillin ρ=0.786
+(p=0.021) under the global ordering and 0.976 (p=3.3×10⁻⁵) under the
+pre-registered CRT-specific ordering, while no baseline reaches significance
+on any product under either ordering (B1 p=0.134, B2 p≥0.286, B3 p≥0.071,
+B4 p≥0.452). All orderings are author-defined pending EXP-012. Second, the
+F3 counterfeit fraction sensitivity sweep shows that the algebra detects
+counterfeiting at 1% infiltration rate with DR=1.000, while B1 misses
+exactly 1% (its failure-rate rule passes 0.01) and detects 2% and above,
+B2 requires ≥10% and B3 requires >5% for majority detection (EXP-006).
+The system is also completely robust to parameter variation, maintaining
+DR=1.000 across 20× variation in detection thresholds and 3× variation in
+evidence weights.
 
 ROC/AUC analysis (Mann-Whitney U) shows SL achieves AUC=0.979, slightly
 below B3’s 0.990 and B1’s trivially perfect 1.000 (binary output). The
@@ -82,7 +93,10 @@ A Dempster-Shafer baseline (B4) reveals a concrete domain-specific
 manifestation of Zadeh’s paradox: when four evidence types indicate
 safety and an active pharmaceutical recall indicates compromise,
 Dempster’s rule normalizes away the conflict and reports BetP(safe)=0.997
-for a recalled drug. The SL algebra correctly produces near-zero integrity
+for a recalled drug. (This recall example is a unit-test construction from
+EXP-005; no recall scenario is simulated in F1-F7, and the paper
+illustrates the paradox with the simulated F2 instead.) The SL algebra
+correctly produces near-zero integrity
 through dogmatic opinion override in cumulative fusion, demonstrating a
 practical advantage of SL’s conflict handling over D-S’s normalization.
 
@@ -99,6 +113,34 @@ for multi-dimensional, multi-node supply chain integrity assessment.
 ---
 
 ## Raw Findings Log
+
+### 2026-09-14 — EXP-006: Main Suite v3.1 (localization fairness, intervals, B1 in sweeps, per-product orderings)
+
+**Key result:** v3.1 reproduces every v3 DR, FPR and score exactly; crediting
+either injected node for F7 raises B2/B3/B4 F7 LA from 0.000 to 1.000; B1
+misses 1% counterfeit and detects 2%+; amoxicillin SL ρ = 0.786 (global
+ordering) / 0.976 (pre-registered CRT ordering).
+
+**Numbers (from experiments/full_results_v3_1.json, metrics_results_v3_1.json):**
+- All 72 DR = 1.000 rows: 95% CI [0.9963, 1.000]. B3 on F3: 0.461
+  [0.430, 0.492]. FPR 0.010 rows: [0.0048, 0.0183]. Largest mean-score
+  half-width 0.0033 (SL, F2, amoxicillin); Table II rows ≤ 0.002.
+- Counterfeit sweep (insulin), SL / B1 / B2 / B3 / B4: 1%: 1.000 / 0.000 /
+  0.000 / 0.002 / 0.103; 2%: 1.000 / 1.000 / 0.000 / 0.016 / 0.000; 5%:
+  1.000 / 1.000 / 0.000 / 0.461 / 0.013; 10%+: all 1.000 except B4 ≤ 0.036.
+- Corrected excursion-duration sweep (+2 C, insulin), durations 1/2/5/10%:
+  SL 1.000 throughout; B1 1.000 throughout (zero-tolerance rule);
+  B2 0.101 / 0.298 / 0.892 / 1.000; B3 0.056 / 0.154 / 0.739 / 1.000.
+  The EXP-004 excursion sweep was invalid (parameter-name bug, see LOGBOOK
+  addendum 2026-09-14) and is superseded.
+- Spearman, product-specific ordering, amoxicillin: SL 0.976 (p=3.3e-05),
+  B1 0.577 (n.s.), B2 0.311 (n.s.), B3 0.667 (p=0.071), B4 0.031 (n.s.).
+- Realized FPR: SL 0.010, B3 0.010, B1 0.000, B2 0.000, B4 0.000; B1 uses a
+  fixed 0.5 threshold, not percentile calibration.
+
+**Implications:** no headline number changes; the paper's "only method"
+claim for DR/LA is withdrawn, LA is defined explicitly, Fig. 4 gains B1,
+the ranking paragraph reports per-product values, and intervals are stated.
 
 ### 2026-06-07 — EXP-002b: Full Experiment Suite v2.1 Final Results
 
