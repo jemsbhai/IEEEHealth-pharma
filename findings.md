@@ -23,7 +23,7 @@ receives identical “fail” signals for fundamentally different risk levels.
 
 Two critical architectural decisions drive the results:
 
-1. **Deduction-based cross-node propagation** (Jøsang §12.6 with causal
+1. **Deduction-based cross-node propagation** (Jøsang §9.4 with causal
    conditionals) correctly propagates disbelief through the supply chain,
    reflecting the physical irreversibility of drug compromise. The original
    trust_discount operator (§14.3) mapped upstream disbelief to downstream
@@ -37,8 +37,12 @@ Two critical architectural decisions drive the results:
    the serialization evidence at the affected node.
 
 All SL operations anchor exclusively to established operators from Jøsang’s
-textbook: `from_evidence` (§3.2), `trust_discount` (§14.3), `cumulative_fuse`
-(§12.3), `deduce` (§12.6). No ad-hoc formulas are introduced. The contribution
+textbook: `from_evidence` (§3.4.3), `trust_discount` (§14.3), `cumulative_fuse`
+(§12.3), `deduce` (§9.4). (Section numbers corrected 2026-09-14 to the
+published Springer edition; the submitted paper cited §3.2 and §12.6.)
+The application-specific encodings (evidence counts, the shelf-life map,
+the critical-document weight, the compromised conditional, the base rates)
+are modeling assumptions, not operators. The contribution
 is the formalization of pharmaceutical supply chain evidence as SL inputs,
 not the invention of new mathematical operators.
 
@@ -113,6 +117,29 @@ for multi-dimensional, multi-node supply chain integrity assessment.
 ---
 
 ## Raw Findings Log
+
+### 2026-09-14 — EXP-008: Parameter sensitivity of the formation functions
+
+**Key result:** across 16 one-at-a-time settings (conditional base rate and
+disbelief, critical-document weight, shelf-life scale, prior weight, base
+rates, severity cap) detection and localization stay at 1.000 and FPR at
+0.010, with one exception: doubling the base prior weight pushes the
+documentation dimension's baseline uncertainty (0.40 -> 0.57 for products
+with document weight 0.6) across the fixed per-dimension threshold of 0.50
+and floods false alarms (FPR 1.000 on insulin and mRNA). Severity ordering
+on insulin stays significant in every setting (rho 0.952-0.976); the F1-F2
+gap ranges 0.564-0.641 around the published 0.620. The conditional's base
+rate is inert (dogmatic opinion) and the severity cap of 5 never binds on
+the published scenarios.
+
+**Numbers:** experiments/sensitivity_results.json, commit 6ec5db8.
+Regression: run_experiments.py reproduced full_results_v3_1.json exactly
+except runtime_seconds after FormationParams was threaded through.
+
+**Implications:** two sentences in the paper answer Reviewer 2 rec 5;
+the prior-weight failure is reported as the reason per-dimension
+thresholds must be calibrated, tying it to EXP-007/007b; the paper stops
+presenting the conditional's base rate 0.01 as a chosen value.
 
 ### 2026-09-14 — EXP-010: Flat vs hierarchical Dempster combination
 
@@ -365,7 +392,7 @@ Six categories surveyed:
    data, no cross-node composition. Our F2 is one of five dimensions.
 4. **Dempster-Shafer:** Closest theoretical competitor. Lacks trust
    discounting, has Zadeh’s paradox, no base rate, no temporal decay.
-   SL addresses all of these (Jøsang 2016, §1.4).
+   SL addresses all of these (Jøsang 2016, §5.1.1).
 5. **SL in trust/IoT:** SL widely used for trust in MANETs/VANETs, but
    NEVER applied to pharmaceutical supply chain. Our paper is the first.
 6. **WHO statistics:** 10% of medicines in LMICs are substandard/falsified.

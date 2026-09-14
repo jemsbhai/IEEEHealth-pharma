@@ -15,7 +15,7 @@ Architecture:
     │       │                    │                         │
     │       │ cross-node         │ within-node             │
     │       │ deduce()           │ cumulative_fuse()       │
-    │       │ (Jøsang §12.6)    │ (Jøsang §12.3)         │
+    │       │ (Jøsang §9.4)     │ (Jøsang §12.3)         │
     │       │                    │                         │
     │       │                    ├─ F1: serialization      │
     │       │                    ├─ F2: cold chain         │
@@ -31,7 +31,7 @@ Cross-Node Propagation Semantics (Definition 5, revised):
     node should produce chain-level DISBELIEF — you can't un-compromise
     a drug.
 
-    Instead, we use the DEDUCTION operator (§12.6) with causal conditionals:
+    Instead, we use the DEDUCTION operator (§9.4) with causal conditionals:
         - If node i was safe: chain safety depends on remaining nodes
         - If node i was compromised: chain is compromised regardless
 
@@ -51,8 +51,12 @@ Dependencies:
 References:
     Jøsang, A. (2016). Subjective Logic. Springer.
       §12.3: Cumulative fusion
-      §12.6: Deduction operator (conditional reasoning under uncertainty)
-      §10.4: Opinion aging (temporal decay)
+      §9.4: Binomial deduction (conditional reasoning under uncertainty)
+      §16.2.2: Evidence ageing (temporal decay)
+    (Section numbers follow the published Springer edition; earlier
+    versions of this file cited §12.6 and §10.4, which are consensus and
+    compromise fusion and binomial abduction respectively; see LOGBOOK
+    addendum 2026-09-14.)
 """
 
 from __future__ import annotations
@@ -376,7 +380,7 @@ def evaluate_path(
     Per Definition 5 (Paper §3.5): conjunctive composition via the
     deduction operator along the product path π = (n_1, ..., n_m).
 
-    Cross-node propagation (Jøsang §12.6 — Deduction):
+    Cross-node propagation (Jøsang §9.4 — Binomial deduction):
         The drug is safe at dispensing iff it was handled safely at
         EVERY node. This is conjunctive: safe_chain = ∧_i safe_i.
 

@@ -201,7 +201,7 @@ def evaluate_path_averaging_fuse(
 ) -> ChainEvaluationResult:
     """Like evaluate_path but uses averaging_fuse instead of cumulative_fuse.
 
-    Within-node: averaging_fuse (Jøsang §12.5) instead of cumulative_fuse (§12.3)
+    Within-node: averaging_fuse (Jøsang §12.4) instead of cumulative_fuse (§12.3)
     Cross-node: deduce (unchanged)
     """
     node_results: Dict[str, NodeEvaluationResult] = {}

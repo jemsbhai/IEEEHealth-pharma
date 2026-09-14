@@ -29,7 +29,7 @@ of severity (mild excursion and severe excursion produce identical scores).
 
 **Our advantage:** The SL algebra maps the same serialization evidence
 that track-and-trace systems collect to SL opinions (F1, via
-from_evidence §3.2) and ADDS four additional evidence dimensions
+from_evidence §3.4.3) and ADDS four additional evidence dimensions
 (cold chain, shelf life, documentation, recall), fusing them into a
 graded integrity score with explicit uncertainty.
 
@@ -125,12 +125,12 @@ unlikely hypothesis). SL's cumulative fusion handles conflict more
 gracefully via the uncertainty component.
 (b) **No trust discounting:** D-S has no native operator for propagating
 opinions through trust networks. SL's trust_discount (§14.3) and deduce
-(§12.6) handle this. Our cross-node propagation (deduce with causal
+(§9.4) handle this. Our cross-node propagation (deduce with causal
 conditionals) has no D-S equivalent.
 (c) **No base rate:** D-S mass functions don't include a prior base rate.
 SL opinions include base rate a, which allows projection to probability
 (P(ω) = b + a·u) and meaningful interpretation of uncertainty.
-(d) **No temporal decay:** SL's decay_opinion (§10.4) handles evidence
+(d) **No temporal decay:** SL's decay_opinion (§16.2.2) handles evidence
 staleness. No D-S equivalent.
 
 **Our positioning:** SL is sometimes described as an extension of D-S
@@ -144,7 +144,8 @@ handling (cumulative fusion with 5 heterogeneous evidence types).
 - Dempster-Shafer for Anomaly Detection (arXiv:0803.1568)
 - Bayesian and D-S models for fraud detection (arXiv:2104.07440)
 - Evidential supplier selection based on interval data fusion (arXiv:1703.01971)
-- Jøsang, 2016: Subjective Logic (§1.4 discusses D-S relationship)
+- Jøsang, 2016: Subjective Logic (§5.1.1 compares SL with D-S belief theory;
+  section numbers corrected 2026-09-14 to the published Springer edition)
 
 ---
 
@@ -163,7 +164,7 @@ Multi-source fusion operators (CBF, ABF, WBF, CCF) have been formalized
 **What does NOT exist:** No prior work applies SL to pharmaceutical
 supply chain integrity. No prior work maps pharmaceutical evidence
 (serialization, cold chain, shelf life, documentation, recall) to SL
-opinions. No prior work uses deduce (§12.6) for cross-node propagation
+opinions. No prior work uses deduce (§9.4) for cross-node propagation
 in a supply chain DAG.
 
 **Our contribution in this context:** The first application of SL to

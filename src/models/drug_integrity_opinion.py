@@ -7,7 +7,7 @@ integrity algebra, as defined in [Paper §3.3].
 Design Principle — COMPOSABILITY FROM ESTABLISHED OPERATORS:
     Every formation function decomposes into exactly two steps:
       1. Evidence mapping:  Opinion.from_evidence(r, w, W, a)
-         — Jøsang (2016, §3.2), standard Dirichlet evidence-to-opinion
+         — Jøsang (2016, §3.4.3), standard Beta evidence-to-opinion mapping
       2. Coverage adjustment: trust_discount(coverage_trust, evidence_opinion)
          — Jøsang (2016, §14.3), trust discounting for partial observability
 
@@ -35,8 +35,12 @@ Dependencies:
 
 References:
     Jøsang, A. (2016). Subjective Logic. Springer.
-      §3.2: Evidence-to-opinion mapping (Beta/Dirichlet)
+      §3.4.2-3.4.3: Beta binomial model and its mapping to a binomial opinion
+      (§3.5.5 for the multinomial/Dirichlet case)
       §14.3: Trust discounting operator
+    (Section numbers follow the published Springer edition; earlier
+    versions of this file cited §3.2, which is "Opinion Classes"; see
+    LOGBOOK addendum 2026-09-14.)
 """
 
 from __future__ import annotations
@@ -180,7 +184,7 @@ def form_serialization_opinion(
 
     Two-step construction per §3.3a:
 
-    Step 1 — Evidence mapping (Jøsang §3.2):
+    Step 1 — Evidence mapping (Jøsang §3.4.3):
         Form an opinion from observed scans using the standard
         Dirichlet evidence-to-opinion mapping:
             ω_sample = from_evidence(r=success, w=failure, W=prior_weight)
@@ -222,7 +226,7 @@ def form_serialization_opinion(
     if scanned_total == 0:
         return DrugIntegrityOpinion.vacuous(base_rate)
 
-    # Step 1: Evidence mapping (Jøsang §3.2)
+    # Step 1: Evidence mapping (Jøsang §3.4.3)
     omega_sample = Opinion.from_evidence(
         positive=s,
         negative=f,
@@ -285,7 +289,7 @@ def form_cold_chain_opinion(
 
     Two-step construction per §3.3b:
 
-    Step 1 — Severity-weighted evidence mapping (Jøsang §3.2 + §3.4):
+    Step 1 — Severity-weighted evidence mapping (Jøsang §3.4.2-3.4.3):
         Each temperature reading is classified as positive or negative
         evidence. Positive evidence (in-range readings) has unit weight.
         Negative evidence (out-of-range readings) is weighted by excursion

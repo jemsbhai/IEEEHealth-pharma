@@ -61,7 +61,8 @@ producing an end-to-end integrity score with calibrated uncertainty.
 | C4 | Simulation evaluation with failure injection | No | No |
 | C5 | Industry-grounded domain model (UAE pharma co-author) | No | No |
 
-The SL primitives (Opinion, cumulative_fuse, trust_discount, decay_opinion) are
+The SL primitives (Opinion, cumulative_fuse, deduce, trust_discount,
+decay_opinion) are
 CITED from jsonld-ex — never re-derived. The contribution is the formalization
 of pharmaceutical supply chain compliance as an SL opinion algebra and the
 empirical demonstration of its superiority over threshold-based systems.
@@ -220,16 +221,21 @@ opinion components directly (which would violate the b+d+u=1 constraint).
 
 ### 3.5 Cross-Node Propagation (Definition 5)
 
+(Revised 2026-09-14 to match the implementation and the submitted paper;
+the original plan used serial trust discounting, replaced by deduction in
+EXP-002a because trust discounting maps upstream disbelief to downstream
+uncertainty, whereas drug compromise is irreversible.)
+
 Along a product path π = (n_1, ..., n_m), the chain-level integrity opinion
-is computed by serial trust discounting:
+is computed by a right fold of the deduction operator (Jøsang §9.4) with
+causal conditionals:
 
-    ω_chain(π) = trust_discount(ω_node(n_1),
-                   trust_discount(ω_node(n_2),
-                     ...
-                       trust_discount(ω_node(n_{m-1}), ω_node(n_m))...))
+    ω_chain = ω_{n_1} ◎ (ω_{n_2} ◎ ( ... ◎ ω_{n_m}))
 
-Each node's opinion is discounted by the preceding node's opinion, reflecting
-that downstream integrity depends on upstream integrity.
+where at each step ω_{Y|x} = the remaining chain opinion (upstream node
+safe) and ω_{Y|¬x} = (0, 1, 0, 0.01) (upstream node compromised). The
+conditional's base rate is immaterial (EXP-008: a dogmatic opinion
+projects to 0 for any a).
 
 For multi-path supply chains (a batch passes through parallel distributors),
 paths are computed independently and then fused:
@@ -378,7 +384,7 @@ does the associative property matter?
 
 **A3: Temporal decay ablation** — remove temporal decay; does staleness matter?
 
-**A4: Cross-node propagation ablation** — replace trust_discount chain with
+**A4: Cross-node propagation ablation** — replace the deduce chain with
 independent node evaluation; does chain-level reasoning help?
 
 ---
@@ -444,9 +450,12 @@ This paper is DISTINCT from HealthCom Paper 1 ("HIPAA Compliance Algebra"):
 
 The paper cites but does not re-derive the following from jsonld-ex:
 - `Opinion(b, d, u, a)` — core type
-- `cumulative_fuse(*opinions)` — within-node fusion
-- `trust_discount(trust, opinion)` — cross-node propagation
-- `decay_opinion(op, elapsed, half_life)` — temporal decay
+- `cumulative_fuse(*opinions)` — within-node fusion (Jøsang §12.3)
+- `deduce(opinion_x, opinion_y_given_x, opinion_y_given_not_x)` — cross-node
+  propagation (Jøsang §9.4)
+- `trust_discount(trust, opinion)` — sensor and scan coverage inside F1/F2
+  (Jøsang §14.3)
+- `decay_opinion(op, elapsed, half_life)` — temporal decay (Jøsang §16.2.2)
 - `robust_fuse(opinions, threshold)` — Byzantine filtering (if needed)
 - `pairwise_conflict()` — conflict detection for localization
 
