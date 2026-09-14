@@ -162,6 +162,138 @@ def generate_normal_evidence(
 
 
 # ═══════════════════════════════════════════════════════════════════
+# OPERATIONAL NOISE (EXP-007): benign nuisance conditions on Normal evidence
+# ═══════════════════════════════════════════════════════════════════
+
+
+@dataclass(frozen=True)
+class NoiseProfile:
+    """Benign operational noise applied to Normal-operation evidence.
+
+    None of these perturbations is a failure. They model scanner read
+    errors, short temperature blips (door openings, sensor jitter), logger
+    dropout, and routine paperwork lag. Pre-registered in LOGBOOK EXP-007.
+
+    Attributes:
+        name:            Regime label (R0, R1, R2).
+        scan_error_rate: Probability that a successfully scanned package is
+                         recorded as a scan failure for a benign reason.
+        blip_prob:       Per-reading probability of an out-of-range blip.
+        blip_max_c:      Blip displacement is U(0.1, blip_max_c) degrees C
+                         beyond the nearer range bound.
+        coverage_min:    Fraction of readings retained is U(coverage_min, 1.0);
+                         dropped readings leave expected_readings unchanged,
+                         so the gap is visible to the coverage discount.
+        doc_delay_prob:  Per non-critical required document probability of
+                         being late (absent). Critical documents are never
+                         affected by noise.
+    """
+    name: str
+    scan_error_rate: float = 0.0
+    blip_prob: float = 0.0
+    blip_max_c: float = 0.0
+    coverage_min: float = 1.0
+    doc_delay_prob: float = 0.0
+
+    @property
+    def is_null(self) -> bool:
+        return (self.scan_error_rate == 0.0 and self.blip_prob == 0.0
+                and self.coverage_min >= 1.0 and self.doc_delay_prob == 0.0)
+
+
+NOISE_R0 = NoiseProfile("R0")
+NOISE_R1 = NoiseProfile("R1", scan_error_rate=0.005, blip_prob=0.02, blip_max_c=1.0,
+                        coverage_min=0.85, doc_delay_prob=0.05)
+NOISE_R2 = NoiseProfile("R2", scan_error_rate=0.01, blip_prob=0.05, blip_max_c=2.0,
+                        coverage_min=0.70, doc_delay_prob=0.10)
+NOISE_REGIMES = {"R0": NOISE_R0, "R1": NOISE_R1, "R2": NOISE_R2}
+
+
+def apply_operational_noise(
+    evidence: NodeEvidence,
+    product: ProductProfile,
+    noise: NoiseProfile,
+    rng: np.random.Generator,
+) -> NodeEvidence:
+    """Return a copy of one node's evidence with benign noise applied.
+
+    Perturbations are applied in a fixed order (scan errors, blips, dropout,
+    late documents) so that results are reproducible for a given rng state.
+    Shelf life and recall status are never touched. Failure injection
+    (apply_failure) is applied afterwards by the caller, exactly as in the
+    main suite.
+    """
+    if noise.is_null:
+        return evidence
+
+    # 1. Benign scan failures among successfully scanned packages
+    ser = evidence.serialization
+    if ser is not None and noise.scan_error_rate > 0.0 and ser.scanned_success > 0:
+        n_benign = int(rng.binomial(ser.scanned_success, noise.scan_error_rate))
+        ser = SerializationEvidence(
+            scanned_success=ser.scanned_success - n_benign,
+            scanned_failure=ser.scanned_failure + n_benign,
+            total_packages=ser.total_packages,
+        )
+
+    # 2. Temperature blips, then 3. logger dropout
+    cc = evidence.cold_chain
+    if cc is not None and len(cc.readings) > 0:
+        readings = np.array(cc.readings, dtype=float)
+        if noise.blip_prob > 0.0:
+            mask = rng.random(len(readings)) < noise.blip_prob
+            n_blips = int(mask.sum())
+            if n_blips > 0:
+                disp = rng.uniform(0.1, noise.blip_max_c, size=n_blips)
+                above = rng.random(n_blips) < 0.5
+                readings[mask] = np.where(
+                    above, cc.required_max + disp, cc.required_min - disp)
+        if noise.coverage_min < 1.0:
+            coverage = rng.uniform(noise.coverage_min, 1.0)
+            n_keep = max(1, int(round(coverage * len(readings))))
+            keep = np.sort(rng.choice(len(readings), size=n_keep, replace=False))
+            readings = readings[keep]
+        cc = ColdChainEvidence(
+            readings=tuple(readings.tolist()),
+            required_min=cc.required_min,
+            required_max=cc.required_max,
+            expected_readings=cc.expected_readings,
+        )
+
+    # 4. Late routine (non-critical) documents
+    doc = evidence.documentation
+    if doc is not None and noise.doc_delay_prob > 0.0:
+        non_critical = sorted(doc.documents_required - doc.documents_critical)
+        late = frozenset(d for d in non_critical if rng.random() < noise.doc_delay_prob)
+        if late:
+            doc = DocumentationEvidence(
+                documents_present=doc.documents_present - late,
+                documents_required=doc.documents_required,
+                documents_critical=doc.documents_critical,
+            )
+
+    return NodeEvidence(
+        serialization=ser,
+        cold_chain=cc,
+        shelf_life=evidence.shelf_life,
+        documentation=doc,
+        recall=evidence.recall,
+    )
+
+
+def generate_noisy_normal_evidence(
+    product: ProductProfile,
+    noise: NoiseProfile,
+    rng: np.random.Generator,
+    n_packages: int = 100,
+    n_readings: int = 100,
+) -> NodeEvidence:
+    """Normal-operation evidence for one node with a noise regime applied."""
+    base = generate_normal_evidence(product, n_packages=n_packages, n_readings=n_readings, rng=rng)
+    return apply_operational_noise(base, product, noise, rng)
+
+
+# ═══════════════════════════════════════════════════════════════════
 # FAILURE SCENARIOS (F1–F7)
 # ═══════════════════════════════════════════════════════════════════
 
