@@ -1,0 +1,23 @@
+{
+  "_note": "EXP-012 label key. NOT to be shared with rankers. Labels are a fixed permutation per product to reduce presentation-order anchoring. Scenario codes match Table I of the paper and get_standard_scenarios().",
+  "products": {
+    "Insulin": {"A": "F4", "B": "F2", "C": "Normal", "D": "F6", "E": "F1", "F": "F7", "G": "F3", "H": "F5"},
+    "Amoxicil": {"A": "F3", "B": "F5", "C": "F1", "D": "Normal", "E": "F7", "F": "F2", "G": "F4", "H": "F6"},
+    "mRNA-bas": {"A": "F6", "B": "F1", "C": "F5", "D": "F3", "E": "F2", "F": "Normal", "G": "F7", "H": "F4"}
+  },
+  "instrument_product_names": {
+    "Insulin": "Insulin (refrigerated biologic)",
+    "Amoxicil": "Amoxicillin tablets (controlled room temperature)",
+    "mRNA-bas": "mRNA-based therapy (frozen)"
+  },
+  "scenario_descriptions": {
+    "Normal": "all records normal",
+    "F1": "mild temperature excursion, +2 C above the upper limit on 5% of readings",
+    "F2": "severe temperature excursion, +17 C above the upper limit on 50% of readings",
+    "F3": "5% of packages fail serial-number verification at the importer",
+    "F4": "20% scan coverage at one custody transfer",
+    "F5": "remaining shelf life at 50% of the regulatory pharmacy minimum",
+    "F6": "Certificate of Analysis missing at the importer",
+    "F7": "F1 at the warehouse and F4 at the distributor in the same batch"
+  }
+}

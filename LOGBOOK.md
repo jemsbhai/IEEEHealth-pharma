@@ -2014,7 +2014,7 @@ limitation of evidence-count fusion that per-type detection addresses.
 **Date:** 2026-09-14 (America/New_York)
 **Researcher:** Muntaser Syed
 **Type:** computational
-**Status:** planned
+**Status:** completed
 
 ### Motivation
 
@@ -2095,21 +2095,103 @@ of Table II); the other products are run for DR/FPR only.
 
 - **Hardware:** Windows laptop, 64 GB RAM, RTX 4090 (CPU-only workload)
 - **Software:** Python 3.12.2, numpy 2.0.2, scipy 1.17.1, jsonld-ex 0.7.4
-- **Git commit (code, before run):** TBD
+- **Git commit (code, before run):** 6ec5db8 (248 tests green)
 - **Config:** N_TRIALS = 1000, SEED = 42
 - **Seeds:** 42
 
 ### Results
 
-[to be filled after run]
+Run 2026-09-14, commit 6ec5db8, runtime 145.6 s. Output:
+experiments/sensitivity_results.json. The grid as implemented has 16
+settings including the default (the plan said 17; the enumeration in the
+plan lists 15 non-default settings).
+
+Regression check: with FormationParams threaded through evaluate_node,
+evaluate_path and evaluate_chain, python scripts/run_experiments.py
+reproduced experiments/full_results_v3_1.json except for the
+runtime_seconds field (16.79 -> 13.02 s); every threshold, rate, score,
+std and interval is identical. The tagged file was restored with
+git checkout.
+
+Insulin, per setting: FPR / min DR / rho (p) / P(F1) / P(F2) / gap:
+
+| setting | FPR | min DR | rho | P(F1) | P(F2) | gap | P(F5) | P(F6) |
+|---|---|---|---|---|---|---|---|---|
+| default | 0.010 | 1.000 | 0.976 (3.3e-5) | 0.951 | 0.332 | 0.620 | 0.976 | 0.988 |
+| cond_base_rate 0.001 / 0.1 / 0.5 | 0.010 | 1.000 | 0.976 | 0.951 | 0.332 | 0.620 | 0.976 | 0.988 |
+| cond_disbelief 0.8 | 0.010 | 1.000 | 0.976 | 0.960 | 0.379 | 0.581 | 0.980 | 0.990 |
+| cond_disbelief 0.9 | 0.010 | 1.000 | 0.976 | 0.956 | 0.354 | 0.602 | 0.978 | 0.989 |
+| critical_weight 1 / 2 / 5 | 0.010 | 1.000 | 0.976 | 0.951 | 0.332 | 0.620 | 0.976 | 0.994 / 0.991 / 0.982 |
+| shelf_life_scale 5 | 0.010 | 1.000 | 0.952 (2.6e-4) | 0.950 | 0.321 | 0.628 | 0.986 | 0.987 |
+| shelf_life_scale 20 | 0.010 | 1.000 | 0.976 | 0.954 | 0.351 | 0.603 | 0.957 | 0.988 |
+| prior_weight 1 | 0.010 | 1.000 | 0.952 (2.6e-4) | 0.950 | 0.309 | 0.641 | 0.976 | 0.989 |
+| prior_weight 4 | 1.000 | 1.000 | 0.952 (2.6e-4) | 0.951 | 0.354 | 0.597 | 0.974 | 0.985 |
+| base_rates 0.5 | 0.010 | 1.000 | 0.976 | 0.931 | 0.325 | 0.606 | 0.955 | 0.967 |
+| severity_cap 2 | 0.010 | 1.000 | 0.976 | 0.951 | 0.388 | 0.564 | 0.976 | 0.988 |
+| severity_cap 10 | 0.010 | 1.000 | 0.976 | 0.951 | 0.332 | 0.620 | 0.976 | 0.988 |
+
+mRNA behaves as insulin (prior_weight 4 also gives FPR = 1.000; rho 0.952-
+0.976). Amoxicillin: FPR = 0.010 in every setting (including prior_weight
+4); min DR = 1.000 everywhere; rho 0.786 (p = 0.021) at default and for
+most settings, 0.524 (p = 0.18) at critical_weight 5, 0.762 at
+shelf_life_scale 5, 0.905 at prior_weight 1, 0.857 at base_rates 0.5;
+gap 0.369-0.452. Localization: min LA = 1.000 in every cell.
+
+Hypotheses:
+- H8.1 REFUTED on one setting: prior_weight = 4 gives FPR = 1.000 on
+  insulin and mRNA (0.010 on amoxicillin). All other 15 settings: FPR =
+  0.010 and DR = 1.000 on every product. Cause: the documentation opinion's
+  baseline uncertainty is W_eff / (5 + W_eff) with W_eff = W / w_doc; at
+  W = 2 and w_doc = 0.6 (insulin, mRNA) it is 0.40, at W = 4 it is 0.57,
+  above the fixed per-dimension uncertainty threshold of 0.50, so every
+  Normal chain is flagged. Amoxicillin (w_doc = 1.0) stays at 0.44. In
+  that cell DR = 1.000 is meaningless (everything is flagged).
+- H8.2 SUPPORTED (insulin): rho between 0.952 and 0.976, p <= 2.6e-4, in
+  every setting including uninformative base rates.
+- H8.3 SUPPORTED: the F1-F2 gap on insulin spans 0.564-0.641; conditional
+  disbelief 0.8 shifts it by 0.039.
+- H8.4 SUPPORTED: F6 falls monotonically (0.994, 0.991, 0.988, 0.982) over
+  critical weights 1, 2, 3, 5 and stays detected at 1.000 at weight 1.
 
 ### Observations
 
-[to be filled after run]
+- The compromised conditional's base rate is inert: with (0, 1, 0, a) the
+  projected probability is 0 for any a, and the deduced chain opinion is
+  identical to three decimals for a in {0.001, 0.01, 0.1, 0.5}. The paper
+  should not present 0.01 as a tuned value.
+- The conditional's disbelief matters mildly: 0.8 instead of 1.0 raises
+  every score slightly (F2 0.332 -> 0.379 on insulin) and leaves detection,
+  ordering and localization unchanged.
+- The severity cap of 5 never binds on the scenarios in the paper (F2's
+  per-reading severity is 17 / 6 = 2.83); a cap of 2 binds and lifts F2
+  from 0.332 to 0.388.
+- The one fragile parameter is the fixed per-dimension uncertainty
+  threshold (0.50), which sits only 0.10 above the documentation
+  dimension's baseline uncertainty for products whose document weight is
+  0.6. This is the same lesson as EXP-007 (fixed per-dimension thresholds
+  do not transfer): thresholds must be calibrated on the Normal
+  distribution of the deployment (EXP-007b's per-type calibration would
+  have set the documentation u threshold above 0.57 automatically).
+- Amoxicillin's ordering under the global severity order is sensitive to
+  the critical-document weight because F6, F1 and F5 sit within 0.02 of
+  each other on that product (0.972, 0.968, 0.953 at default); weight 5
+  pushes F6 to 0.958 and reorders them. Under the pre-registered CRT
+  ordering (EXP-006) this is the ordering the algebra is expected to
+  produce; the sensitivity is in the author-defined global ordering as
+  much as in the parameter.
 
 ### Interpretation
 
-[to be filled after run]
+For Reviewer 2's rec 5 the camera-ready can state: detection and
+localization are unchanged across every formation parameter in the grid
+(conditional base rate and disbelief, critical-document weight, shelf-life
+scale, prior weight, base rates, severity cap), with one exception that
+is itself instructive: doubling the prior weight pushes the documentation
+dimension's baseline uncertainty across the fixed 0.50 threshold and
+floods false alarms on two products, which is why per-dimension thresholds
+must be calibrated rather than fixed. Severity ordering on insulin stays
+significant throughout (rho >= 0.952), and the F1-F2 gap moves by at most
+0.056 from its published value.
 
 ### Artifacts
 
@@ -2211,5 +2293,115 @@ structural (normalization and dilution).
 ### Artifacts
 
 - experiments/ds_check_results.json
+
+---
+
+## EXP-012: Independent Expert Ranking of Failure Scenario Severity
+
+**Date:** 2026-09-14 (America/New_York), planned; data collection pending
+**Researcher:** Muntaser Syed (instrument), Mahasen Enam (recruitment)
+**Type:** human expert elicitation (no personal data; rankers identified
+as R1-R3 by role only)
+**Status:** planned
+
+### Motivation
+
+Reviewer 2 (recs 2 and 3) asks that the severity ordering be validated by
+independent domain experts with inter-rater agreement reported, and that
+product-specific rankings be considered. Every ordering used so far (the
+global ordering of EXP-004 and the CRT ordering pre-registered in EXP-006)
+is author-defined. EXP-007 and EXP-008 showed that the algebra's
+disagreements with the global ordering concentrate on the relative
+severity of the mild excursion (F1), the short-dated batch (F5) and the
+missing certificate (F6), which is a judgment question, not a
+computational one.
+
+### Design
+
+- Rankers: three independent pharmaceutical professionals recruited by
+  Mahasen Enam (pharmacist, quality-assurance specialist, or regulator);
+  reported by role and years of experience only.
+- Task: for each of the three products, rank eight scenarios from 1 (least
+  concern for drug integrity and patient safety at the point of
+  dispensing) to 8 (greatest concern). Ties are allowed but discouraged.
+- Instrument: docs/exp012/ranking_instrument.md. Scenarios are described
+  in operational terms only (readings, scan counts, days, documents), with
+  product-specific numbers; no Subjective Logic vocabulary, no scores, no
+  method names, no mention of which scenarios the authors consider severe.
+  Scenarios carry neutral labels A-H in a different fixed order per
+  product (docs/exp012/scenario_key.json, not shared with rankers) to
+  reduce anchoring on presentation order.
+- Independence: rankers complete the sheet alone, without discussing it
+  with each other or with the authors, and return
+  docs/exp012/response_sheet.csv with their ranks.
+- The instrument and key are committed before any response is received.
+
+### Hypotheses (pre-registered before data collection)
+
+- H12.1 (agreement): Kendall's W (tie-corrected) among the three rankers
+  is >= 0.60 for each product. If W < 0.50 for a product, its ordering is
+  reported as contested and no product-specific ground truth is claimed.
+- H12.2 (authors vs experts, global ordering): Spearman rho between the
+  expert median ranking and the pre-registered global ordering is >= 0.80
+  for insulin and mRNA.
+- H12.3 (authors vs experts, CRT ordering): for amoxicillin, the expert
+  median ranking is closer to the pre-registered CRT ordering than to the
+  global ordering (higher Spearman rho).
+- H12.4 (algebra vs experts): Spearman rho between the SL mean scores of
+  the clean-regime main suite (full_results_v3_1.json) and the expert
+  median ranking is >= 0.85 with p < 0.05 for insulin and mRNA, and
+  >= 0.80 for amoxicillin.
+- H12.5 (baselines vs experts): no baseline reaches p < 0.05 against the
+  expert median ranking on any product (B1's binary output caps its rho at
+  0.577 for any ranking that places Normal first).
+
+### Pre-registered analysis (scripts/run_expert_ranking.py)
+
+- Kendall's W with tie correction: W = 12 S / (m^2 (n^3 - n) - m T), with
+  m = 3 rankers, n = 8 scenarios, S the sum of squared deviations of the
+  scenario rank sums from their mean, and T the tie correction summed
+  over rankers.
+- Expert ground truth per product: the median rank of each scenario over
+  the three rankers; ties in the median broken by the mean rank, then
+  reported as tied.
+- Spearman rank correlation (scipy, two-sided) between (a) the expert
+  median ranking and each pre-registered ordering, (b) each method's mean
+  score per scenario (negated) and the expert median ranking, (c) each
+  individual ranker and the SL mean scores.
+- Output: experiments/expert_ranking_results.json; responses archived
+  under experiments/exp012_responses/ as received (R1.csv, R2.csv,
+  R3.csv).
+
+### Protocol
+
+1. Commit the instrument, the key, the response sheet, the analysis
+   script and its tests (this entry marks the pre-registration).
+2. Mahasen sends the instrument and the response sheet to three rankers;
+   responses are saved unedited as experiments/exp012_responses/R*.csv.
+3. Run: python scripts/run_expert_ranking.py; paste console output.
+4. Evaluate H12.1-H12.5; fill Results/Observations/Interpretation; update
+   findings.md; commit; tag exp-012-final.
+5. If responses arrive after the camera-ready deadline, the paper keeps
+   the author-defined orderings with the statement that expert validation
+   is in progress, and this entry is completed afterwards.
+
+### Results
+
+[to be filled after data collection]
+
+### Observations
+
+[to be filled after data collection]
+
+### Interpretation
+
+[to be filled after data collection]
+
+### Artifacts
+
+- docs/exp012/ranking_instrument.md, docs/exp012/scenario_key.json,
+  docs/exp012/response_sheet.csv
+- experiments/exp012_responses/ (as received)
+- experiments/expert_ranking_results.json
 
 ---
