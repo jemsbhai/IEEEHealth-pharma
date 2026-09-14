@@ -997,7 +997,7 @@ written; these notes supersede them where they conflict.
 **Date:** 2026-09-14 (America/New_York)
 **Researcher:** Muntaser Syed
 **Type:** computational
-**Status:** planned
+**Status:** completed
 
 ### Motivation
 
@@ -1112,26 +1112,109 @@ SL rho = 0.976 (insulin), 0.976 (mRNA), 0.786 with p = 0.021 (amoxicillin).
 - **Hardware:** Windows laptop, 64 GB RAM, RTX 4090 (CPU-only workload)
 - **Software:** Windows / PowerShell, Python 3.11+, numpy, scipy, jsonld-ex
   (versions to be recorded from pip freeze at run time)
-- **Git commit (code, before run):** TBD
+- **Git commit (code, before run):** 765b71e (harness commits 7805fff, 3d39a63, 765b71e; 134 tests green)
 - **Config:** constants in scripts/run_experiments.py and
   scripts/run_metrics.py (SEED = 42, N_TRIALS = 1000, FPR_TARGET = 0.01)
 - **Seeds:** 42
 
 ### Results
 
-[to be filled after run]
+Run 2026-09-14. Python 3.12.2, numpy 2.0.2, scipy 1.17.1, jsonld-ex 0.7.4
+(editable install from E:\data\code\claudecode\jsonld\jsonld-ex\packages\python).
+Code commit 765b71e. Runtime: run_experiments.py 16.8 s, run_metrics.py 143.8 s.
+Outputs: experiments/full_results_v3_1.json, experiments/metrics_results_v3_1.json.
+
+- H6.1 SUPPORTED. F7 LA for B2, B3 and B4 rose from 0.000 to 1.000 on all
+  three products; SL and B1 unchanged at 1.000. A programmatic diff of
+  full_results_v3.json against full_results_v3_1.json shows these nine rows
+  are the only LA values that changed. (B4's F7 LA rests on 60 detected
+  trials, CI [0.940, 1.000].)
+- H6.2 SUPPORTED. All 72 rows with DR = 1.000 carry the 95% Clopper-Pearson
+  interval [0.9963, 1.000]. B3 on F3: 0.461 [0.430, 0.492] (insulin and
+  amoxicillin), 0.412 [0.381, 0.443] (mRNA). FPR = 0.010 rows (SL, B3):
+  [0.0048, 0.0183]; FPR = 0.000 rows (B1, B2, B4): [0.000, 0.0037]. The
+  largest mean-score 95% half-width in the suite is 0.0033 (SL, F2,
+  amoxicillin); the Table II rows (insulin Normal, F1, F2) are at most 0.002.
+- H6.3 SUPPORTED. B1 in the counterfeit sweep: DR = 0.000 at 1% and 1.000 at
+  2% and above, on all three products, exactly as derived from its
+  max_failure_rate rule.
+- H6.4 SUPPORTED. Corrected excursion-duration sweep (insulin; +2 C at
+  distributor_a; durations 1, 2, 5, 10, 20, 30, 50% of readings):
+  B2 = 0.101, 0.298, 0.892, 1.000, 1.000, 1.000, 1.000 (monotone);
+  B3 = 0.056, 0.154, 0.739, 1.000, 1.000, 1.000, 1.000;
+  SL = 1.000 at every duration, including a single reading of 100;
+  B1 = 1.000 at every duration (its zero-tolerance temperature rule fires on
+  one reading); B4 between 0.021 and 0.091 with no trend. Amoxicillin and
+  mRNA differ only in the third decimal of B3/B4.
+- H6.5 SUPPORTED. Amoxicillin SL rho under the pre-registered CRT ordering =
+  0.976 (p = 3.3e-05), up from 0.786 (p = 0.021) under the global ordering.
+  Other methods under the CRT ordering: B1 0.577 (p = 0.134), B2 0.311
+  (p = 0.453), B3 0.667 (p = 0.071), B4 0.031 (p = 0.942); SL remains the
+  only significant method for that product. Insulin and mRNA are unchanged
+  (their product-specific ordering is the global one): SL 0.976 (p = 3.3e-05)
+  on both.
+- H6.6 SUPPORTED. DR, FPR, mean score, std, mean uncertainty and calibrated
+  thresholds are identical to v3 to floating-point precision for all 120
+  rows. AUC, entropy and calibration reproduce EXP-004 (insulin: SL AUC
+  0.9794, pooled entropy 2.192 bits, ECE 0.771).
+
+Counterfeit sweep with B1 (insulin; amoxicillin identical; mRNA differs only
+in B3 at the third decimal):
+
+| fraction | SL    | B1    | B2    | B3    | B4    |
+|----------|-------|-------|-------|-------|-------|
+| 1%       | 1.000 | 0.000 | 0.000 | 0.002 | 0.103 |
+| 2%       | 1.000 | 1.000 | 0.000 | 0.016 | 0.000 |
+| 3%       | 1.000 | 1.000 | 0.000 | 0.084 | 0.214 |
+| 5%       | 1.000 | 1.000 | 0.000 | 0.461 | 0.013 |
+| 10%      | 1.000 | 1.000 | 1.000 | 1.000 | 0.036 |
+| 15%      | 1.000 | 1.000 | 1.000 | 1.000 | 0.000 |
+| 20%      | 1.000 | 1.000 | 1.000 | 1.000 | 0.000 |
+
+Per-product pooled entropy (bits): SL 2.19 / 2.08 / 2.01 (insulin /
+amoxicillin / mRNA); B1 0.54 on all; B2 2.41; B3 3.69 / 3.69 / 3.63;
+B4 0.00.
 
 ### Observations
 
-[to be filled after run]
+- The excursion sweep was placed at distributor_a, the standard F1 node in
+  get_standard_scenarios(); the invalid EXP-004 sweep had used
+  central_warehouse. The protocol did not fix the node; recorded here as
+  the choice made.
+- Under N = 100 packages, 1% infiltration is exactly one failed scan. B1
+  passes it because a failure rate of 0.01 does not exceed its rule's 0.01
+  limit; SL flags it because the Normal-operation chain score has std
+  0.00015, so any systematic drop separates. Both facts are consequences of
+  the noiseless Normal regime and are the reason EXP-007 exists.
+- B1's DR = 1.000 on every excursion duration is the same zero-tolerance
+  rule that EXP-007 will expose to benign temperature blips.
+- B2's F3 node score lands exactly on its calibrated threshold (0.9875) and
+  the strict inequality does not fire; the paper's wording ("remains above")
+  is corrected in the camera-ready.
 
 ### Interpretation
 
-[to be filled after run]
+Nothing in the headline results moves: Table II and Fig. 2 stand as
+published. What changes for the camera-ready is (1) the LA definition,
+which must state that it is conditional on detection, that SL is credited
+for any flagged node while the baselines are credited for their single
+weakest node, and that F7 credits either injected node; (2) Fig. 4 gains
+B1, which misses exactly-1% infiltration by its rule boundary and detects
+2% and above, so SL's 1% detection is a real but narrow advantage over B1
+and a large one over B2 and B3; (3) the severity-ranking paragraph reports
+per-product values: 0.976 on insulin and mRNA, 0.786 on amoxicillin under
+the global ordering and 0.976 under the pre-registered CRT ordering, all
+orderings author-defined pending EXP-012; (4) one sentence of intervals.
+The EXP-004 excursion sweep is superseded by the corrected one here and
+must not be cited.
 
 ### Artifacts
 
-- experiments/full_results_v3_1.json
-- experiments/metrics_results_v3_1.json
+- experiments/full_results_v3_1.json (120 rows with 95% intervals)
+- experiments/metrics_results_v3_1.json (per-product AUC, Spearman under both
+  orderings, entropy, calibration; sensitivity sweeps; severity sweeps for
+  all products with B1)
+- Console output reproduced by running the two scripts at commit 765b71e
+  with seed 42.
 
 ---

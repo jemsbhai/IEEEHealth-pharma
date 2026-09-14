@@ -1,0 +1,3268 @@
+{
+  "runtime_seconds": 16.79444146156311,
+  "adaptive_thresholds": {
+    "Insulin ": {
+      "SL_Algebra": 0.9962124238789577,
+      "B1_Threshold": 0.5,
+      "B2_WeightedScoring": 0.9875,
+      "B3_Bayesian": 0.8091270414848821,
+      "B4_DempsterShafer": 1.0
+    },
+    "Amoxicil": {
+      "SL_Algebra": 0.9938017447729587,
+      "B1_Threshold": 0.5,
+      "B2_WeightedScoring": 0.9875,
+      "B3_Bayesian": 0.8091270414848821,
+      "B4_DempsterShafer": 1.0
+    },
+    "mRNA-bas": {
+      "SL_Algebra": 0.9964575305877724,
+      "B1_Threshold": 0.5,
+      "B2_WeightedScoring": 0.9875,
+      "B3_Bayesian": 0.7872643950844496,
+      "B4_DempsterShafer": 1.0
+    }
+  },
+  "results": [
+    {
+      "method": "SL_Algebra",
+      "scenario": "Normal",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9965016351873903,
+      "std_score": 0.0001480540629258044,
+      "mean_uncertainty": 0.009712606402224383,
+      "threshold_used": 0.9962124238789577,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 10,
+      "mean_score_ci_halfwidth": 9.19204550516223e-06
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "Normal",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 1.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "Normal",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9895300000000002,
+      "std_score": 0.002016581265409348,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 0.000125200932620064
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "Normal",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.8416406154779957,
+      "std_score": 0.014812121934490267,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 10,
+      "mean_score_ci_halfwidth": 0.0009196214960887493
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "Normal",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 1.0000000000000002,
+      "std_score": 1.8524429647660953e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 1.1501028537380182e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F1",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9512412962810317,
+      "std_score": 0.004461623474109284,
+      "mean_uncertainty": 0.009309979138362002,
+      "threshold_used": 0.9962124238789577,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0002770031783691403
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F1",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F1",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.892,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.981345,
+      "std_score": 0.0036730062619059122,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.8710962391200021,
+        0.9105609670175998
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9958730243836603,
+        1.0
+      ],
+      "n_detected": 892,
+      "mean_score_ci_halfwidth": 0.00022804129811084355
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F1",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.739,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.7997189424024855,
+      "std_score": 0.014006406546434341,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.7106015911063485,
+        0.7659836031579349
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9950207201192798,
+        1.0
+      ],
+      "n_detected": 739,
+      "mean_score_ci_halfwidth": 0.000869598062993698
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F1",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.043,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.876888628112638e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.0312911704560926,
+        0.057486257961972334
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9177888788458615,
+        1.0
+      ],
+      "n_detected": 43,
+      "mean_score_ci_halfwidth": 2.4069948493015127e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F2",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.3317386177007568,
+      "std_score": 0.03218713052864816,
+      "mean_uncertainty": 0.003260532532956307,
+      "threshold_used": 0.9962124238789577,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.001998361697430755
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F2",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F2",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8687025000000002,
+      "std_score": 0.003673927564609844,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00022809849786754877
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F2",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.42528739679585575,
+      "std_score": 0.007278984780520879,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0004519211294286586
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F2",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.129,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 2.7842038339462233e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.10884057120623478,
+        0.1513714153149562
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9718090302502737,
+        1.0
+      ],
+      "n_detected": 129,
+      "mean_score_ci_halfwidth": 1.7285934496850806e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F3",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9771034001640808,
+      "std_score": 0.00021936371747046583,
+      "mean_uncertainty": 0.009525195762959302,
+      "threshold_used": 0.9962124238789577,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 1.361935791103935e-05
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F3",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F3",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9875000000000003,
+      "std_score": 2.220446049250313e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 1.3785802782524802e-17
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F3",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.461,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8103535348447822,
+      "std_score": 0.012427038788994831,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.4297584650591189,
+        0.4924717630817992
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9920300223300834,
+        1.0
+      ],
+      "n_detected": 461,
+      "mean_score_ci_halfwidth": 0.0007715418529250466
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F3",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.013,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.2733697872677437e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.006939617502851475,
+        0.022127803636778482
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.7529473619995289,
+        1.0
+      ],
+      "n_detected": 13,
+      "mean_score_ci_halfwidth": 2.0322957334083453e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F4",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9962919635329286,
+      "std_score": 0.0001326254038035371,
+      "mean_uncertainty": 0.009710581324752167,
+      "threshold_used": 0.9962124238789577,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 8.234145843829803e-06
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F4",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F4",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8000000000000002,
+      "std_score": 1.1102230246251565e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 6.892901391262401e-18
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F4",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.5086043408150402,
+      "std_score": 0.007988698687838846,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.000495984239908663
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F4",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.01,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 2.947009590825516e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.6915028921812392,
+        1.0
+      ],
+      "n_detected": 10,
+      "mean_score_ci_halfwidth": 1.8296726025406694e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F5",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9759803988948754,
+      "std_score": 0.002118940274929634,
+      "mean_uncertainty": 0.009514381529651719,
+      "threshold_used": 0.9962124238789577,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0001315559670904474
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F5",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F5",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8436699999999999,
+      "std_score": 0.00387377077277425,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00024050591058587045
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F5",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.06392008780396972,
+      "std_score": 0.0011239020572539993,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 6.977828672490701e-05
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F5",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 1.0000000000000004,
+      "std_score": 2.3519964068557473e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 1.4602542863433964e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F6",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9876926201438061,
+      "std_score": 0.0008753056935320473,
+      "mean_uncertainty": 0.009627499599430716,
+      "threshold_used": 0.9962124238789577,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 5.434399844809558e-05
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F6",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F6",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9536524999999999,
+      "std_score": 0.003700066722371372,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00022972136672276547
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F6",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.6059812431441569,
+      "std_score": 0.01066472779283299,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0006621274771838996
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F6",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.048,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.1782255068390246e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.03560026534288328,
+        0.06314011540150924
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9260272146527198,
+        1.0
+      ],
+      "n_detected": 48,
+      "mean_score_ci_halfwidth": 1.9732247063812124e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F7",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9511596020784744,
+      "std_score": 0.004498928016043158,
+      "mean_uncertainty": 0.009309142411077978,
+      "threshold_used": 0.9962124238789577,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0002793192583214835
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F7",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F7",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8000000000000002,
+      "std_score": 1.1102230246251565e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 6.892901391262401e-18
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F7",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.483246683218875,
+      "std_score": 0.00773229363028618,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00048006514312603046
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F7",
+      "product": "Insulin ",
+      "n_trials": 1000,
+      "detection_rate": 0.06,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.8780012378724103e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.04609503542248433,
+        0.07656049040393477
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9403705077138331,
+        1.0
+      ],
+      "n_detected": 60,
+      "mean_score_ci_halfwidth": 2.4076856212627284e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "Normal",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.994606852573041,
+      "std_score": 0.00039839418933022066,
+      "mean_uncertainty": 0.014869502965072584,
+      "threshold_used": 0.9938017447729587,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 10,
+      "mean_score_ci_halfwidth": 2.4734596572002228e-05
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "Normal",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 1.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "Normal",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9895300000000002,
+      "std_score": 0.002016581265409348,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 0.000125200932620064
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "Normal",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.8416406154779957,
+      "std_score": 0.014812121934490267,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 10,
+      "mean_score_ci_halfwidth": 0.0009196214960887493
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "Normal",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 1.0000000000000002,
+      "std_score": 1.8524429647660953e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 1.1501028537380182e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F1",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9675025783961634,
+      "std_score": 0.004635569180836807,
+      "mean_uncertainty": 0.014570876447117832,
+      "threshold_used": 0.9938017447729587,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00028780272564308634
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F1",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F1",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.892,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.981345,
+      "std_score": 0.0036730062619059122,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.8710962391200021,
+        0.9105609670175998
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9958730243836603,
+        1.0
+      ],
+      "n_detected": 892,
+      "mean_score_ci_halfwidth": 0.00022804129811084355
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F1",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.739,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.7997189424024855,
+      "std_score": 0.014006406546434341,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.7106015911063485,
+        0.7659836031579349
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9950207201192798,
+        1.0
+      ],
+      "n_detected": 739,
+      "mean_score_ci_halfwidth": 0.000869598062993698
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F1",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.044,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.8832421043974844e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.032149497010871435,
+        0.05862041920633091
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9195800602364241,
+        1.0
+      ],
+      "n_detected": 44,
+      "mean_score_ci_halfwidth": 2.4109394518319778e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F2",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.5547811878285795,
+      "std_score": 0.052654266117469525,
+      "mean_uncertainty": 0.008384739915068143,
+      "threshold_used": 0.9938017447729587,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0032690788798903333
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F2",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F2",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8687025000000002,
+      "std_score": 0.003673927564609844,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00022809849786754877
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F2",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.42528739679585575,
+      "std_score": 0.007278984780520879,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0004519211294286586
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F2",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.129,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 2.7842038339462233e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.10884057120623478,
+        0.1513714153149562
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9718090302502737,
+        1.0
+      ],
+      "n_detected": 129,
+      "mean_score_ci_halfwidth": 1.7285934496850806e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F3",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9650783610681256,
+      "std_score": 0.0005590748201609867,
+      "mean_uncertainty": 0.014433889761355677,
+      "threshold_used": 0.9938017447729587,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 3.471057184216248e-05
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F3",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F3",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9875000000000003,
+      "std_score": 2.220446049250313e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 1.3785802782524802e-17
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F3",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.461,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8103535348447822,
+      "std_score": 0.012427038788994831,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.4297584650591189,
+        0.4924717630817992
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9920300223300834,
+        1.0
+      ],
+      "n_detected": 461,
+      "mean_score_ci_halfwidth": 0.0007715418529250466
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F3",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.013,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.2733697872677437e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.006939617502851475,
+        0.022127803636778482
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.7529473619995289,
+        1.0
+      ],
+      "n_detected": 13,
+      "mean_score_ci_halfwidth": 2.0322957334083453e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F4",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9939453544426019,
+      "std_score": 0.00035998148366471054,
+      "mean_uncertainty": 0.014859752426406615,
+      "threshold_used": 0.9938017447729587,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 2.2349715458467914e-05
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F4",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F4",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8000000000000002,
+      "std_score": 1.1102230246251565e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 6.892901391262401e-18
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F4",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.5086043408150402,
+      "std_score": 0.007988698687838846,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.000495984239908663
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F4",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.01,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 2.947009590825516e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.6915028921812392,
+        1.0
+      ],
+      "n_detected": 10,
+      "mean_score_ci_halfwidth": 1.8296726025406694e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F5",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9533227864755023,
+      "std_score": 0.007569116312838107,
+      "mean_uncertainty": 0.014260694113101003,
+      "threshold_used": 0.9938017447729587,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0004699341592289882
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F5",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F5",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8436699999999999,
+      "std_score": 0.00387377077277425,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00024050591058587045
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F5",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.06392008780396972,
+      "std_score": 0.0011239020572539993,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 6.977828672490701e-05
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F5",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 1.0000000000000004,
+      "std_score": 2.3519964068557473e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 1.4602542863433964e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F6",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9721536849870772,
+      "std_score": 0.0037062081393024688,
+      "mean_uncertainty": 0.014538180103764458,
+      "threshold_used": 0.9938017447729587,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00023010266111470054
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F6",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F6",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9536524999999999,
+      "std_score": 0.003700066722371372,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00022972136672276547
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F6",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.6059812431441569,
+      "std_score": 0.01066472779283299,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0006621274771838996
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F6",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.048,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.1782255068390246e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.03560026534288328,
+        0.06314011540150924
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9260272146527198,
+        1.0
+      ],
+      "n_detected": 48,
+      "mean_score_ci_halfwidth": 1.9732247063812124e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F7",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.966979775778366,
+      "std_score": 0.004725844701271586,
+      "mean_uncertainty": 0.014562990480725535,
+      "threshold_used": 0.9938017447729587,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00029340754779683256
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F7",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F7",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8000000000000002,
+      "std_score": 1.1102230246251565e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 6.892901391262401e-18
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F7",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.483246683218875,
+      "std_score": 0.00773229363028618,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.8091270414848821,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00048006514312603046
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F7",
+      "product": "Amoxicil",
+      "n_trials": 1000,
+      "detection_rate": 0.06,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.875298631479258e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.04609503542248433,
+        0.07656049040393477
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9403705077138331,
+        1.0
+      ],
+      "n_detected": 60,
+      "mean_score_ci_halfwidth": 2.4060076881849413e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "Normal",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9966680466860335,
+      "std_score": 0.00010544478993227401,
+      "mean_uncertainty": 0.009264788993420875,
+      "threshold_used": 0.9964575305877724,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 10,
+      "mean_score_ci_halfwidth": 6.546617419242759e-06
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "Normal",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 1.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "Normal",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9895300000000002,
+      "std_score": 0.002016581265409348,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 0.000125200932620064
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "Normal",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.01,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.8183880075306589,
+      "std_score": 0.014215346052642708,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.7872643950844496,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 10,
+      "mean_score_ci_halfwidth": 0.0008825702260734501
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "Normal",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 1.0000000000000002,
+      "std_score": 1.8524429647660953e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 1.1501028537380182e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F1",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9521585134383208,
+      "std_score": 0.003217511501383276,
+      "mean_uncertainty": 0.00887114808276438,
+      "threshold_used": 0.9964575305877724,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00019976157053467244
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F1",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F1",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.892,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.981345,
+      "std_score": 0.0036730062619059122,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.8710962391200021,
+        0.9105609670175998
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9958730243836603,
+        1.0
+      ],
+      "n_detected": 892,
+      "mean_score_ci_halfwidth": 0.00022804129811084355
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F1",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.719,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.777699306517088,
+      "std_score": 0.013247706614996775,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.7872643950844496,
+      "detection_rate_ci": [
+        0.6900239857126379,
+        0.7466802940214341
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9948825694147673,
+        1.0
+      ],
+      "n_detected": 719,
+      "mean_score_ci_halfwidth": 0.0008224936191390738
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F1",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.043,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.876888628112638e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.0312911704560926,
+        0.057486257961972334
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9177888788458615,
+        1.0
+      ],
+      "n_detected": 43,
+      "mean_score_ci_halfwidth": 2.4069948493015127e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F2",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.38127087047047414,
+      "std_score": 0.026094265906026974,
+      "mean_uncertainty": 0.0035662801537786745,
+      "threshold_used": 0.9964575305877724,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0016200817113151845
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F2",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F2",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8687025000000002,
+      "std_score": 0.003673927564609844,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00022809849786754877
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F2",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.4135391631316534,
+      "std_score": 0.006956294949339499,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.7872643950844496,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00043188669367150655
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F2",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.129,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 2.7842038339462233e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.10884057120623478,
+        0.1513714153149562
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9718090302502737,
+        1.0
+      ],
+      "n_detected": 129,
+      "mean_score_ci_halfwidth": 1.7285934496850806e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F3",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9808679735893804,
+      "std_score": 9.542148420422696e-05,
+      "mean_uncertainty": 0.009119149774795623,
+      "threshold_used": 0.9964575305877724,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 5.9243131032137276e-06
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F3",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F3",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 0.9875000000000003,
+      "std_score": 2.220446049250313e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 1.3785802782524802e-17
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F3",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.412,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.7879654844091489,
+      "std_score": 0.011889378282275069,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.7872643950844496,
+      "detection_rate_ci": [
+        0.38129151430862224,
+        0.4432281114624895
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9910863731242245,
+        1.0
+      ],
+      "n_detected": 412,
+      "mean_score_ci_halfwidth": 0.0007381608044996928
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F3",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.013,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.2733697872677437e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.006939617502851475,
+        0.022127803636778482
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.7529473619995289,
+        1.0
+      ],
+      "n_detected": 13,
+      "mean_score_ci_halfwidth": 2.0322957334083453e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F4",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9965078031209138,
+      "std_score": 9.408541908600841e-05,
+      "mean_uncertainty": 0.009263312230092191,
+      "threshold_used": 0.9964575305877724,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 5.841362516638611e-06
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F4",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F4",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8000000000000002,
+      "std_score": 1.1102230246251565e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 6.892901391262401e-18
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F4",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.494552722201321,
+      "std_score": 0.007639026291979139,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.7872643950844496,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0004742745717568859
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F4",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.01,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 2.947009590825516e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.004805510691049308,
+        0.018313243055112515
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.6915028921812392,
+        1.0
+      ],
+      "n_detected": 10,
+      "mean_score_ci_halfwidth": 1.8296726025406694e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F5",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9775808273850602,
+      "std_score": 0.0014478908267252,
+      "mean_uncertainty": 0.009088871269942466,
+      "threshold_used": 0.9964575305877724,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 8.989336802215748e-05
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F5",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F5",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8436699999999999,
+      "std_score": 0.00387377077277425,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00024050591058587045
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F5",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.06249972615243441,
+      "std_score": 0.001085616146958233,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.7872643950844496,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 6.740127779525943e-05
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F5",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 0.0,
+      "mean_score": 1.0000000000000004,
+      "std_score": 2.3519964068557473e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.0,
+        0.003682083896865671
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.0,
+        0.0
+      ],
+      "n_detected": 0,
+      "mean_score_ci_halfwidth": 1.4602542863433964e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F6",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9882788479541816,
+      "std_score": 0.0006226870038419685,
+      "mean_uncertainty": 0.009187462653288283,
+      "threshold_used": 0.9964575305877724,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 3.865998110201746e-05
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F6",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F6",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9536524999999999,
+      "std_score": 0.003700066722371372,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.00022972136672276547
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F6",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.5892393654220744,
+      "std_score": 0.010235049157902734,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.7872643950844496,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0006354505627728832
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F6",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.048,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.1782255068390246e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.03560026534288328,
+        0.06314011540150924
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9260272146527198,
+        1.0
+      ],
+      "n_detected": 48,
+      "mean_score_ci_halfwidth": 1.9732247063812124e-17
+    },
+    {
+      "method": "SL_Algebra",
+      "scenario": "F7",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.9520931214578505,
+      "std_score": 0.003255766224640193,
+      "mean_uncertainty": 0.008870487817338213,
+      "threshold_used": 0.9964575305877724,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0002021366431940509
+    },
+    {
+      "method": "B1_Threshold",
+      "scenario": "F7",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.0,
+      "std_score": 0.0,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.5,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0
+    },
+    {
+      "method": "B2_WeightedScoring",
+      "scenario": "F7",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.8000000000000002,
+      "std_score": 1.1102230246251565e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.9875,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 6.892901391262401e-18
+    },
+    {
+      "method": "B3_Bayesian",
+      "scenario": "F7",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 0.4699409897490111,
+      "std_score": 0.007280424443828025,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 0.7872643950844496,
+      "detection_rate_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9963179161031344,
+        1.0
+      ],
+      "n_detected": 1000,
+      "mean_score_ci_halfwidth": 0.0004520105119850699
+    },
+    {
+      "method": "B4_DempsterShafer",
+      "scenario": "F7",
+      "product": "mRNA-bas",
+      "n_trials": 1000,
+      "detection_rate": 0.06,
+      "false_positive_rate": 0.0,
+      "localization_accuracy": 1.0,
+      "mean_score": 1.0,
+      "std_score": 3.8780012378724103e-16,
+      "mean_uncertainty": 0.0,
+      "threshold_used": 1.0,
+      "detection_rate_ci": [
+        0.04609503542248433,
+        0.07656049040393477
+      ],
+      "false_positive_rate_ci": [
+        0.0,
+        0.0
+      ],
+      "localization_accuracy_ci": [
+        0.9403705077138331,
+        1.0
+      ],
+      "n_detected": 60,
+      "mean_score_ci_halfwidth": 2.4076856212627284e-17
+    }
+  ]
+}
