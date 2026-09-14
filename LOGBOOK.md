@@ -2008,3 +2008,182 @@ limitation of evidence-count fusion that per-type detection addresses.
 - experiments/fusion_results.json
 
 ---
+
+## EXP-008: Parameter Sensitivity of the Formation Functions and the Compromised Conditional
+
+**Date:** 2026-09-14 (America/New_York)
+**Researcher:** Muntaser Syed
+**Type:** computational
+**Status:** planned
+
+### Motivation
+
+Reviewer 2 (rec 5) asks for sensitivity analyses of the shelf-life mapping,
+the critical-document weight, the base rates, the conditional opinions,
+the evidence weights and the detection thresholds. EXP-004 covered the
+per-dimension thresholds (20x range) and the cold-chain weight (3x);
+EXP-003 A5 covered uniform vs product-specific weights. This experiment
+covers the remaining parameters, one at a time around the published
+defaults, in the clean regime at N = 100, with the main-suite detection
+rule (per-dimension d > 0.02, u > 0.50, chain u > 0.30, chain threshold
+recalibrated for each setting at the 1st percentile of Normal).
+
+### Hypotheses (pre-registered before any code change)
+
+Derived from the formation functions: in the clean regime every injected
+failure produces per-dimension disbelief or uncertainty far above the
+fixed thresholds under any setting below, so detection should not move;
+severity scores and the ordering may.
+
+- H8.1 (detection is insensitive): DR = 1.000 on F1-F7 and in-sample
+  FPR = 0.010 (insulin) for every setting in the grid.
+- H8.2 (ordering is insensitive): Spearman rho against the global ordering
+  (insulin) >= 0.90 with p < 0.05 for every setting, including
+  uninformative base rates.
+- H8.3 (severity gap is stable): P(F1) - P(F2) stays within [0.40, 0.80]
+  for every setting (default 0.619); relaxing the compromised conditional's
+  disbelief from 1.0 to 0.8 changes the gap by less than 0.10, because the
+  deduced chain opinion under a compromised upstream node has projected
+  probability 0.1 x base rate, which is still near zero.
+- H8.4 (critical-document weight is monotone): the F6 mean score decreases
+  monotonically over critical_weight in {1, 2, 3, 5}, and F6 remains
+  detected at 1.000 at critical_weight = 1 (d = 1 / (4 + 1 + W) > 0.02).
+
+### Parameter grid (one at a time around the published defaults)
+
+- Compromised conditional base rate a: {0.001, 0.01 (default), 0.1, 0.5}.
+- Compromised conditional disbelief: {0.8, 0.9, 1.0 (default)} with b = 0,
+  u = 1 - d, a = 0.01.
+- Critical-document weight: {1, 2, 3 (default), 5}.
+- Shelf-life evidence scale: {5, 10 (default), 20}.
+- Base Dirichlet prior weight W: {1, 2 (default), 4} (product weights still
+  divide it).
+- Per-dimension base rates: defaults (0.99, 0.95, 0.90, 0.80, recall 0.99)
+  vs uninformative (all 0.5).
+- Cold-chain severity cap: {2, 5 (default), 10}.
+
+17 settings including the default. Product: insulin (the reference product
+of Table II); the other products are run for DR/FPR only.
+
+### Dependent Variables / Metrics
+
+- Per setting: FPR, DR per scenario (and minimum), Spearman rho and p,
+  mean scores for Normal and F1-F7, severity gap P(F1) - P(F2), with
+  95% intervals on rates.
+
+### Protocol
+
+1. src/models/chain_integrity.py: a FormationParams dataclass (critical
+   weight, shelf-life scale, severity cap, base rates, compromised
+   conditional) threaded through evaluate_path and evaluate_node with
+   defaults equal to today's hard-coded values. Regression requirement:
+   python scripts/run_experiments.py must reproduce
+   experiments/full_results_v3_1.json byte-for-byte (git status clean
+   after the run).
+2. scripts/run_sensitivity.py: the grid above, JSON output
+   experiments/sensitivity_results.json.
+3. tests: default FormationParams reproduce evaluate_path exactly; each
+   parameter reaches its formation function; grid enumeration; smoke run.
+4. Commit: feat(exp008): formation parameters and sensitivity harness.
+   Record SHA below.
+5. Run: python scripts/run_experiments.py (regression), then
+   python scripts/run_sensitivity.py; paste console output.
+6. Evaluate H8.1-H8.4; fill Results/Observations/Interpretation; update
+   findings.md; commit; tag exp-008-final.
+
+### Environment
+
+- **Hardware:** Windows laptop, 64 GB RAM, RTX 4090 (CPU-only workload)
+- **Software:** Python 3.12.2, numpy 2.0.2, scipy 1.17.1, jsonld-ex 0.7.4
+- **Git commit (code, before run):** TBD
+- **Config:** N_TRIALS = 1000, SEED = 42
+- **Seeds:** 42
+
+### Results
+
+[to be filled after run]
+
+### Observations
+
+[to be filled after run]
+
+### Interpretation
+
+[to be filled after run]
+
+### Artifacts
+
+- experiments/sensitivity_results.json
+
+---
+
+## EXP-010: Flat versus Hierarchical Dempster Combination
+
+**Date:** 2026-09-14 (America/New_York)
+**Researcher:** Muntaser Syed
+**Type:** computational
+**Status:** planned
+
+### Motivation
+
+The submitted paper describes B4 as a flat combination of 25 mass
+functions and spends a paragraph arguing that a hierarchical combination
+(five evidence masses per node, then five node masses) would not change
+the conclusion. The code is in fact hierarchical (audit addendum item 5).
+Dempster's rule is commutative and associative (Shafer, A Mathematical
+Theory of Evidence, 1976, Ch. 3), so the two groupings must produce the
+same combined mass function; the only way they could differ in this
+implementation is the degenerate total-conflict branch of
+dempster_combine, which returns a vacuous mass when the conflict K reaches
+1 - 1e-12. This experiment verifies the identity numerically so the
+paragraph can be replaced by one sentence.
+
+### Hypotheses (pre-registered before any code change)
+
+- H10.1: over Normal and F1-F7 (clean regime, N = 100, 1000 trials each,
+  seed 42, all three products), the maximum absolute difference between the
+  flat and the hierarchical pignistic probability BetP(safe) is below 1e-9,
+  and the total-conflict branch never fires in either grouping.
+- H10.2: the same holds under noise regime R2 at N = 100 (1000 noisy Normal
+  trials, insulin), which exercises the late-document branch fixed in
+  addendum item 7.
+
+### Protocol
+
+1. src/baselines/baselines.py: evaluate_dempster_shafer_flat, combining
+   all 25 masses in node-major order with the same dempster_combine, and a
+   conflict-branch counter accessible to the harness (a small helper that
+   reports K for each pairwise step).
+2. scripts/run_ds_check.py: computes both groupings per trial, records the
+   maximum |difference|, the mean |difference|, and the number of
+   total-conflict events; JSON output experiments/ds_check_results.json.
+3. tests: flat and hierarchical agree on hand-built mass functions;
+   associativity on three random masses; the conflict counter reports K.
+4. Commit: feat(exp010): flat D-S combination and associativity check.
+5. Run: python scripts/run_ds_check.py; paste console output.
+6. Evaluate H10.1-H10.2; fill Results; update findings.md; commit; tag
+   exp-010-final.
+
+### Environment
+
+- **Software:** Python 3.12.2, numpy 2.0.2, scipy 1.17.1
+- **Git commit (code, before run):** TBD
+- **Seeds:** 42 (clean), 4242 (R2)
+
+### Results
+
+[to be filled after run]
+
+### Observations
+
+[to be filled after run]
+
+### Interpretation
+
+[to be filled after run]
+
+### Artifacts
+
+- experiments/ds_check_results.json
+
+---
