@@ -114,6 +114,19 @@ for multi-dimensional, multi-node supply chain integrity assessment.
 
 ## Raw Findings Log
 
+### 2026-09-14 — EXP-010: Flat vs hierarchical Dempster combination
+
+**Key result:** the flat 25-source and the hierarchical (per node, then
+across nodes) Dempster combinations agree to 2.3e-15 on 25,000 chains,
+with zero total-conflict events; the largest pairwise conflict observed is
+K = 0.55 (F5) and 0.49 (F2), so B4's failure is conflict normalization at
+moderate K plus dilution, not the K -> 1 case of Zadeh's example.
+
+**Implications:** the paper's hierarchical-combination paragraph is
+replaced by one sentence; Sec. IV.G describes the F2 mechanism as conflict
+normalization (citing Zadeh for the critique) rather than as the paradox
+itself; the B4 description is corrected to hierarchical.
+
 ### 2026-09-14 — EXP-009: Fusion operator under compound failures and evidence volume
 
 **Key result:** compound failures whose root cause spans two evidence types
