@@ -1218,3 +1218,179 @@ must not be cited.
   with seed 42.
 
 ---
+
+## EXP-007: Operational Stress Test - Detection and False Alarms under Benign Noise
+
+**Date:** 2026-09-14 (America/New_York)
+**Researcher:** Muntaser Syed
+**Type:** computational
+**Status:** planned
+
+### Motivation
+
+Reviewer 2 (weak aspect 4) notes that no evaluation covers false alarms
+under realistic missing data, sensor drift, scanning errors, correlated
+failures, adversarial manipulation, delayed reporting, or conflicting
+records; Reviewers 1 and 2 both note the scenarios are too clean. EXP-006
+confirmed why: generate_normal_evidence produces zero scan failures and
+clips every reading inside the range, so the SL Normal chain score has
+std 0.00015 and a single failed scan or a single out-of-range reading
+separates perfectly. This experiment defines a noisy Normal regime with
+benign scanner errors, short temperature blips, sensor dropout, and late
+routine documents, recalibrates every method on that regime, and re-runs
+F1-F7 and the counterfeit sweep on top of it. Correlated and adversarial
+failures are handled in EXP-009; delayed reporting in EXP-013; record
+mismatches between sender and receiver are already represented as
+unscanned packages (scan rate below 1.0).
+
+### Hypotheses (pre-registered before any code change)
+
+All predictions derive from the rules in src/baselines/baselines.py and the
+fixed per-dimension thresholds in scripts/run_experiments.py; each can fail.
+
+- H7.1 (B1 as deployed): B1 with its fixed rules (scan rate >= 0.90,
+  failure rate <= 0.01, zero temperature tolerance, critical documents,
+  shelf life >= minimum) has FPR >= 0.95 on noisy Normal in both regimes,
+  because a single blip anywhere in 500 readings fails the zero-tolerance
+  rule. If FPR < 0.95, H7.1 is refuted.
+- H7.2 (SL with fixed per-dimension thresholds): keeping d > 0.02 and
+  u > 0.50 fixed while recalibrating only the chain threshold gives
+  FPR >= 0.50 in R1, because two blips at one node (w >= 2.0 against
+  r <= 98) or one late routine document (d about 0.12) exceed 0.02.
+- H7.3 (SL calibrated): with all four criteria calibrated on the noisy
+  regime under an equal split of the 1% budget, out-of-sample FPR is
+  within [0.003, 0.02] in both regimes, and DR >= 0.95 on F2, F5, F6 and F7
+  in both regimes.
+- H7.4 (counterfeit floor): in R2 no calibrated method (SL-cal, B1-tuned,
+  B2, B3) reaches DR > 0.50 at 1% infiltration, because one failed scan in
+  100 is indistinguishable from a benign scanner error at N = 100; and
+  SL-cal DR at 5% infiltration >= B1-tuned DR at 5%.
+- H7.5 (severity ranking survives noise): SL-cal Spearman rho against the
+  global ordering (insulin) is >= 0.85 with p < 0.05 in both regimes; B1
+  variants cannot exceed the binary ceiling (rho = 0.577); B2 and B3 remain
+  non-significant.
+- H7.6 (information content): SL-cal pooled Shannon entropy (insulin)
+  >= 1.5 bits in both regimes; B1 variants <= 1.0 bit.
+- H7.7 (uncertainty criterion is not tripped by dropout): sensor coverage
+  down to 0.70 raises per-dimension uncertainty to at most about 0.32
+  (trust discounting by coverage), so the calibrated uncertainty threshold
+  stays below the u = 0.80 produced by F4, and SL-cal DR on F4 >= 0.95 in R2.
+
+### Pre-registered noise regimes (applied independently at every node, on top
+of generate_normal_evidence; failures F1-F7 are injected afterwards exactly
+as in the main suite)
+
+- R0 (reference): no noise; identical to the main suite.
+- R1 (moderate): benign scan failures ~ Binomial(n_scanned, 0.005); each
+  reading independently becomes a blip with probability 0.02, displaced
+  U(0.1, 1.0) C outside the nearer bound; readings retained with coverage
+  ~ U(0.85, 1.0) (the rest dropped at random, expected_readings unchanged);
+  each non-critical required document (bioequivalence_study,
+  import_license) missing with probability 0.05.
+- R2 (heavy): scan failures ~ Binomial(n_scanned, 0.01); blip probability
+  0.05 with displacement U(0.1, 2.0) C; coverage ~ U(0.70, 1.0); each
+  non-critical document missing with probability 0.10.
+
+These rates are modeling assumptions chosen to be conservative for a
+regulated cold chain (sub-1% benign read failures, frequent short door
+openings, logger gaps, routine paperwork lag); they are not measurements.
+
+### Method variants
+
+- SL-fixed: chain threshold calibrated (as always); per-dimension d > 0.02,
+  u > 0.50 and chain u > 0.30 fixed (the main-suite rule).
+- SL-cal: chain score, chain uncertainty, max per-dimension disbelief
+  (over nodes and evidence types, recall excluded) and max per-dimension
+  uncertainty each thresholded at the 0.25% / 99.75% point of the noisy
+  Normal calibration set (equal split of the 1% budget across four
+  criteria).
+- B1-fixed: rules as deployed (above).
+- B1-tuned: same rule family with limits fitted to the calibration set:
+  max failure rate at the 99.75th percentile of per-node failure rate,
+  temperature tolerance at the 99.75th percentile of per-node maximum
+  excursion magnitude, minimum scan rate at the 0.25th percentile of
+  per-node scan rate; document and shelf-life rules unchanged.
+- B2, B3, B4: chain threshold at the 1st percentile of the calibration set.
+
+### Calibration and evaluation protocol
+
+- Calibration set: 5000 noisy Normal trials, seed 4242, per regime and
+  product. Evaluation set: 1000 fresh trials, seed 42 (Normal and each
+  failure), so every reported FPR is out-of-sample. R0 is calibrated the
+  same way for comparability (its main-suite numbers remain the reference
+  of record).
+- Products: all three for FPR and DR; Spearman, entropy and the counterfeit
+  sweep (1, 2, 3, 5, 10, 15, 20%) on insulin, under R1 and R2.
+- Every rate carries a 95% Clopper-Pearson interval (n = 1000).
+
+### Independent Variables
+
+- Noise regime: R0, R1, R2
+- Method variant: SL-fixed, SL-cal, B1-fixed, B1-tuned, B2, B3, B4
+- Scenario: Normal, F1-F7; counterfeit fraction (insulin)
+
+### Dependent Variables / Metrics
+
+- FPR (out-of-sample), DR per scenario, LA (shared rule from EXP-006)
+- Mean score and std per scenario; Spearman rho and p (global ordering);
+  pooled Shannon entropy (insulin)
+- Realized calibrated thresholds per method and regime (logged)
+
+### Control Conditions
+
+- Seed 42 evaluation, seed 4242 calibration; N = 100 packages and 100
+  readings per node; product weights, formation functions, deduce
+  propagation and the compromised conditional unchanged from the main suite.
+- R0 serves as the within-experiment control; its DR/FPR must match the
+  main suite up to the out-of-sample FPR variation.
+
+### Protocol
+
+1. simulator.py: add NoiseProfile (scan_error_rate, blip_prob, blip_max_c,
+   coverage_min, doc_delay_prob), NOISE_R0/R1/R2 constants, and
+   apply_operational_noise(evidence, product, noise, rng) returning new
+   NodeEvidence with the four perturbations; readings dropped by index so
+   expected_readings stays 100.
+2. baselines.py: evaluate_threshold exposes min_scan_rate,
+   max_failure_rate and temp_tolerance and passes them to its rule
+   functions (defaults unchanged, so B1-fixed is byte-identical to today).
+3. scripts/run_stress_test.py: calibration statistics per method, the four
+   SL-cal criteria, B1 tuning, evaluation loop, counterfeit sweep, JSON
+   output experiments/stress_results.json with thresholds and intervals.
+4. tests: noise application (failure counts, blip counts and magnitudes,
+   coverage bounds, document removal restricted to non-critical documents,
+   R0 is the identity), evaluate_threshold parameter pass-through and
+   default equivalence, calibration helpers (percentile split, B1 tuning
+   monotonicity), harness smoke run at small n.
+5. Commit code: feat(exp007): operational noise regimes and stress-test
+   harness. Record SHA below.
+6. Run: python scripts/run_stress_test.py; paste console output.
+7. Evaluate H7.1-H7.7, fill Results/Observations/Interpretation, update
+   findings.md, commit docs(logbook): EXP-007 completed, tag exp-007-final.
+
+### Environment
+
+- **Hardware:** Windows laptop, 64 GB RAM, RTX 4090 (CPU-only workload)
+- **Software:** Python 3.12.2, numpy 2.0.2, scipy 1.17.1, jsonld-ex 0.7.4
+- **Git commit (code, before run):** TBD
+- **Config:** constants in scripts/run_stress_test.py (N_TRIALS = 1000,
+  N_CALIB = 5000, SEED = 42, CALIB_SEED = 4242, FPR_TARGET = 0.01)
+- **Seeds:** 42 (evaluation), 4242 (calibration)
+
+### Results
+
+[to be filled after run]
+
+### Observations
+
+[to be filled after run]
+
+### Interpretation
+
+[to be filled after run]
+
+### Artifacts
+
+- experiments/stress_results.json
+
+---
