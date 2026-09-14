@@ -2405,3 +2405,66 @@ computational one.
 - experiments/expert_ranking_results.json
 
 ---
+
+## Camera-Ready Record (2026-09-14)
+
+**Paper:** Drug Integrity Algebra: Quantifying End-to-End Pharmaceutical
+Safety with Subjective Logic, IEEE HealthCom 2026 (New York, Oct 19-21).
+**Source of record:** git tag camera-ready-2026-09-14 (paper/main.tex,
+paper/references.bib, figures/ regenerated from v3.1 data).
+**Length:** 7 pages (one overlength page at US$100; HealthCom allows up to
+two). Page 7 begins at Discussion / Limitations.
+**Submission:** IEEE Conference eXpress, camera-ready deadline
+2026-09-14. [Muntaser to confirm PDF eXpress certification, upload, EDAS
+abstract update, and registration.]
+
+### What changed from the submitted version and why
+
+| Change | Source |
+|---|---|
+| Table I target nodes (F1, F2 Distributor; F4 Warehouse) | audit item 3, simulator.py |
+| Josang section numbers (3.4.3, 9.4, 16.2.2) | audit item 2, Springer TOC |
+| F1 description (W = 2/w_i, coverage via discounting) | audit item 4 |
+| "only method to do so" removed; B1 parity stated | EXP-006, full_results_v3_1.json |
+| Realized FPRs and B1's fixed 0.5 threshold | EXP-006 |
+| LA definition and F7 two-node credit | EXP-006 (H6.1) |
+| 95% intervals sentence | EXP-006 (H6.2) |
+| B1 in the counterfeit sweep and Fig. 4 | EXP-006 (H6.3) |
+| Per-product Spearman, CRT ordering | EXP-006 (H6.5) |
+| B4 Spearman reported as undefined; Fig. 3(a) | audit item 8 |
+| B4 documentation mass fix (no published number affected) | audit item 7 |
+| Modeling-assumption paragraph in III-C | reviewer 2 rec 4; parameters from code |
+| Sec. IV-H noise paragraph | EXP-007, EXP-007b |
+| Sec. IV-H sensitivity sentences | EXP-008 |
+| Sec. IV-H fusion/independence sentences | EXP-009 |
+| Hierarchical paragraph replaced; "conflict normalization" wording | EXP-010 |
+| IV-E 1% mechanism (chain score, spread 0.0001) | derived from formation rule and thresholds |
+| Clinical implications extension, ontology passage, GS1 refs | reviewer 3; GS1 EPCIS/CBV 2.0 verified |
+| Limitations rewritten | EXP-007/007b/008/009 findings |
+| Abstract and Conclusion reframed | EXP-006, EXP-007b |
+| II-E attributions ([15] mesh, [16] agents, [17] Van der Heijden) | reference audit |
+
+### Not in the paper
+
+- EXP-012 (expert rankings): pre-registered, data pending; the paper says
+  "in progress".
+- EXP-013 (temporal decay): not run; Limitations says decay is
+  implemented but inactive.
+- Mutual-information results (EXP-007b, H7b.7 refuted): the paper makes no
+  information-content claim beyond Shannon entropy in the clean regime;
+  the MI finding is recorded here for the journal extension.
+- Evidence-volume dilution mechanism (EXP-007b, EXP-009): one sentence in
+  Limitations; full analysis reserved for the journal extension.
+
+### Journal extension candidates (from this campaign)
+
+1. Per-type calibration as the deployment procedure, with the noise
+   regimes and evidence-volume results in full (EXP-007, EXP-007b).
+2. Expert-validated severity orderings (EXP-012) and product-specific
+   orderings.
+3. Evidence-volume normalization before fusion (EXP-007b, EXP-009).
+4. Mutual information vs rank correlation as complementary measures of
+   what a graded score carries (EXP-007b).
+5. Temporal decay under delayed reporting (EXP-013).
+
+---
