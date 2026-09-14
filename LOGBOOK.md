@@ -990,6 +990,27 @@ written; these notes supersede them where they conflict.
    Realized FPRs were SL 0.010, B3 0.010, B1 0.000, B2 0.000, B4 0.000;
    B1 is not percentile-calibrated (fixed threshold 0.5).
 
+7. (Added during EXP-007 implementation.) baselines._ds_documentation's
+   branch for "non-critical document missing, critical documents present"
+   returned masses (0.3c, 0.1(1-c), 0.6+0.1(1-c)) summing to 0.8+0.1c, which
+   violates MassFunction's invariant and raised an assertion. The branch is
+   unreachable in the main suite (Normal is complete; F6 removes a critical
+   document), so no v3/v3.1 number is affected. Fixed to (0.6c, 0.2(1-c),
+   remainder), continuous with the complete case; regression tests in
+   tests/test_exp007_b4_fix.py.
+
+8. (Added during EXP-007 implementation.) B4's Spearman rho of 0.312
+   (p = 0.452) reported in EXP-004/EXP-005, the paper (Sec. IV.D, IV.G,
+   Fig. 3a) and metrics_results_v3_1.json is an artifact: B4's mean score is
+   1.0 for every scenario up to floating-point residue (1.0000000000000002
+   on Normal, 1.0000000000000004 on F5), so scipy ranked rounding noise.
+   compute_spearman now reports methods whose mean scores span less than
+   1e-9 as undefined (rho = NaN, constant_output = True). The conclusion
+   (B4 non-significant) is unchanged; the camera-ready reports B4's rank
+   correlation as undefined rather than 0.31. metrics_results_v3_1.json is
+   left as generated (tag exp-006-final); the stress test uses the fixed
+   function.
+
 ---
 
 ## EXP-006: Main Suite v3.1 - Localization Fairness, Confidence Intervals, B1 in Counterfeit Sweep, Per-Product Severity Orderings
