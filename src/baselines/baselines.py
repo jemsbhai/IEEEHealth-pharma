@@ -659,6 +659,80 @@ def evaluate_dempster_shafer(
 BASELINE_METHODS["B4_DempsterShafer"] = evaluate_dempster_shafer
 
 
+# ── EXP-010: flat combination and conflict reporting ─────────────────────
+
+def dempster_conflict(m1: MassFunction, m2: MassFunction) -> float:
+    """Conflict mass K of Dempster's rule for two masses on {safe, compromised}.
+    dempster_combine returns a vacuous mass when K >= 1 - 1e-12."""
+    return m1.m_safe * m2.m_compromised + m1.m_compromised * m2.m_safe
+
+
+TOTAL_CONFLICT_K = 1.0 - 1e-12
+
+
+def collect_masses(path: List[str], node_evidence: Dict[str, NodeEvidence]) -> Dict[str, List[MassFunction]]:
+    """The five per-type mass functions at each node, in the order used by
+    evaluate_dempster_shafer (serialization, cold chain, shelf life,
+    documentation, recall)."""
+    out: Dict[str, List[MassFunction]] = {}
+    for node_id in path:
+        ev = node_evidence.get(node_id, NodeEvidence())
+        out[node_id] = [
+            _ds_serialization(ev.serialization),
+            _ds_cold_chain(ev.cold_chain),
+            _ds_shelf_life(ev.shelf_life),
+            _ds_documentation(ev.documentation),
+            _ds_recall(ev.recall),
+        ]
+    return out
+
+
+def combine_with_conflict_count(masses: List[MassFunction]) -> Tuple[MassFunction, int, float]:
+    """Iterated Dempster combination that also reports how many pairwise
+    steps hit the total-conflict branch and the largest K seen."""
+    if not masses:
+        return MassFunction.vacuous(), 0, 0.0
+    result = masses[0]
+    total_conflict_events = 0
+    max_k = 0.0
+    for m in masses[1:]:
+        k = dempster_conflict(result, m)
+        max_k = max(max_k, k)
+        if k >= TOTAL_CONFLICT_K:
+            total_conflict_events += 1
+        result = dempster_combine(result, m)
+    return result, total_conflict_events, max_k
+
+
+def evaluate_dempster_shafer_flat(
+    path: List[str],
+    node_evidence: Dict[str, NodeEvidence],
+    detection_threshold: float = 0.5,
+) -> BaselineResult:
+    """B4 with all 25 mass functions combined in one node-major pass.
+
+    Dempster's rule is associative and commutative, so this must equal the
+    hierarchical evaluate_dempster_shafer except where the total-conflict
+    branch fires; EXP-010 verifies that numerically. Node scores are still
+    computed per node so that weakest_node has the same meaning.
+    """
+    per_node = collect_masses(path, node_evidence)
+    node_scores = {n: dempster_combine_multi(*per_node[n]).pignistic_safe() for n in path}
+    flat: List[MassFunction] = [m for n in path for m in per_node[n]]
+    chain_mass = dempster_combine_multi(*flat)
+    chain_score = chain_mass.pignistic_safe()
+    weakest = min(path, key=lambda n: node_scores[n])
+    return BaselineResult(
+        method="B4_DempsterShafer_flat",
+        path=path,
+        chain_score=chain_score,
+        node_scores=node_scores,
+        detected=(chain_score < detection_threshold),
+        weakest_node=weakest,
+        detection_threshold=detection_threshold,
+    )
+
+
 def evaluate_all_baselines(
     path: List[str],
     node_evidence: Dict[str, NodeEvidence],
