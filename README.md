@@ -69,8 +69,10 @@ python scripts/run_experiment.py --config configs/base.yaml
 ## Authors
 
 - Muntaser Syed (Florida Institute of Technology)
-- [Collaborator] (Pharma Industry, UAE)
+- Mahasen Enam (Pharma Industry, UAE)
 - Marius Silaghi (Florida Institute of Technology)
+- Venkat Durga Sai (BITS Pilani)
+- Vincent Occhiogrosso (Arizona State University)  
 
 ## License
 
